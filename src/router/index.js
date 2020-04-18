@@ -1,15 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Services from '../components/Services.vue'
 import Ns001 from '../views/Ns001.vue'
+import Rb001 from '../components/Rb001.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
-  
+
+  {
+    path: '/',
+    name: 'Services',
+    component: Services
+  },
   {
     path: '/ns001',
     name: 'Ns001',
     component: Ns001
+  },
+  {
+    path: '/rb-001',
+    name: 'Rb001',
+    component: Rb001
   },
   {
     path: '/about',

@@ -98,7 +98,8 @@
                 name: "Заявки на закупку",
                 img: "soft.png",
                 items: [
-                    {name:"Закупка техники/оборудования/программного обеспечения", img:"computer_add.png", lnk:"../../it-uslugi/uslugi/ws-001.php"}                                      
+                    {name:"Закупка техники/оборудования/программного обеспечения", img:"computer_add.png", lnk:"../../it-uslugi/uslugi/ws-001.php"},
+                    {name:"Заявка на закупку (Dev)", img:"computer_add.png", lnk:"/rb-001"}                                      
                 ]
                 },
             {

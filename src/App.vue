@@ -49,22 +49,20 @@
       </template>
     </v-breadcrumbs>
     </div>
-
     <v-content>
       <router-view/>
-      <Services/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Services from './components/Services'
+//import Services from './components/Services'
 
 export default {
   name: 'App',
 
   components: {
-    Services,
+   // Services,
   },
 
   data: () => ({
@@ -77,7 +75,7 @@ export default {
         {
           text: 'Заявки',
           disabled: false,
-          href: 'https://portal.ahstep.ru/ahstep/services/',
+          href: '/',
         },
       ],    
   }),
