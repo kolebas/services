@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
+    <!--<v-app-bar
       app
       color="primary"
       dark
@@ -35,26 +35,68 @@
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
-    </v-app-bar>
+    </v-app-bar>-->
+    
+    <div color="green">
+      <v-breadcrumbs :items="items">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item
+          :href="item.href"
+          :disabled="item.disabled"
+        >
+          {{ item.text.toUpperCase() }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+    </div>
 
     <v-content>
-      <Home/>
+      <router-view/>
+      <Services/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Home from './components/Home'
+import Services from './components/Services'
 
 export default {
   name: 'App',
 
   components: {
-    Home,
+    Services,
   },
 
   data: () => ({
-    //
+      items: [
+        {
+          text: 'Главная',
+          disabled: false,
+          href: 'https://portal.ahstep.ru/',
+        },
+        {
+          text: 'Заявки',
+          disabled: false,
+          href: 'https://portal.ahstep.ru/ahstep/services/',
+        },
+      ],    
   }),
 };
 </script>
+
+<style>
+html {
+		overflow: hidden;
+  }
+  .bx-im-bar {
+		width: 80px;
+	}
+  .v-breadcrumbs{
+    background: #f5f5f5;
+    margin-left: 1%!important;
+    margin-right: 1%!important;
+    margin-top: 10px!important;
+    margin-bottom: 10px!important;
+    border-radius: 10px!important;
+  }
+</style>
