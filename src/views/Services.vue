@@ -8,8 +8,8 @@
             color="grey lighten-4"            
             >
                 <v-card-text class="pa-0">
-                    <p class="text-center pt-4 headline text--primary">{{title}}</p>
-					<p class="text-center">{{sub_message}} <v-btn @click="clkmyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon> Мои заявки</v-btn></p>
+                    <p class="text-center pt-4 headline text--primary">{{ title }}</p>
+					<p class="text-center">{{ sub_message }} <v-btn @click="clkmyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon> Мои заявки</v-btn></p>
                 </v-card-text>
 
             <v-expansion-panels
@@ -37,22 +37,21 @@
                             </v-col>                     
                     </v-expansion-panel-header>
                         <v-expansion-panel-content>
-                        <v-list>
-                            <v-list-item-group>                            
-                                <v-list-item
-                                v-for="(item, i) in cat.items"
-                                :key="i"
-                                 @click="itemclk(item.lnk)">
-                                    <v-list-item-icon>
-                                        <img :src="require('../assets/img/' + item.img)">
-                                    </v-list-item-icon>
-                                    <v-list-item-content>
-                                        <v-list-item-title v-text="item.name"></v-list-item-title>                                    
-                                    </v-list-item-content>
-                                </v-list-item> 
-                            </v-list-item-group>
-                        </v-list>
-                        
+                            <v-list>
+                                <v-list-item-group>                            
+                                    <v-list-item
+                                    v-for="(item, i) in cat.items"
+                                    :key="i"
+                                    @click="itemclk(item.lnk, item.route)">
+                                        <v-list-item-icon>
+                                            <img :src="require('../assets/img/' + item.img)">
+                                        </v-list-item-icon>
+                                        <v-list-item-content>
+                                            <v-list-item-title v-text="item.name"></v-list-item-title>                                    
+                                        </v-list-item-content>
+                                    </v-list-item> 
+                                </v-list-item-group>
+                            </v-list>                        
                         </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-expansion-panels>
@@ -60,6 +59,7 @@
         </v-row>
     </v-container>
 </template>
+
 
 <script>
   export default {
@@ -83,6 +83,7 @@
                     {name:"Удаленный доступ (VPN)", img:"vpn.png", lnk:"../../it-uslugi/uslugi/ns-001.php"},
                     {name:"Служебная сотовая связь", img:"sim_add.png", lnk:"../../it-uslugi/uslugi/ph-001.php"},
                     {name:"Установка программного обеспечения", img:"soft.png", lnk:"../../it-uslugi/uslugi/sf-001.php"},
+                    {name:"Установка программного обеспечения (Dev)", img:"soft.png", route:"/sf001"},
                     {name:"Отключение доступов", img:"user_del.png", lnk:"../../it-uslugi/uslugi/ar-001.php"}                    
                 ]
                 },
@@ -99,7 +100,7 @@
                 img: "soft.png",
                 items: [
                     {name:"Закупка техники/оборудования/программного обеспечения", img:"computer_add.png", lnk:"../../it-uslugi/uslugi/ws-001.php"},
-                    {name:"Заявка на закупку (Dev)", img:"computer_add.png", lnk:"/rb-001"}                                      
+                    {name:"Заявка на закупку (Dev)", img:"computer_add.png", route:"/rb001"}                                      
                 ]
                 },
             {
@@ -131,12 +132,17 @@
       tile: true,
     }),
     methods: {
-        itemclk: function(prop){
-            console.log(prop);
-            document.location.href = prop;
+        itemclk: function(lnk, route){
+            if(route != null){
+                //console.log(route);
+                this.$router.push(route);
+            } else {
+                //console.log(lnk);
+                document.location.href = lnk;
+            }
         },
         clkmyreq: function(){
-            document.location.href = "/helpdesk/my_ticket.php";
+            document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
         }
     }
   }

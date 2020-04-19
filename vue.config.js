@@ -4,5 +4,5 @@ module.exports = {
 	"babel"
   ],
 	
-  publicPath: '/'
+  publicPath: '/ahstep/services_dev'
 }

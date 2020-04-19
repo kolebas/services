@@ -1,17 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Services from '../components/Services.vue'
 import Ns001 from '../views/Ns001.vue'
-import Rb001 from '../components/Rb001.vue'
+
 
 Vue.use(VueRouter)
 
   const routes = [
-
   {
     path: '/',
     name: 'Services',
-    component: Services
+    component: () => import(/* webpackChunkName: "services" */ '../views/Services.vue')
   },
   {
     path: '/ns001',
@@ -19,9 +17,14 @@ Vue.use(VueRouter)
     component: Ns001
   },
   {
-    path: '/rb-001',
+    path: '/rb001',
     name: 'Rb001',
-    component: Rb001
+    component: () => import(/* webpackChunkName: "services" */ '../views/Rb001.vue')
+  },
+  {
+    path: '/sf001',
+    name: 'Sf001',
+    component: () => import(/* webpackChunkName: "services" */ '../views/Sf001.vue')
   },
   {
     path: '/about',
@@ -38,5 +41,8 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+
+//const services = () => import(/*webpackChunkName: "Services"*/  '../components/Services.vue')
 
 export default router
