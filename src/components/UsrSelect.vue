@@ -26,13 +26,11 @@
 import axios from 'axios';
 export default {
     data: () => ({
-        users: [
-            {ID:"1", LAST_NAME:"Иващенко", NAME:"Евгения"},
-            ]
+        users: []
 
     }),
     mounted() {
-        for (let i = 0, t = 100; i < t; i = i + 50) {
+        for (let i = 0, t = 1000; i < t ; i = i + 50) {
             axios
                 .get('https://portal.ahstep.ru/rest/1/s7i3kl0o2ydbm29h/user.get.json', {
                     //onUploadProgress: function(progressEvent) {},
