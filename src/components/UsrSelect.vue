@@ -8,11 +8,11 @@
         <v-col cols="6">
             <v-autocomplete
                     :items="users"
+                    v-model="userId"
                       outlined
                       solo
                       dense
                       chips
-                      small-chips
                       label="Укажите пользователей которые могут создавать удалять и редактровать файлы"
                       :item-text="users => users.LAST_NAME + ' ' + users.NAME"
                       :item-value="users => users.ID"                      
@@ -26,7 +26,8 @@
 import axios from 'axios';
 export default {
     data: () => ({
-        users: []
+        users: [],
+        userId: "",
 
     }),
     mounted() {

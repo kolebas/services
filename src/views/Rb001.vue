@@ -11,11 +11,11 @@
             class="headline grey lighten-2"
             primary-title
             >
-            Privacy Policy
+            Статус
             </v-card-title>
 
             <v-card-text>
-                {{ warn_message }}            
+                {{ warnMessage }}            
             </v-card-text>
 
             <v-divider></v-divider>
@@ -42,7 +42,7 @@
             >
             <v-card-text class="pa-0">
                 <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-                <p class="text-center">{{ sub_message }} <v-btn @click="clkmyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
+                <p class="text-center">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
                 <hr/>
             </v-card-text>
             <UsrSelect/>                
@@ -54,6 +54,7 @@
                 </v-col>
                 <v-col cols="6">
                     <v-combobox
+                        v-model="type"
                         :items="items_type"
                         label="Выберите необходимое оборудование"
                         chips
@@ -71,16 +72,16 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea outlined solo label="Для указания дополнительноый информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительноый информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>
             <hr/>
             <v-card-actions class="py-4">
                 <div class="mx-auto">
-                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="btn_sent()">
+                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="formSend()">
                         Отправить
                     </v-btn>
-                    <v-btn class="mx-1" @click="btn_cns()">
+                    <v-btn class="mx-1" @click="formCancl()">
                         Отмена
                     </v-btn>
                 </div>
@@ -91,7 +92,8 @@
 </template>
 
 <script>
-import UsrSelect from '../components/UsrSelect'
+import UsrSelect from '../components/UsrSelect';
+import axios from 'axios';
     export default{
         components: {
             UsrSelect
@@ -99,19 +101,50 @@ import UsrSelect from '../components/UsrSelect'
         data:() => ({
             title: "Заявка на закупку (DEV)",
             sub_message: "Заявка согласуется внутри департамента ИТ, при необходимости может быть дополнительно отправлена на согласование руководителям подразделений или компаний. Статус созданной заявки вы моежете отслеживать в разделе ",
-            warn_message: "В связи с ограничениями лицензионного соглашение данное программно обеспечение предоставляется только для сотрудников офиса в г.Ростове-на-Дону.",
+            warnMessage: "",
             items_type: ["Стационарный компьютер","Ноутбук","Монитор","МФУ","Стационарный телефон","Прочее оборудование и ПО"],
-            dialog: false
+            dialog: false,
+            userId: "1234",
+            type: "",
+            cmnt: ""
     }),
     methods: {
-        btn_sent: function(){
-            console.log("Отправка");
+        formSend: function(){
+            console.log(this.cmnt);
+            //this.dialog = true;
+            //this.loading = true;
+            axios({
+                method: 'post',
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+                url: './ajax/ajax.php',
+                /*auth: {
+                    username: 'admin',
+                    password: 'Htdjk.wbz17'
+                },*/
+                data: {
+                    userId: this.userId,
+                    type: this.type,
+                    cmnt: this.cmnt
+                }
+            })
+            .then(function (response) {
+                this.warnMessage = "Ваша заявка успешно отправлена";
+                console.log(response);
+            })
+            .catch(function (error) {
+                this.warnMessage = "Произошла ошибка";
+                console.log(error);
+            });			
             this.dialog = true;
+            this.loading = false;
         },
-        btn_cns: function(){
-            //console.log("Отмена");
+        formCancl: function(){
             this.$router.go(-1);
-        }
+        },
+        btnToMyreq(){
+            document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
+        },
     }
     }    
 </script>

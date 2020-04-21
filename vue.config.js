@@ -3,6 +3,6 @@ module.exports = {
     "vuetify",
 	"babel"
   ],
-	
-  publicPath: '/ahstep/services_dev'
+	filenameHashing: false,
+  publicPath: '/ahstep/services_dev/'
 }

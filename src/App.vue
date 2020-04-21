@@ -13,22 +13,23 @@
     </v-breadcrumbs>
     </div>
     <v-content>
+      <Buttons/>
       <router-view/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-//import Services from './components/Services'
-
+import Buttons from './components/Buttons'
 export default {
   name: 'App',
 
   components: {
-   // Services,
+    Buttons,
   },
 
-  data: () => ({
+  data: () => ({ 
+      btns: true,   
       items: [
         {
           text: 'Главная',
