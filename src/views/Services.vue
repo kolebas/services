@@ -62,6 +62,7 @@
 
 
 <script>
+
   export default {
     data: () => ({
         title: "Заявки на доступ к ИТ услугам",

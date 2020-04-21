@@ -4,5 +4,8 @@ module.exports = {
 	"babel"
   ],
 	filenameHashing: false,
-  publicPath: '/ahstep/services_dev/'
+	publicPath: '/ahstep/services_dev/',
+	devServer: {
+			proxy: 'https://portal.ahstep.ru',
+    }
 }

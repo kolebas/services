@@ -28,5 +28,17 @@
     "vue-cli-plugin-vuetify": "^2.0.5",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.3.0"
-  }
+  },
+  "description": "```\r npm install\r ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kolebas/services.git"
+  },
+  "author": "Zaikin Nikolay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kolebas/services/issues"
+  },
+  "homepage": "https://github.com/kolebas/services#readme"
 }

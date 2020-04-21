@@ -45,7 +45,7 @@
                 <p class="text-center">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
                 <hr/>
             </v-card-text>
-            <UsrSelect/>                
+            <!--<UsrSelect/>-->                
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -92,11 +92,11 @@
 </template>
 
 <script>
-import UsrSelect from '../components/UsrSelect';
+//import UsrSelect from '../components/UsrSelect';
 import axios from 'axios';
     export default{
         components: {
-            UsrSelect
+            //UsrSelect
         },
         data:() => ({
             title: "Заявка на закупку (DEV)",
@@ -135,7 +135,7 @@ import axios from 'axios';
             .catch(function (error) {
                 this.warnMessage = "Произошла ошибка";
                 console.log(error);
-            });			
+            });		
             this.dialog = true;
             this.loading = false;
         },
