@@ -24,7 +24,7 @@ export default {
   name: 'App',
 
   components: {
-    //Buttons,
+  //  Buttons,
   },
 
   data: () => ({ 

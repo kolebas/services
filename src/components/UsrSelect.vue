@@ -27,21 +27,19 @@ import axios from 'axios';
 export default {
     data: () => ({
         users: [],
-        userId: "",
-
+        userId: ''
     }),
     mounted() {
-        for (let i = 0, t = 1000; i < t ; i = i + 50) {
-            axios
-                .get('https://portal.ahstep.ru/rest/1/s7i3kl0o2ydbm29h/user.get.json', {
+         axios
+             .get('./ajax/ajax.php', { 
+                //.get('./ajax/ajax.php', {
                     //onUploadProgress: function(progressEvent) {},
-                    params: {
-                        //ACTIVE: "Y",
-                        start: i
-                    }
+                   /* auth: {
+                    username: 'admin',
+                    password: 'Htdjk.wbz17'
+                },*/
                 })
-                .then(response => (this.users = this.users.concat(response.data.result)))
-        }
+                .then(response => (this.users = response.data))        
     }
 }
 </script>
