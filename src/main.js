@@ -2,6 +2,7 @@ import Vue from 'vue'
 //import './plugins/axios'
 import App from './App.vue'
 import router from './router'
+import 'babel-polyfill'
 import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = true

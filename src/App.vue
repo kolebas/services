@@ -46,11 +46,8 @@ export default {
 </script>
 
 <style>
-html {
-		overflow: hidden;
-  }
-  .bx-im-bar {
-		width: 80px;
+body {
+		overflow: unset!important;
 	}
   .v-breadcrumbs{
     background: #f5f5f5;
