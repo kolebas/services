@@ -3,7 +3,7 @@
         <v-col cols="4">
             <v-card-text class="subtitle-1 text-right pt-2">
                 ФИО сотрудника:
-            </v-card-text>
+            </v-card-text>                
         </v-col>
         <v-col cols="6">
             <v-autocomplete
@@ -27,17 +27,12 @@ import axios from 'axios';
 export default {
     data: () => ({
         users: [],
-        userId: ''
+        userId: '', 
+        error: []
     }),
     mounted() {
          axios
-             .get('./ajax/ajax.php', { 
-                //.get('./ajax/ajax.php', {
-                    //onUploadProgress: function(progressEvent) {},
-                   /* auth: {
-                    username: 'admin',
-                    password: 'Htdjk.wbz17'
-                },*/
+             .get('./ajax/ajax.php', {
                 })
                 .then(response => (this.users = response.data))        
     }

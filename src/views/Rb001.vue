@@ -62,6 +62,7 @@
                         solo
                         outlined
                         dense
+                        :error-messages="type_err"
                     ></v-combobox>
                 </v-col>                   
             </v-row>
@@ -102,43 +103,50 @@ import axios from 'axios';
             title: "Заявка на закупку (DEV)",
             sub_message: "Заявка согласуется внутри департамента ИТ, при необходимости может быть дополнительно отправлена на согласование руководителям подразделений или компаний. Статус созданной заявки вы моежете отслеживать в разделе ",
             warnMessage: "",
-            items_type: ["Стационарный компьютер","Ноутбук","Монитор","МФУ","Стационарный телефон","Прочее оборудование и ПО"],
+            items_type: ['Стационарный компьютер', 'Ноутбук', 'Монитор', 'МФУ', 'Стационарный телефон', 'Прочее оборудование и ПО'],
             dialog: false,
             userId: "",
             type: "",
-            cmnt: ""
+            cmnt: "",
+            type_err: ""
     }),
     methods: {
-        formSend: function(){
-            console.log(this.cmnt);
-            //this.dialog = true;
-            //this.loading = true;
-            axios({
-                method: 'post',
-                withCredentials: true,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                url: './ajax/ajax.php',
-                /*auth: {
-                    username: 'admin',
-                    password: 'Htdjk.wbz17'
-                },*/
-                data: {
-                    userId: this.userId,
-                    type: this.type,
-                    cmnt: this.cmnt
-                }
-            })
-            .then(function (response) {
-                //msg = "Ваша заявка успешно отправлена";
-                console.log(response);
-            })
-            .catch(function (error) {
-                //msg = "Произошла ошибка";
-                //this.$emit('Message', this.warnMessage = "Произошла ошибка");
-                console.log(error);
-            });		
-            this.dialog = true;
-            this.loading = false;
+        function () {
+            console.log('test');            
+        },
+        //Отправка формы
+        formSend: function(){            
+            //Проверка полей тип
+            if (this.type && this.cmnt) {
+                axios({
+                    method: 'post',
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+                    url: './ajax/ajax.php',
+                    data: {
+                        userId: this.userId,
+                        type: this.type,
+                        cmnt: this.cmnt
+                    }
+                })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });		
+                this.dialog = true;
+                this.loading = false;
+                this.warnMessage = "Ваша заявка успешно отправлена"
+            }
+
+            if (!this.type) {
+                this.type_err = "Требуется выбрать тип устройства"
+            }
+            if (!this.cmnt) {
+                console.log('Error');
+            }
+            
         },
         formCancl: function(){
             this.$router.go(-1);
