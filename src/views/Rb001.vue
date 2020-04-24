@@ -14,7 +14,7 @@
             Статус
             </v-card-title>
 
-            <v-card-text class="subtitle-1 text-center">
+            <v-card-text class="subtitle-1 text-center mt-4">
                 {{ warnMessage }}            
             </v-card-text>
 
@@ -42,7 +42,7 @@
             >
             <v-card-text class="pa-0">
                 <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-                <p class="text-center">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
+                <p class="subtitle-1 font-weight-medium mx-8">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
                 <hr/>
             </v-card-text>
             <v-row class="mb-n6">
@@ -59,6 +59,7 @@
                             solo
                             dense
                             chips
+                            deletable-chips
                             label="Начните набирать фамилию или имя сотрудника"
                             :item-text="users => users.LAST_NAME + ' ' + users.NAME"
                             :item-value="users => users.ID"
@@ -79,6 +80,7 @@
                         :items="items_type"
                         label="Выберите необходимое оборудование"
                         chips
+                        deletable-chips
                         multiple
                         solo
                         outlined
@@ -94,7 +96,7 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительноый информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>
             <hr/>
