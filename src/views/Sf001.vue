@@ -1,35 +1,123 @@
 <template>
-    <v-container>
-        <h1>{{ title }}</h1>
-        <v-row>
+<v-container>
+    <div class="text-center">
+        <v-dialog
+        v-model="dialog"
+        width="500"
+        persistent
+        >
+        <v-card>
+            <v-card-title
+            class="headline grey lighten-2"
+            primary-title
+            >
+            Статус
+            </v-card-title>
+
+            <v-card-text class="subtitle-1 text-center mt-4">
+                {{ warnMessage }}            
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="primary"
+                text
+                @click="funcDialog()"
+            >
+                Понятно
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+        <v-dialog
+        v-model="softModal"
+        width="500"
+        persistent
+        >
+        <v-card>
+            <v-card-title
+            class="headline red lighten-1"
+            primary-title
+            color="red"
+            >
+            Внимание!!!
+            </v-card-title>
+
+            <v-card-text class="subtitle-1 text-center mt-4" >
+                {{ softModalMsg }}            
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="primary"
+                text
+                @click="closeSoftModal()"
+            >
+                Понятно
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+    </div>
+    <v-row>
         <v-card
-            max-width="100%"
+            max-width="55%"
             raised
             class="mx-auto"
             color="grey lighten-4"            
             >
             <v-card-text class="pa-0">
                 <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-                <p class="text-center">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
+                <p class="subtitle-1 font-weight-medium mx-8">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
                 <hr/>
             </v-card-text>
-            <UsrSelect/>                
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
-                        Тип оборудования:
+                        ФИО сотрудника:
+                    </v-card-text>                
+                </v-col>
+                <v-col cols="6">
+                    <v-autocomplete
+                            :items="users"
+                            v-model="userId"
+                            outlined
+                            solo
+                            dense
+                            chips
+                            deletable-chips
+                            label="Начните набирать фамилию или имя сотрудника"
+                            :item-text="users => users.LAST_NAME + ' ' + users.NAME"
+                            :item-value="users => users.ID"
+                            :error-messages="userId_err"                      
+                            > 
+                            </v-autocomplete>
+                </v-col>
+            </v-row>                  
+            <v-row class="mb-n6">
+                <v-col cols="4">
+                    <v-card-text class="subtitle-1 text-right pt-2">
+                        Наименование ПО:
                     </v-card-text>                        
                 </v-col>
                 <v-col cols="6">
                     <v-combobox
-                        v-model="type"
+                        @change="showSoftModal()"
+                        v-model="soft"
                         :items="items_type"
-                        label="Выберите необходимое оборудование"
+                        label="Выберите необходимое ПО"
                         chips
-                        multiple
+                        deletable-chips
                         solo
                         outlined
                         dense
+                        :error-messages="type_err"
                     ></v-combobox>
                 </v-col>                   
             </v-row>
@@ -40,13 +128,13 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительноый информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>
             <hr/>
             <v-card-actions class="py-4">
                 <div class="mx-auto">
-                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="test_sf001()">
+                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="formSend()">
                         Отправить
                     </v-btn>
                     <v-btn class="mx-1" @click="formCancl()">
@@ -55,72 +143,94 @@
                 </div>
             </v-card-actions>                    
         </v-card>
-    </v-row>
-        <v-btn @click="test_sf001()">Test BTN</v-btn>
-        <transition name="slide-fade">
-            <v-row v-if="show">
-                <v-card
-                    max-width="55%"
-                    raised
-                    class="mx-auto"
-                    color="grey lighten-4"
-                    >
-                    <v-card-text>{{ title }}</v-card-text>
-                </v-card>            
-            </v-row>
-        </transition>        
-            <button v-on:click="show = !show">
-                Переключить
-            </button>
-    </v-container>
+    </v-row>    
+</v-container>
 </template>
 
 <script>
+//import UsrSelect from '../components/UsrSelect';
 import axios from 'axios';
     export default{
+        components: {
+            //UsrSelect
+        },
         data:() => ({
-            title: "Установка программного обеспечения (Dev)",
-            cmnt: "",
-            show: true,
-        }),
-        methods: {
-        test_sf001:  function(){
-       axios({
-                method: 'post',
-                withCredentials: true,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                url: './ajax/ajax.php',
-                /*auth: {
-                    username: 'admin',
-                    password: 'Htdjk.wbz17'
-                },*/
-                data: {
-                    cmnt: this.cmnt
+            title: "Установка программного обеспечения",
+            sub_message: "В рамках исполнения данной заявки вам будет предоставлен доступ к программному обеспечения из предложенного списка. Статус созданной заявки вы моежете отслеживать в разделе ",
+            warnMessage: '',
+            items_type: ['Консультант +', 'Гарант'],
+            dialog: false,
+            users: [],
+            userId: '',
+            soft: '',
+            softModal: '',
+            softModalMsg: 'В связи с ограничением лицензионного соглашения, данное программное обеспечение предоставляется только сотрудникам офиса в г. Ростове-на-Дону',
+            cmnt: '',
+            userId_err: '',
+            type_err: ''
+    }),
+    methods: {
+        //Показ предупреждения о Консультанте
+        showSoftModal: function(){
+            if(this.soft == 'Консультант +'){
+                this.softModal = true;
+            }            
+        },
+        //Закрыть предупреждение
+        closeSoftModal: function(){
+            this.softModal = false;
+        },
+        //Отправка формы
+        formSend: function(){            
+            //Проверка полей тип
+            if (this.userId && this.soft) {
+                axios({
+                    method: 'post',
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+                    url: './ajax/ajax_sf001.php',
+                    data: {
+                        userId: this.userId,
+                        soft: this.soft,
+                        cmnt: this.cmnt
+                    }
+                })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });		
+                this.dialog = true;
+                this.loading = false;
+                this.warnMessage = 'Ваша заявка успешно отправлена';
+                
                 }
-            })
-            .then(function (response) {
-                //this.warnMessage = "Ваша заявка успешно отправлена";
-                console.log(response);
-            })
-            .catch(function (error) {
-                //this.warnMessage = "Произошла ошибка";
-                console.log(error);
-            });
+            if (!this.userId) {
+                this.userId_err = 'Необходимо выбрать сотрудника'
+            }
+            if (!this.soft) {
+                this.type_err = 'Необходимо выбрать программное обеспечение'
+            }
+        },
+        //Действие кнопки "назад"
+        formCancl: function(){
+            this.$router.go(-1);
+        },
+        //Действие кнопки "Мои заявки"
+        btnToMyreq(){
+            document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
+        },
+        //Взаимодействие с диалогом
+        funcDialog(){
+            this.$router.go(-1);
+        }
+    },
+    mounted() {
+         axios
+             .get('./ajax/ajax_user.php', {
+                })
+                .then(response => (this.users = response.data))        
     }
-  }  
-    }
+}    
 </script>
-
-<style>
-    .slide-fade-enter-active {
-    transition: all .3s ease;
-    }
-    .slide-fade-leave-active {
-    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-    }
-    .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active до версии 2.1.8 */ {
-    transform: translateX(10px);
-    opacity: 0;
-    }
-</style>

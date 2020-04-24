@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Ns001 from '../views/Ns001.vue'
+//import Ns001 from '../views/Ns001.vue'
 
 Vue.use(VueRouter)
 
@@ -13,7 +13,7 @@ Vue.use(VueRouter)
   {
     path: '/ns001',
     name: 'Ns001',
-    component: Ns001
+    component: () => import(/* webpackChunkName: "services" */ '../views/Ns001.vue')
   },
   {
     path: '/rb001',
