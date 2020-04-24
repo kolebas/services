@@ -14,7 +14,7 @@
             Статус
             </v-card-title>
 
-            <v-card-text>
+            <v-card-text class="subtitle-1 text-center">
                 {{ warnMessage }}            
             </v-card-text>
 
@@ -25,7 +25,7 @@
             <v-btn
                 color="primary"
                 text
-                @click="dialog = false"
+                @click="funcDialog()"
             >
                 Понятно
             </v-btn>
@@ -142,7 +142,7 @@ import axios from 'axios';
                     method: 'post',
                     withCredentials: true,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                    url: './ajax/ajax.php',
+                    url: './ajax/ajax_rb001.php',
                     data: {
                         userId: this.userId,
                         type: this.type,
@@ -157,7 +157,9 @@ import axios from 'axios';
                 });		
                 this.dialog = true;
                 this.loading = false;
-                this.warnMessage = 'Ваша заявка успешно отправлена'            }
+                this.warnMessage = 'Ваша заявка успешно отправлена';
+                
+                }
 
             if (!this.type) {
                 this.type_err = 'Необходимо выбрать тип оборудование'
@@ -167,16 +169,22 @@ import axios from 'axios';
             }
             
         },
+        //Действие кнопки "назад"
         formCancl: function(){
             this.$router.go(-1);
         },
+        //Действие кнопки "Мои заявки"
         btnToMyreq(){
             document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
         },
+        //Взаимодействие с диалогом
+        funcDialog(){
+            this.$router.go(-1);
+        }
     },
     mounted() {
          axios
-             .get('./ajax/ajax.php', {
+             .get('./ajax/ajax_rb001.php', {
                 })
                 .then(response => (this.users = response.data))        
     }

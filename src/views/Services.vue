@@ -80,11 +80,10 @@
                 name: "Заявки пользователя",
                 img: "user.png",
                 items: [
-                    {name:"Новый пользователь", img:"user_add.png", lnk:"../../it-uslugi/uslugi/nu-001.php"},
                     {name:"Удаленный доступ (VPN)", img:"vpn.png", lnk:"../../it-uslugi/uslugi/ns-001.php"},
                     {name:"Служебная сотовая связь", img:"sim_add.png", lnk:"../../it-uslugi/uslugi/ph-001.php"},
                     {name:"Установка программного обеспечения", img:"soft.png", lnk:"../../it-uslugi/uslugi/sf-001.php"},
-                    {name:"Установка программного обеспечения (Dev)", img:"soft.png", route:"/sf001"},
+                    //{name:"Установка программного обеспечения (Dev)", img:"soft.png", route:"/sf001"},
                     {name:"Отключение доступов", img:"user_del.png", lnk:"../../it-uslugi/uslugi/ar-001.php"}                    
                 ]
                 },
@@ -100,8 +99,8 @@
                 name: "Заявки на закупку",
                 img: "soft.png",
                 items: [
-                    {name:"Закупка техники/оборудования/программного обеспечения", img:"computer_add.png", lnk:"../../it-uslugi/uslugi/ws-001.php"},
-                    {name:"Заявка на закупку (Dev)", img:"computer_add.png", route:"/rb001"}                                      
+                    //{name:"Закупка техники/оборудования/программного обеспечения", img:"computer_add.png", lnk:"../../it-uslugi/uslugi/ws-001.php"},
+                    {name:"Закупка техники/оборудования/программного обеспечения", img:"computer_add.png", route:"/rb001"}                                      
                 ]
                 },
             {
@@ -117,7 +116,7 @@
                 name: "Почта",
                 img: "mails.png",
                 items: [
-                    {name:"Создание/изменение адреса почтовой рассылки", img:"mails.png", lnk:""}                       
+                    {name:"Создание/изменение адреса почтовой рассылки", img:"mails.png", lnk:"../../it-uslugi/uslugi/ml-001.php"}                       
                 ]
                 }
             ],
