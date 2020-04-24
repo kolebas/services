@@ -38,7 +38,7 @@ export default {
         {
           text: 'Заявки',
           disabled: false,
-          href: '/',
+          href: '/ahstep/services/',
         },
       ],    
   }),
