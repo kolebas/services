@@ -155,7 +155,7 @@ import axios from 'axios';
             //Buttons
         },
         data:() => ({
-            title: "Установка программного обеспечения",
+            title: "Удаленный доступ (VPN)",
             sub_message: "В рамках исполнения данной заявки вам будет предоставлен доступ к программному обеспечения из предложенного списка. Статус созданной заявки вы моежете отслеживать в разделе ",
             warnMessage: '',
             items_type: ['Служебный компьютер', 'Личный компьютер', 'Мобильное устройство'],
@@ -187,7 +187,7 @@ import axios from 'axios';
                     method: 'post',
                     withCredentials: true,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                    url: './ajax/ajax_sf001.php',
+                    url: './ajax/ajax_ns001.php',
                     data: {
                         userId: this.userId,
                         type: this.type,
