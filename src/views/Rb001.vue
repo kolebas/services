@@ -14,7 +14,7 @@
             Статус
             </v-card-title>
 
-            <v-card-text>
+            <v-card-text class="subtitle-1 text-center mt-4">
                 {{ warnMessage }}            
             </v-card-text>
 
@@ -25,7 +25,7 @@
             <v-btn
                 color="primary"
                 text
-                @click="dialog = false"
+                @click="funcDialog()"
             >
                 Понятно
             </v-btn>
@@ -42,10 +42,32 @@
             >
             <v-card-text class="pa-0">
                 <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-                <p class="text-center">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
+                <p class="subtitle-1 font-weight-medium mx-8">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
                 <hr/>
             </v-card-text>
-            <UsrSelect/>               
+            <v-row class="mb-n6">
+                <v-col cols="4">
+                    <v-card-text class="subtitle-1 text-right pt-2">
+                        ФИО сотрудника:
+                    </v-card-text>                
+                </v-col>
+                <v-col cols="6">
+                    <v-autocomplete
+                            :items="users"
+                            v-model="userId"
+                            outlined
+                            solo
+                            dense
+                            chips
+                            deletable-chips
+                            label="Начните набирать фамилию или имя сотрудника"
+                            :item-text="users => users.LAST_NAME + ' ' + users.NAME"
+                            :item-value="users => users.ID"
+                            :error-messages="userId_err"                      
+                            > 
+                            </v-autocomplete>
+                </v-col>
+            </v-row>                  
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -58,6 +80,7 @@
                         :items="items_type"
                         label="Выберите необходимое оборудование"
                         chips
+                        deletable-chips
                         multiple
                         solo
                         outlined
@@ -73,7 +96,7 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительноый информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>
             <hr/>
@@ -93,36 +116,35 @@
 </template>
 
 <script>
-import UsrSelect from '../components/UsrSelect';
+//import UsrSelect from '../components/UsrSelect';
 import axios from 'axios';
     export default{
         components: {
-            UsrSelect
+            //UsrSelect
         },
         data:() => ({
-            title: "Заявка на закупку (DEV)",
+            title: "Заявка на приобретение техники/программного обеспечения",
             sub_message: "Заявка согласуется внутри департамента ИТ, при необходимости может быть дополнительно отправлена на согласование руководителям подразделений или компаний. Статус созданной заявки вы моежете отслеживать в разделе ",
-            warnMessage: "",
+            warnMessage: '',
             items_type: ['Стационарный компьютер', 'Ноутбук', 'Монитор', 'МФУ', 'Стационарный телефон', 'Прочее оборудование и ПО'],
             dialog: false,
-            userId: "",
-            type: "",
-            cmnt: "",
-            type_err: ""
+            users: [],
+            userId: '',
+            type: '',
+            cmnt: '',
+            userId_err: '',
+            type_err: ''
     }),
     methods: {
-        function () {
-            console.log('test');            
-        },
         //Отправка формы
         formSend: function(){            
             //Проверка полей тип
-            if (this.type && this.cmnt) {
+            if (this.type && this.userId) {
                 axios({
                     method: 'post',
                     withCredentials: true,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                    url: './ajax/ajax.php',
+                    url: './ajax/ajax_rb001.php',
                     data: {
                         userId: this.userId,
                         type: this.type,
@@ -137,23 +159,36 @@ import axios from 'axios';
                 });		
                 this.dialog = true;
                 this.loading = false;
-                this.warnMessage = "Ваша заявка успешно отправлена"
-            }
+                this.warnMessage = 'Ваша заявка успешно отправлена';
+                
+                }
 
             if (!this.type) {
-                this.type_err = "Требуется выбрать тип устройства"
+                this.type_err = 'Необходимо выбрать тип оборудование'
             }
-            if (!this.cmnt) {
-                console.log('Error');
+            if (!this.userId) {
+                this.userId_err = 'Необходимо выбрать сотрудника'
             }
             
         },
+        //Действие кнопки "назад"
         formCancl: function(){
             this.$router.go(-1);
         },
+        //Действие кнопки "Мои заявки"
         btnToMyreq(){
             document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
         },
+        //Взаимодействие с диалогом
+        funcDialog(){
+            this.$router.go(-1);
+        }
+    },
+    mounted() {
+         axios
+             .get('./ajax/ajax_rb001.php', {
+                })
+                .then(response => (this.users = response.data))        
     }
-    }    
+}    
 </script>

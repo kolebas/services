@@ -1,17 +1,23 @@
 <template>
-    <v-container>
-        <v-btn v-if="btns" @click="test_btn()">Test BTN</v-btn>
-
-    </v-container>
+    <v-card-actions class="py-4">
+                <div class="mx-auto">
+                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="formSend()">
+                        Отправить
+                    </v-btn>
+                    <v-btn class="mx-1" @click="formCancl()">
+                        Отмена
+                    </v-btn>
+                </div>
+            </v-card-actions>
 </template>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 export default {
     data: () => ({
         btns: true,
     }),
-    methods: {
+   /* methods: {
     test_btn:  function(){
        axios({
                 method: 'post',
@@ -21,7 +27,7 @@ export default {
                 /*auth: {
                     username: 'admin',
                     password: 'Htdjk.wbz17'
-                },*/
+                },
                 data: {
                     cmnt: "this.cmnt"
                 }
@@ -35,6 +41,6 @@ export default {
                 console.log(error);
             });
     }
-  }    
+  }  */  
 }
 </script>
