@@ -2,6 +2,7 @@ import Vue from 'vue'
 //import './plugins/axios'
 import App from './App.vue'
 import router from './router'
+export const bus = new Vue()
 import 'babel-polyfill'
 import vuetify from './plugins/vuetify';
 
