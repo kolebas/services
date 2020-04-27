@@ -25,10 +25,18 @@
                 :tile="tile"
             >
                 <v-expansion-panel
-                    v-for="(cat, i) in cats"
+                    v-for="(cat, i) in cats"                    
                     :key="i"
-                >
-                    <v-expansion-panel-header class="py-0">
+                >                    
+                    <v-expansion-panel-header v-if="condition && cat.status == 'dev'" class="py-0">
+                            <v-col cols="1" class="px-0">
+                                <img  :src="require('../assets/img/' + cat.img)">
+                            </v-col>
+                            <v-col cols="10" class="px-0">
+                               <p class="subtitle-1 font-weight-medium mb-0">{{cat.name}}</p>                           
+                            </v-col>                     
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-header v-if="cat.status != 'dev'" class="py-0">
                             <v-col cols="1" class="px-0">
                                 <img  :src="require('../assets/img/' + cat.img)">
                             </v-col>
@@ -53,8 +61,8 @@
                                 </v-list-item-group>
                             </v-list>                        
                         </v-expansion-panel-content>
-                </v-expansion-panel>
-            </v-expansion-panels>
+                    </v-expansion-panel>                
+                </v-expansion-panels>
             </v-card>
         </v-row>
     </v-container>
@@ -62,9 +70,10 @@
 
 
 <script>
-
+import axios from 'axios';
   export default {
     data: () => ({
+        usrid: '',
         title: "Заявки на доступ к ИТ услугам",
         sub_message: "Для получения доступа к сервису или услуге, выберите нужую категорию, а затем услугу, после заполнения необходимых полей формы заявка будет отправлена на согласование отвественных сотрудникам. Статус заявки вы можете отслеживать в разделе",
         cats: [
@@ -122,7 +131,17 @@
                 items: [
                     {name:"Создание/изменение адреса почтовой рассылки", img:"mails.png", lnk:"../../it-uslugi/uslugi/ml-001.php"}                       
                 ]
-                }
+                },
+            {
+                name: "Заявки в отдел мониторинга -- Development",
+                status: "dev",
+                img: "mon.png",
+                items: [
+                    {name:"Корректировка данных в путевых листах 1С", img:"mon_corr.png", route:"/ms-001"},
+                    {name:"Предоставление доступа к программам мониторинга", img:"mon_accs.png", route:"/ms-002"}, 
+                    {name:"Заявка о неисправности телематического оборудования", img:"mon_brkn.png", route:"/ms-003"}                        
+                ]
+                }    
             ],
       accordion: false,
       popout: false,
@@ -138,16 +157,26 @@
     methods: {
         itemclk: function(lnk, route){
             if(route != null){
-                //console.log(route);
                 this.$router.push(route);
             } else {
-                //console.log(lnk);
                 document.location.href = lnk;
             }
         },
         clkmyreq: function(){
             document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
         }
+    },
+    mounted() {
+         axios
+             .get('./ajax/ajax_usr.php', {
+                })
+                .then(response => (this.usrid = response.data))        
+    },
+    computed: {
+    condition() {
+      this.usrid;
+      return this.usrid == 1 || this.usrid == 2318 || this.usrid == 2416 || this.usrid == 2385;
     }
+  }
   }
 </script>

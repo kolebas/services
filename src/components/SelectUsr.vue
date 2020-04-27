@@ -35,10 +35,7 @@ export default {
         }
     },
     data: () => ({
-        users: [{
-            text: 'text',
-            value: '123456789'
-        }],
+        users: [],
         userId: '',
         userIdErr: '', 
         error: []
