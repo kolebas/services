@@ -72,11 +72,7 @@
             class="mx-auto"
             color="grey lighten-4"            
             >
-            <v-card-text class="pa-0">
-                <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-                <p class="subtitle-1 font-weight-medium mx-8">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
-                <hr/>
-            </v-card-text>
+            <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -107,7 +103,7 @@
                     </v-card-text>                        
                 </v-col>
                 <v-col cols="6">
-                    <v-combobox
+                    <v-select
                         @change="showCmpModal()"
                         v-model="type"
                         :items="items_type"
@@ -118,7 +114,7 @@
                         outlined
                         dense
                         :error-messages="type_err"
-                    ></v-combobox>
+                    ></v-select>
                 </v-col>                   
             </v-row>
             <v-row class="mb-n6" v-if="type == 'Служебный компьютер'">
@@ -148,11 +144,11 @@
 </template>
 
 <script>
-//import Buttons from '../components/Buttons';
+import RqCardTitle from '../components/RqCardTitle';
 import axios from 'axios';
     export default{
         components: {
-            //Buttons
+            RqCardTitle
         },
         data:() => ({
             title: "Удаленный доступ (VPN)",

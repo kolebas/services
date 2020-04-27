@@ -75,7 +75,7 @@
                     </v-card-text>                        
                 </v-col>
                 <v-col cols="6">
-                    <v-combobox
+                    <v-select
                         v-model="type"
                         :items="items_type"
                         label="Выберите необходимое оборудование"
@@ -86,7 +86,7 @@
                         outlined
                         dense
                         :error-messages="type_err"
-                    ></v-combobox>
+                    ></v-select>
                 </v-col>                   
             </v-row>
             <v-row class="mb-n6">

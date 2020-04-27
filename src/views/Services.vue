@@ -87,7 +87,8 @@
                     {name:"Служебная сотовая связь", img:"sim_add.png", route:"/ph001"},
                     //{name:"Установка программного обеспечения", img:"soft.png", lnk:"../../it-uslugi/uslugi/sf-001.php"},
                     {name:"Установка программного обеспечения", img:"soft.png", route:"/sf001"},
-                    {name:"Отключение доступов", img:"user_del.png", lnk:"../../it-uslugi/uslugi/ar-001.php"}                    
+                    //{name:"Отключение доступов", img:"user_del.png", lnk:"../../it-uslugi/uslugi/ar-001.php"},
+                    {name:"Отключение доступов", img:"user_del.png", route:"/ar001"}                    
                 ]
                 },
             {

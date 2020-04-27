@@ -6,6 +6,7 @@ export const bus = new Vue()
 import 'babel-polyfill'
 import vuetify from './plugins/vuetify';
 
+
 Vue.config.productionTip = true
 
 new Vue({
