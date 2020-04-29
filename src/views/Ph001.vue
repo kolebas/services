@@ -165,6 +165,10 @@ import axios from 'axios';
         btnToMyreq(){
             document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
         },
+        //Взаимодействие с диалогом
+        funcDialog(){
+            this.$router.go(-1);
+        }
     }
 }    
 </script>
