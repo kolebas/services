@@ -183,38 +183,18 @@ import axios from 'axios';
             if (this.cmnt ) {
                 var formData = new FormData();
                 formData.append('file', this.file);
-                formData.append("cmnt", this.cmnt);
-                console.log(formData);                
+                formData.append('cmnt', this.cmnt);                
                 axios({
                     method: 'post',
-                    formData,
                     headers: { 'Content-Type': 'multipart/form-data'},
                     url: 'https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms001.php',
                     auth:{
                         username: "admin",
                         password: "Htdjk.wbz17"
                     },
-                    data: formData,
-                })
-                /*axios.post('https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms001.php',
-                    formData,
-                    {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    auth:{
-                        username: "admin",
-                        password: "Htdjk.wbz17"
-                    }
-                }
-                ).then(function(data){
-                console.log(data.data);
-                })
-                .catch(function(){
-                console.log('FAILURE!!');
-                });*/
+                    data: formData,                    
+                })                
                 .then(function (response) {
-                    console.log(formData);
                     console.log(response);
                 })
                 .catch(function (error) {
@@ -239,7 +219,6 @@ import axios from 'axios';
         },
         onFileUpload: function(){
            this.file = this.$refs.file.files[0];
-            console.log(this.file);
         },        
         //Действие кнопки "назад"
         formCancl: function(){
