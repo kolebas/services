@@ -36,6 +36,21 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "services" */ '../views/Sf001.vue')
   },
   {
+    path: '/ms001',
+    name: 'Ms001',
+    component: () => import(/* webpackChunkName: "services" */ '../views/Ms001.vue')
+  },
+  {
+    path: '/ms002',
+    name: 'Ms002',
+    component: () => import(/* webpackChunkName: "services" */ '../views/Ms002.vue')
+  },
+  {
+    path: '/Ms003',
+    name: 'Ms003',
+    component: () => import(/* webpackChunkName: "services" */ '../views/Ms003.vue')
+  },
+  {
     path: '/test',
     name: 'Test',
     component: () => import(/* webpackChunkName: "services" */ '../views/Test.vue')
