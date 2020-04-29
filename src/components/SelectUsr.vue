@@ -15,11 +15,27 @@
                     dense
                     chips
                     deletable-chips
+                    cache-items
+                    autofocus
                     label="Начните набирать фамилию или имя сотрудника"
-                    :item-text="users => users.LAST_NAME + ' ' + users.NAME"
-                    :item-value="users => users.ID"
+                    item-text="NAME"
+                    item-value="ID"
                     :error-messages="userId_err"                      
                     > 
+                        <!--<template v-slot:selection="data">
+                            <v-chip
+                                v-bind="data.attrs"
+                                :input-value="data.selected"
+                                close
+                                @click="data.selectd"
+                                @click:close="remove(data.item)"
+                            >
+                            <v-avatar left>
+                                <v-img :src="data.item.avatar"></v-img>
+                            </v-avatar>
+                                {{ item.text }}
+                            </v-chip>
+                        </template>-->
                     </v-autocomplete>
         </v-col>
     </v-row>
