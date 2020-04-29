@@ -123,9 +123,8 @@
                         Файл:
                     </v-card-text>
                 </v-col>
-                <v-col cols="6">
-                    <input type="file" id="file" ref="file" @change="onFileUpload()" />
-                    <v-file-input v-model="file" @change="onFileUpload1()" chips outlined solo dense label="Выберите файлы"></v-file-input>
+                <v-col cols="6">                    
+                    <input type="file" id="file" ref="file" @change="onFileUpload()" />                    
                 </v-col>
             </v-row>            
             <hr/>
@@ -169,8 +168,8 @@ import axios from 'axios';
             agro_err: '',
             hyst: '',
             hyst_err: '',
-            cmnt: '',
-            file: []
+            cmnt: '123456',
+            file: ''
     }),
     created(){
             bus.$on('SelectUsr', data=>{
@@ -179,35 +178,49 @@ import axios from 'axios';
         },
     methods: {
         //Отправка формы
-        formSend: function(){            
+        formSend(){            
             //Проверка полей тип
             if (this.cmnt ) {
-                /*var formData = new FormData();
+                var formData = new FormData();
                 formData.append('file', this.file);
-                formData.append('cmnt', this.cmnt);*/
+                formData.append("cmnt", this.cmnt);
+                console.log(formData);                
                 axios({
                     method: 'post',
-                    withCredentials: true,
-                   //formData,
+                    formData,
                     headers: { 'Content-Type': 'multipart/form-data'},
                     url: 'https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms001.php',
                     auth:{
                         username: "admin",
                         password: "Htdjk.wbz17"
                     },
-                    data: {
-                        //userId: this.userId,
-                        file: this.file,
-                        cmnt: this.cmnt
-                    }
+                    data: formData,
                 })
+                /*axios.post('https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms001.php',
+                    formData,
+                    {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    auth:{
+                        username: "admin",
+                        password: "Htdjk.wbz17"
+                    }
+                }
+                ).then(function(data){
+                console.log(data.data);
+                })
+                .catch(function(){
+                console.log('FAILURE!!');
+                });*/
                 .then(function (response) {
+                    console.log(formData);
                     console.log(response);
                 })
                 .catch(function (error) {
                     console.log(error);
                 });		
-                this.dialog = true;
+                this.dialog = false;
                 this.loading = false;
                 this.warnMessage = 'Ваша заявка успешно отправлена';
                 
@@ -225,10 +238,9 @@ import axios from 'axios';
             }
         },
         onFileUpload: function(){
-           // this.file = this.$refs.file.files[0];
+           this.file = this.$refs.file.files[0];
             console.log(this.file);
-
-        },
+        },        
         //Действие кнопки "назад"
         formCancl: function(){
             this.$router.go(-1);
