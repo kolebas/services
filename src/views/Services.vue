@@ -137,9 +137,9 @@ import axios from 'axios';
                 status: "dev",
                 img: "mon.png",
                 items: [
-                    {name:"Корректировка данных в путевых листах 1С", img:"mon_corr.png", route:"/ms-001"},
-                    {name:"Предоставление доступа к программам мониторинга", img:"mon_accs.png", route:"/ms-002"}, 
-                    {name:"Заявка о неисправности телематического оборудования", img:"mon_brkn.png", route:"/ms-003"}                        
+                    {name:"Корректировка данных в путевых листах 1С", img:"mon_corr.png", route:"/ms001"},
+                    {name:"Предоставление доступа к программам мониторинга", img:"mon_accs.png", route:"/ms002"}, 
+                    {name:"Заявка о неисправности телематического оборудования", img:"mon_brkn.png", route:"/ms003"}                        
                 ]
                 }    
             ],
@@ -175,7 +175,7 @@ import axios from 'axios';
     computed: {
     condition() {
       this.usrid;
-      return this.usrid == 1 || this.usrid == 2318 || this.usrid == 2416 || this.usrid == 2385;
+      return this.usrid == 1 || this.usrid == 2318 || this.usrid == 2416 || this.usrid == 2385 || this.usrid == 3371 || this.usrid == 1940;
     }
   }
   }
