@@ -73,29 +73,7 @@
             color="grey lighten-4"            
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
-            <v-row class="mb-n6">
-                <v-col cols="4">
-                    <v-card-text class="subtitle-1 text-right pt-2">
-                        ФИО сотрудника:
-                    </v-card-text>                
-                </v-col>
-                <v-col cols="6">
-                    <v-autocomplete
-                            :items="users"
-                            v-model="userId"
-                            outlined
-                            solo
-                            dense
-                            chips
-                            deletable-chips
-                            label="Начните набирать фамилию или имя сотрудника"
-                            :item-text="users => users.LAST_NAME + ' ' + users.NAME"
-                            :item-value="users => users.ID"
-                            :error-messages="userId_err"                      
-                            > 
-                            </v-autocomplete>
-                </v-col>
-            </v-row>                  
+            <SelectUsr :userId_err="userId_err"></SelectUsr>                    
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -144,11 +122,14 @@
 </template>
 
 <script>
+import { bus } from '../main.js';
 import RqCardTitle from '../components/RqCardTitle';
+import SelectUsr from '../components/SelectUsr';
 import axios from 'axios';
     export default{
         components: {
-            RqCardTitle
+            RqCardTitle,
+            SelectUsr
         },
         data:() => ({
             title: "Удаленный доступ (VPN)",
@@ -166,6 +147,11 @@ import axios from 'axios';
             userId_err: '',
             type_err: ''
     }),
+    created(){
+            bus.$on('SelectUsr', data=>{
+                this.userId = data;
+            });
+        },
     methods: {
         //Показ предупреждения о Консультанте
         showCmpModal: function(){

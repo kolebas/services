@@ -45,29 +45,7 @@
                 <p class="subtitle-1 font-weight-medium mx-8">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
                 <hr/>
             </v-card-text>
-            <v-row class="mb-n6">
-                <v-col cols="4">
-                    <v-card-text class="subtitle-1 text-right pt-2">
-                        ФИО сотрудника:
-                    </v-card-text>                
-                </v-col>
-                <v-col cols="6">
-                    <v-autocomplete
-                            :items="users"
-                            v-model="userId"
-                            outlined
-                            solo
-                            dense
-                            chips
-                            deletable-chips
-                            label="Начните набирать фамилию или имя сотрудника"
-                            :item-text="users => users.LAST_NAME + ' ' + users.NAME"
-                            :item-value="users => users.ID"
-                            :error-messages="userId_err"                      
-                            > 
-                            </v-autocomplete>
-                </v-col>
-            </v-row>                  
+            <SelectUsr :userId_err="userId_err"></SelectUsr>                 
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -116,11 +94,12 @@
 </template>
 
 <script>
-//import UsrSelect from '../components/UsrSelect';
+import { bus } from '../main.js';
+import SelectUsr from '../components/SelectUsr';
 import axios from 'axios';
     export default{
         components: {
-            //UsrSelect
+            SelectUsr
         },
         data:() => ({
             title: "Заявка на приобретение техники/программного обеспечения",
@@ -135,6 +114,11 @@ import axios from 'axios';
             userId_err: '',
             type_err: ''
     }),
+    created(){
+            bus.$on('SelectUsr', data=>{
+                this.userId = data;
+            });
+        },
     methods: {
         //Отправка формы
         formSend: function(){            
