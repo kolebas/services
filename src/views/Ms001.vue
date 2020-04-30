@@ -104,7 +104,7 @@
                     </v-card-text>
                 </v-col>
                 <v-col cols="2">
-                    <v-text-field v-model="agro" outlined solo dense suffix="Га" :error-messages="agro_err"></v-text-field>
+                    <v-text-field v-model="hyst" outlined solo dense suffix="Га" :error-messages="hyst_err"></v-text-field>
                 </v-col>
             </v-row>
             <v-row class="mb-n6">
@@ -123,8 +123,8 @@
                         Файл:
                     </v-card-text>
                 </v-col>
-                <v-col cols="6">                    
-                    <input type="file" id="file" ref="file" @change="onFileUpload()" />                    
+                <v-col cols="6"> 
+                    <v-file-input type="file" v-model="file" label="Выберите файл" outlined solo dense ref="file"></v-file-input>                  
                 </v-col>
             </v-row>            
             <hr/>
@@ -157,7 +157,7 @@ import axios from 'axios';
             warnMessage: '',
             items_type: ['Предоставить новый номер', 'Перевод личного номера на корпоративный контракт'],
             dialog: false,
-            userId: '',
+            userId: '1',
             org: [],
             org_err: '',
             list: '',
@@ -168,8 +168,8 @@ import axios from 'axios';
             agro_err: '',
             hyst: '',
             hyst_err: '',
-            cmnt: '123456',
-            file: ''
+            cmnt: '',
+            file: []
     }),
     created(){
             bus.$on('SelectUsr', data=>{
@@ -183,6 +183,12 @@ import axios from 'axios';
             if (this.cmnt ) {
                 var formData = new FormData();
                 formData.append('file', this.file);
+                formData.append('userId', this.userId);
+                formData.append('org', this.org); 
+                formData.append('list', this.list); 
+                formData.append('area', this.area); 
+                formData.append('agro', this.agro);
+                formData.append('hyst', this.hyst); 
                 formData.append('cmnt', this.cmnt);                
                 axios({
                     method: 'post',
@@ -196,11 +202,12 @@ import axios from 'axios';
                 })                
                 .then(function (response) {
                     console.log(response);
+                    this.dialog = true;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });		
-                this.dialog = false;
+                
                 this.loading = false;
                 this.warnMessage = 'Ваша заявка успешно отправлена';
                 
@@ -217,9 +224,10 @@ import axios from 'axios';
                 }
             }
         },
-        onFileUpload: function(){
-           this.file = this.$refs.file.files[0];
-        },        
+        /*onFileUpload: function(){
+           //this.file = this.$refs.file.files[0];
+           console.log(this.file);
+        }, */       
         //Действие кнопки "назад"
         formCancl: function(){
             this.$router.go(-1);
