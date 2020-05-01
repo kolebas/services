@@ -50,8 +50,7 @@
         <v-col cols="6">
             <v-autocomplete
                     :items="org"
-                    @change="selectUsr()"
-                    v-model="userId"
+                    v-model="org_name"
                     outlined
                     solo
                     dense
@@ -59,9 +58,9 @@
                     deletable-chips
                     cache-items
                     autofocus
-                    label="Начните набирать фамилию или имя сотрудника"
+                    label="Начните набирать название организации"
                     item-text="NAME"
-                    item-value="ID"
+                    item-value="NAME"
                     :error-messages="org_err"                      
                     >
                     </v-autocomplete>
@@ -124,7 +123,7 @@
                     </v-card-text>
                 </v-col>
                 <v-col cols="6"> 
-                    <v-file-input type="file" v-model="file" label="Выберите файл" outlined solo dense ref="file"></v-file-input>                  
+                    <v-file-input type="file" v-model="file" label="Выберите файл или файлы" chips outlined solo multiple dense ref="file" prepend-icon=""></v-file-input>                  
                 </v-col>
             </v-row>            
             <hr/>
@@ -144,7 +143,7 @@
 </template>
 
 <script>
-import { bus } from '../main.js';
+
 import RqCardTitle from '../components/RqCardTitle';
 import axios from 'axios';
     export default{
@@ -155,10 +154,9 @@ import axios from 'axios';
             title: "Корректировка данных в путевых листах 1С",
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
             warnMessage: '',
-            items_type: ['Предоставить новый номер', 'Перевод личного номера на корпоративный контракт'],
             dialog: false,
-            userId: '1',
             org: [],
+            org_name: '',
             org_err: '',
             list: '',
             list_err: '',
@@ -171,20 +169,22 @@ import axios from 'axios';
             cmnt: '',
             file: []
     }),
-    created(){
-            bus.$on('SelectUsr', data=>{
-                this.userId = data;
-            });
-        },
+    mounted() {
+         axios
+             .get('./ajax/ajax_ms001.php', {
+                })
+                .then(response => (this.org = response.data))        
+    },
     methods: {
         //Отправка формы
-        formSend(){            
-            //Проверка полей тип
-            if (this.cmnt ) {
+        formSend(){
+            if (this.org_name && this.list && this.area && this.hyst && this.agro) {
                 var formData = new FormData();
-                formData.append('file', this.file);
-                formData.append('userId', this.userId);
-                formData.append('org', this.org); 
+                    for( var i = 0; i < this.file.length; i++ ){
+                        let file = this.file[i];
+                        formData.append('file[' + i + ']', file);
+                    }
+                formData.append('org', this.org_name); 
                 formData.append('list', this.list); 
                 formData.append('area', this.area); 
                 formData.append('agro', this.agro);
@@ -192,42 +192,39 @@ import axios from 'axios';
                 formData.append('cmnt', this.cmnt);                
                 axios({
                     method: 'post',
+                    withCredentials: true,
                     headers: { 'Content-Type': 'multipart/form-data'},
-                    url: 'https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms001.php',
-                    auth:{
-                        username: "admin",
-                        password: "Htdjk.wbz17"
-                    },
+                    url: './ajax/ajax_ms001.php',
                     data: formData,                    
                 })                
                 .then(function (response) {
                     console.log(response);
-                    this.dialog = true;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });		
                 
+                this.dialog = true;
                 this.loading = false;
                 this.warnMessage = 'Ваша заявка успешно отправлена';
                 
                 }
-            if (!this.userId) {
-                this.userId_err = 'Необходимо выбрать сотрудника'
+            if (!this.org_name) {               
+                this.org_err = 'Необходимо выбрать организацию'
             }
-            if (!this.type) {               
-                this.type_err = 'Необходимо выбрать тип устройства'
+            if (!this.list) {               
+                this.list_err = 'Необходимо указать номер и дату путевого листа'
             }
-            if (this.type == 'Перевод личного номера на корпоративный контракт'){
-                if(!this.telNumber){
-                    this.telNumberErr = 'Необходимо указать телефонный номер'
-                }
+            if (!this.area) {               
+                this.area_err = 'Необходимо указать номер поля или участка'
             }
-        },
-        /*onFileUpload: function(){
-           //this.file = this.$refs.file.files[0];
-           console.log(this.file);
-        }, */       
+            if (!this.agro) {               
+                this.agro_err = 'Необходимо указать выработку'
+            }
+            if (!this.hyst) {               
+                this.hyst_err = 'Необходимо указать выработку'
+            }
+        },       
         //Действие кнопки "назад"
         formCancl: function(){
             this.$router.go(-1);

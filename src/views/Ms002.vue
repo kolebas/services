@@ -121,16 +121,16 @@ import axios from 'axios';
         //Отправка формы
         formSend: function(){            
             //Проверка полей тип
-            if (this.userId && this.type && this.type != 'Перевод личного номера на корпоративный контракт'  || this.userId && this.type && this.telNumber ) {
+            if (this.userId && this.soft) {
                 axios({
                     method: 'post',
                     withCredentials: true,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                    url: './ajax/ajax_ph001.php',
+                    url: './ajax/ajax_ms002.php',
                     data: {
                         userId: this.userId,
-                        type: this.type,
-                        telnumber: this.telNumber
+                        soft: this.soft,
+                        cmnt: this.cmnt
                     }
                 })
                 .then(function (response) {
@@ -147,13 +147,8 @@ import axios from 'axios';
             if (!this.userId) {
                 this.userId_err = 'Необходимо выбрать сотрудника'
             }
-            if (!this.type) {               
-                this.type_err = 'Необходимо выбрать тип устройства'
-            }
-            if (this.type == 'Перевод личного номера на корпоративный контракт'){
-                if(!this.telNumber){
-                    this.telNumberErr = 'Необходимо указать телефонный номер'
-                }
+            if (!this.soft) {               
+                this.soft_err = 'Необходимо выбрать программное обеспечение'
             }
         },
         //Действие кнопки "назад"
