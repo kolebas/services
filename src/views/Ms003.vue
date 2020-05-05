@@ -35,12 +35,13 @@
     </div>
     <v-row>
         <v-card
-            max-width="55%"
+            max-width="65%"
             raised
             class="mx-auto"
             color="grey lighten-4"            
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <hr/>
             <SelectUsr :userId_err="userId_err"></SelectUsr>                  
             <v-row class="mb-n6">
                 <v-col cols="4">
@@ -155,10 +156,6 @@ import axios from 'axios';
         //Действие кнопки "назад"
         formCancl: function(){
             this.$router.go(-1);
-        },
-        //Действие кнопки "Мои заявки"
-        btnToMyreq(){
-            document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
         },
         //Взаимодействие с диалогом
         funcDialog(){

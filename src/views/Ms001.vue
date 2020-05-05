@@ -35,37 +35,38 @@
     </div>
     <v-row>
         <v-card
-            max-width="55%"
+            max-width="65%"
             raised
             class="mx-auto"
             color="grey lighten-4"            
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <hr/>
             <v-row class="mb-n6">
-        <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2">
-                Организация:
-            </v-card-text>                
-        </v-col>
-        <v-col cols="6">
-            <v-autocomplete
-                    :items="org"
-                    v-model="org_name"
-                    outlined
-                    solo
-                    dense
-                    chips
-                    deletable-chips
-                    cache-items
-                    autofocus
-                    label="Начните набирать название организации"
-                    item-text="NAME"
-                    item-value="NAME"
-                    :error-messages="org_err"                      
-                    >
-                    </v-autocomplete>
-        </v-col>
-    </v-row>                  
+                <v-col cols="5">
+                    <v-card-text class="subtitle-1 text-right pt-2">
+                        Организация:
+                    </v-card-text>                
+                </v-col>
+                <v-col cols="6">
+                    <v-autocomplete
+                            :items="org"
+                            v-model="org_name"
+                            outlined
+                            solo
+                            dense
+                            chips
+                            deletable-chips
+                            cache-items
+                            autofocus
+                            label="Начните набирать название организации"
+                            item-text="NAME"
+                            item-value="NAME"
+                            :error-messages="org_err"                      
+                            >
+                            </v-autocomplete>
+                </v-col>
+            </v-row>                  
             <v-row class="mb-n6">
                 <v-col cols="5">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -178,7 +179,7 @@ import axios from 'axios';
     methods: {
         //Отправка формы
         formSend(){
-            if (this.org_name && this.list && this.area && this.hyst && this.agro) {
+            if (this.org_name && this.list && this.area && this.hyst && this.agro && this.cmnt) {
                 var formData = new FormData();
                     for( var i = 0; i < this.file.length; i++ ){
                         let file = this.file[i];
