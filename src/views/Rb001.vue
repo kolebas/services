@@ -40,11 +40,8 @@
             class="mx-auto"
             color="grey lighten-4"            
             >
-            <v-card-text class="pa-0">
-                <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-                <p class="subtitle-1 font-weight-medium mx-8">{{ sub_message }} <v-btn @click="btnToMyreq()" color="green lighten-2 white--text" small><v-icon left dark>mdi-format-list-bulleted</v-icon>Мои заявки</v-btn></p>
-                <hr/>
-            </v-card-text>
+            <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <hr/>
             <SelectUsr :userId_err="userId_err"></SelectUsr>                 
             <v-row class="mb-n6">
                 <v-col cols="4">
@@ -95,10 +92,12 @@
 
 <script>
 import { bus } from '../main.js';
+import RqCardTitle from '../components/RqCardTitle';
 import SelectUsr from '../components/SelectUsr';
 import axios from 'axios';
     export default{
         components: {
+            RqCardTitle,
             SelectUsr
         },
         data:() => ({

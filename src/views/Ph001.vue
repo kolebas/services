@@ -41,6 +41,7 @@
             color="grey lighten-4"            
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <hr/>
             <SelectUsr :userId_err="userId_err"></SelectUsr>                  
             <v-row class="mb-n6">
                 <v-col cols="4">
