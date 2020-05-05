@@ -139,19 +139,13 @@ import axios from 'axios';
                 items: [
                     {name:"Корректировка данных в путевых листах 1С", img:"mon_corr.png", route:"/ms001"},
                     {name:"Предоставление доступа к программам мониторинга", img:"mon_accs.png", route:"/ms002"}, 
-                    {name:"Заявка о неисправности телематического оборудования", img:"mon_brkn.png", route:"/ms003"}                        
+                    {name:"Заявка о неисправности телематического оборудования", img:"mon_brkn.png", route:"/ms003"},
+                    {name:"Добавление основного средства в папку «Техника для выработки»", img:"ms004.png", route:"/ms004"}                         
                 ]
                 }    
             ],
-      accordion: false,
-      popout: false,
       inset: true,
-      multiple: false,
-      disabled: false,
-      readonly: false,
       focusable: true,
-      flat: false,
-      hover: false,
       tile: true,
     }),
     methods: {
