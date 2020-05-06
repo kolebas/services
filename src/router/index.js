@@ -54,6 +54,11 @@ Vue.use(VueRouter)
     path: '/Ms004',
     name: 'Ms004',
     component: () => import(/* webpackChunkName: "services" */ '../views/Ms004.vue')
+  },
+  {
+    path: '/Inc',
+    name: 'Inc',
+    component: () => import(/* webpackChunkName: "services" */ '../views/Inc.vue')
   }
 ]
 
