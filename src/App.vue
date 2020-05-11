@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div color="green">
-      <v-breadcrumbs :items="items">
+      <v-breadcrumbs class="mt-0" :items="items">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
           :href="item.href"
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-//import Buttons from './components/Buttons'
 export default {
   name: 'App',
 
@@ -46,9 +45,12 @@ export default {
 </script>
 
 <style>
-body {
+  body{
 		overflow: unset!important;
 	}
+  #uiToolbarContainer{
+    display: none;
+  }
   .v-breadcrumbs{
     background: #f5f5f5;
     margin-left: 1%!important;

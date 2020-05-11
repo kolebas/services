@@ -1,37 +1,7 @@
 <template>
 <v-container>
     <div class="text-center">
-        <v-dialog
-        v-model="dialog"
-        width="500"
-        persistent
-        >
-        <v-card>
-            <v-card-title
-            class="headline grey lighten-2"
-            primary-title
-            >
-            Статус
-            </v-card-title>
-
-            <v-card-text class="subtitle-1 text-center mt-4">
-                {{ warnMessage }}            
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                color="primary"
-                text
-                @click="funcDialog()"
-            >
-                Понятно
-            </v-btn>
-            </v-card-actions>
-        </v-card>
-        </v-dialog>        
+        <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage"/>        
     </div>
     <v-row>
         <v-card
@@ -42,7 +12,12 @@
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
             <hr/>
-            <SelectUsr :userId_err="userId_err"></SelectUsr>                  
+            <SelectUsr
+                    cols_title='4'
+                    cols_input='6'
+                    title='ФИО:'
+                    :userId_err="userId_err"                    
+                />                   
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2" >
@@ -50,7 +25,7 @@
                     </v-card-text>                        
                 </v-col>
                 <v-col cols="6">
-                    <v-text-field v-model="agro" outlined solo dense :error-messages="agro_err" hint="Номер регистрационного знака техники с несиправным оборудованием" label="Например: 54-32 УА 161"></v-text-field>
+                    <v-text-field v-model="nmbr" outlined solo dense :error-messages="nmbr_err" hint="Номер регистрационного знака техники с несиправным оборудованием" label="Например: 54-32 УА 161"></v-text-field>
                 </v-col>                  
             </v-row>
             <v-row class="mb-n6">
@@ -60,7 +35,7 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" outlined solo :error-messages="cmnt_err" label="Для указания дополнительной информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>
             <v-row class="mb-n6">
@@ -69,14 +44,14 @@
                         Файл:
                     </v-card-text>
                 </v-col>
-                <v-col cols="6">
-                    <v-file-input v-model="file" chips outlined solo dense label="Выберите файлы"></v-file-input>
+                <v-col cols="6" class="mb-2">
+                    <InputFileCard />
                 </v-col>
             </v-row>           
             <hr/>
             <v-card-actions class="py-4">
                 <div class="mx-auto">
-                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="formSend()">
+                    <v-btn class="mx-1" :loading="btnLoader" color="green lighten-2 white--text" @click="formSend()">
                         Отправить
                     </v-btn>
                     <v-btn class="mx-1" @click="formCancl()">
@@ -91,27 +66,39 @@
 
 <script>
 import { bus } from '../main.js';
+import DialogAfterSendForm from '../components/DialogAfterSendForm.vue';
 import RqCardTitle from '../components/RqCardTitle';
 import SelectUsr from '../components/SelectUsr';
+import InputFileCard from '../components/InputFileCard';
 import axios from 'axios';
     export default{
         components: {
+            DialogAfterSendForm,
             RqCardTitle,
-            SelectUsr
+            SelectUsr,
+            InputFileCard
         },
         data:() => ({
             title: "Заявка о неисправности телематического оборудования",
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
-            warnMessage: '',
             dialog: false,
+            dialogMessage: '',
             users: [],
             userId: '',
             userId_err: '',
-            cmnt: ''
+            nmbr: '',
+            nmbr_err: '',
+            cmnt: '',
+            cmnt_err: '',
+            file: [],
+            btnLoader: false
     }),
     created(){
             bus.$on('SelectUsr', data=>{
                 this.userId = data;
+            });
+            bus.$on('inputFile', data=>{
+                this.file = data;               
             });
         },
     methods: {
@@ -119,6 +106,7 @@ import axios from 'axios';
         formSend: function(){            
             //Проверка полей тип
             if (this.userId && this.type && this.type != 'Перевод личного номера на корпоративный контракт'  || this.userId && this.type && this.telNumber ) {
+                this.btnLoader = true
                 axios({
                     method: 'post',
                     withCredentials: true,
@@ -130,16 +118,18 @@ import axios from 'axios';
                         telnumber: this.telNumber
                     }
                 })
-                .then(function (response) {
-                    console.log(response);
+                .then(response => {
+                    if(response.status == 200){
+                        this.dialog = true
+                        this.dialogMessage = 'Успешно. Номер вашей заявки: ' + response.data
+                        this.btnLoader = false;
+                    }                    
                 })
-                .catch(function (error) {
+                .catch(error => {
                     console.log(error);
-                });		
-                this.dialog = true;
-                this.loading = false;
-                this.warnMessage = 'Ваша заявка успешно отправлена';
-                
+                    this.dialog = true
+                    this.dialogMessage = 'Произошла ошибка'
+                });                
                 }
             if (!this.userId) {
                 this.userId_err = 'Необходимо выбрать сотрудника'

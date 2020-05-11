@@ -1,19 +1,21 @@
 <template>
         <v-row class='mb-n6'>
-            <v-col cols='5'>
+            <v-col :cols='cols_title'>
                 <v-card-text class='subtitle-1 text-right pt-2'>
                     {{ title }}
                 </v-card-text>                        
             </v-col>
-            <v-col cols='6'>
+            <v-col :cols='cols_input'>
                 <v-text-field 
                     v-model='value.value' 
                     outlined 
                     solo 
                     dense
-                    :id='id'
-                    :error-messages='input_err' 
-                    :label='label' 
+                    :id='id'                     
+                    :label='label'
+                    :suffix='suffix'
+                    :append-icon='icon_in_rt' 
+                    :error-messages='input_err'
                     @change='inputCard'
                 ></v-text-field>
             </v-col>                    
@@ -27,7 +29,11 @@ export default {
         id: {type: String},
         title: {type: String},
         label: {type: String},
-        input_err: {type: String}
+        suffix: {type: String},
+        icon_in_rt: {type: String},
+        input_err: {type: String},
+        cols_title: {type: String},
+        cols_input: {type: String},
     },
     data:() => ({
         value: {

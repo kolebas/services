@@ -11,6 +11,11 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "services" */ '../views/Services.vue')
   },
   {
+    path: '/nu001',
+    name: 'Nu001',
+    component: () => import(/* webpackChunkName: "services" */ '../views/Nu001.vue')
+  },
+  {
     path: '/ns001',
     name: 'Ns001',
     component: () => import(/* webpackChunkName: "services" */ '../views/Ns001.vue')

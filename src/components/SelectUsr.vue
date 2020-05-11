@@ -1,11 +1,11 @@
 <template>
     <v-row class="mb-n6">
-        <v-col cols="4">
+        <v-col :cols="cols_title">
             <v-card-text class="subtitle-1 text-right pt-2">
-                ФИО сотрудника:
+                {{ title }}
             </v-card-text>                
         </v-col>
-        <v-col cols="6">
+        <v-col :cols="cols_input">
             <v-autocomplete
                     :items="users"
                     @change="selectUsr()"
@@ -22,20 +22,14 @@
                     item-value="ID"
                     :error-messages="userId_err"                      
                     > 
-                        <!--<template v-slot:selection="data">
-                            <v-chip
-                                v-bind="data.attrs"
-                                :input-value="data.selected"
-                                close
-                                @click="data.selectd"
-                                @click:close="remove(data.item)"
-                            >
-                            <v-avatar left>
-                                <v-img :src="data.item.avatar"></v-img>
-                            </v-avatar>
-                                {{ item.text }}
-                            </v-chip>
-                        </template>-->
+                        <template v-slot:selection="data">
+                                <v-chip
+                                    label
+                                ><v-avatar left>
+                                    <v-icon>mdi-account-circle</v-icon>
+                                  </v-avatar>{{ data.item.NAME }}
+                                </v-chip>
+                            </template>
                     </v-autocomplete>
         </v-col>
     </v-row>
@@ -46,9 +40,10 @@ import { bus } from '../main.js';
 import axios from 'axios';
 export default {
     props: {
-        userId_err: {
-            type: String
-        }
+        title: {type: String},
+        userId_err: {type: String},                
+        cols_title: {type: Number},
+        cols_input: {type: Number}
     },
     data: () => ({
         users: [],
@@ -65,6 +60,7 @@ export default {
     mounted() {
          axios
              .get('./ajax/ajax_user.php', {
+                 
                 })
                 .then(response => (this.users = response.data))        
     }

@@ -1,39 +1,7 @@
 <template>
-<v-container>
-    <div class="text-center">
-        <v-dialog
-        v-model="dialog"
-        width="500"
-        persistent
-        >
-        <v-card>
-            <v-card-title
-            class="headline grey lighten-2"
-            primary-title
-            >
-            Статус
-            </v-card-title>
-
-            <v-card-text class="subtitle-1 text-center mt-4">
-                {{ warnMessage }}            
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                color="primary"
-                text
-                @click="funcDialog()"
-            >
-                Понятно
-            </v-btn>
-            </v-card-actions>
-        </v-card>
-        </v-dialog>        
-    </div>
+<v-container>        
     <v-row>
+        <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage"/>
         <v-card
             max-width="55%"
             raised
@@ -42,7 +10,12 @@
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
             <hr/>
-            <SelectUsr :userId_err="userId_err"></SelectUsr>
+            <SelectUsr
+                    cols_title='4'
+                    cols_input='6'
+                    title='ФИО:'
+                    :userId_err="userId_err"                    
+                />
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2">
@@ -93,7 +66,7 @@
             <hr/>
             <v-card-actions class="py-4">
                 <div class="mx-auto">
-                    <v-btn class="mx-1" color="green lighten-2 white--text" @click="formSend()">
+                    <v-btn class="mx-1" :loading="btnLoader" color="green lighten-2 white--text" @click="formSend()">
                         Отправить
                     </v-btn>
                     <v-btn class="mx-1" @click="formCancl()">
@@ -108,19 +81,21 @@
 
 <script>
 import { bus } from '../main.js';
+import DialogAfterSendForm from '../components/DialogAfterSendForm.vue';
 import RqCardTitle from '../components/RqCardTitle';
 import SelectUsr from '../components/SelectUsr.vue';
 import axios from 'axios';
 
     export default{
         components: {
+            DialogAfterSendForm,
             RqCardTitle,
             SelectUsr
         },
         data:() => ({            
             title: "Отключение пользователя от информационных систем",
             sub_message: "Заявка в обязательном порядке согласуется сотрудниками департамента управления персоналом. Статус созданной заявки вы моежете отслеживать в разделе ",
-            warnMessage: '',
+            dialogMessage: '',
             items_type: ['Служебный компьютер', 'Личный компьютер', 'Мобильное устройство'],
             dialog: false,
             users: [],
@@ -129,7 +104,8 @@ import axios from 'axios';
             ar_date: '',
             ar_date_err: '',
             menu: '',
-            cmnt: ''
+            cmnt: '',
+            btnLoader: false
     }),
     created(){
             bus.$on('SelectUsr', data=>{
@@ -141,6 +117,7 @@ import axios from 'axios';
         formSend: function(){          
             //Проверка полей тип
             if (this.userId && this.ar_date) {
+                this.btnLoader = true
                 axios({
                     method: 'post',
                     withCredentials: true,
@@ -152,16 +129,18 @@ import axios from 'axios';
                         cmnt: this.cmnt
                     }
                 })
-                .then(function (response) {
-                    console.log(response);
+                .then(response => {
+                    if(response.status == 200){
+                        this.dialog = true
+                        this.dialogMessage = 'Успешно. Номер вашей заявки: ' + response.data
+                        this.btnLoader = false;
+                    }                    
                 })
-                .catch(function (error) {
+                .catch(error => {
                     console.log(error);
-                });		
-                this.dialog = true;
-                this.loading = false;
-                this.warnMessage = 'Ваша заявка успешно отправлена';
-                
+                    this.dialog = true
+                    this.dialogMessage = 'Произошла ошибка'
+                });                
                 }
             if (!this.userId) {
                 this.userId_err = 'Необходимо выбрать сотрудника'
@@ -172,10 +151,6 @@ import axios from 'axios';
         },
         //Действие кнопки "назад"
         formCancl: function(){
-            this.$router.go(-1);
-        },        
-        //Взаимодействие с диалогом
-        funcDialog(){
             this.$router.go(-1);
         }
     }    
