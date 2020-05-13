@@ -189,6 +189,11 @@ export default {
             this.org_err = '';
             this.org_name = data;
         });
+    },
+    methods: {
+        formCancl: function(){
+            this.$router.go(-1);
+        },
     }
 }
 </script>

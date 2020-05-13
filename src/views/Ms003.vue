@@ -12,12 +12,11 @@
             >
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
             <hr/>
-            <SelectUsr
-                    cols_title='4'
-                    cols_input='6'
-                    title='ФИО:'
-                    :userId_err="userId_err"                    
-                />                   
+            <SelectOrg
+                :cols_title='4'
+                :cols_input='6'  
+                :org_err='org_err'
+            />                   
             <v-row class="mb-n6">
                 <v-col cols="4">
                     <v-card-text class="subtitle-1 text-right pt-2" >
@@ -68,14 +67,14 @@
 import { bus } from '../main.js';
 import DialogAfterSendForm from '../components/DialogAfterSendForm.vue';
 import RqCardTitle from '../components/RqCardTitle';
-import SelectUsr from '../components/SelectUsr';
+import SelectOrg from '../components/SelectOrg';
 import InputFileCard from '../components/InputFileCard';
 import axios from 'axios';
     export default{
         components: {
             DialogAfterSendForm,
             RqCardTitle,
-            SelectUsr,
+            SelectOrg,
             InputFileCard
         },
         data:() => ({
@@ -83,9 +82,8 @@ import axios from 'axios';
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
             dialog: false,
             dialogMessage: '',
-            users: [],
-            userId: '',
-            userId_err: '',
+            org_name: '',
+            org_err: '',
             nmbr: '',
             nmbr_err: '',
             cmnt: '',
@@ -94,8 +92,8 @@ import axios from 'axios';
             btnLoader: false
     }),
     created(){
-            bus.$on('SelectUsr', data=>{
-                this.userId = data;
+            bus.$on('SelectOrg', data=>{
+                this.org_name = data;
             });
             bus.$on('inputFile', data=>{
                 this.file = data;               
@@ -105,18 +103,28 @@ import axios from 'axios';
         //Отправка формы
         formSend: function(){            
             //Проверка полей тип
-            if (this.userId && this.type && this.type != 'Перевод личного номера на корпоративный контракт'  || this.userId && this.type && this.telNumber ) {
+            if ( this.nmbr && this.cmnt) {
                 this.btnLoader = true
+                 this.btnLoader = true;
+                var formData = new FormData();
+                    for( var i = 0; i < this.file.length; i++ ){
+                        let file = this.file[i];
+                        formData.append('file[' + i + ']', file);
+                    }
+                formData.append('org', this.org_name); 
+                formData.append('nmbr', this.nmbr); 
+                formData.append('cmnt', this.cmnt);               
                 axios({
                     method: 'post',
                     withCredentials: true,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                    url: './ajax/ajax_ph001.php',
-                    data: {
-                        userId: this.userId,
-                        type: this.type,
-                        telnumber: this.telNumber
-                    }
+                    auth: {
+                        username: 'zaikin.ni',
+                        password: 'Vbufhwbz75'
+
+                    },
+                    headers: { 'Content-Type': 'multipart/form-data'},
+                    url: 'https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms003.php',
+                    data: formData,                    
                 })
                 .then(response => {
                     if(response.status == 200){
@@ -131,24 +139,18 @@ import axios from 'axios';
                     this.dialogMessage = 'Произошла ошибка'
                 });                
                 }
-            if (!this.userId) {
-                this.userId_err = 'Необходимо выбрать сотрудника'
+            if (!this.org_name) {
+                this.org_err = 'Необходимо выбрать организацию'
             }
-            if (!this.type) {               
-                this.type_err = 'Необходимо выбрать тип устройства'
+            if (!this.nmbr) {               
+                this.nmbr_err = 'Необходимо указать номер техники'
             }
-            if (this.type == 'Перевод личного номера на корпоративный контракт'){
-                if(!this.telNumber){
-                    this.telNumberErr = 'Необходимо указать телефонный номер'
-                }
+            if (!this.cmnt) {
+                this.cmnt_err = 'Необходимо указать комментарий'
             }
         },
         //Действие кнопки "назад"
         formCancl: function(){
-            this.$router.go(-1);
-        },
-        //Взаимодействие с диалогом
-        funcDialog(){
             this.$router.go(-1);
         }
     }
