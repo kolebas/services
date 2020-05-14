@@ -24,7 +24,7 @@
                     </v-card-text>                        
                 </v-col>
                 <v-col cols="6">
-                    <v-text-field v-model="nmbr" outlined solo dense :error-messages="nmbr_err" hint="Номер регистрационного знака техники с несиправным оборудованием" label="Например: 54-32 УА 161"></v-text-field>
+                    <v-text-field v-model="nmbr" outlined solo dense @input="nmbr_err = ''" :error-messages="nmbr_err" hint="Номер регистрационного знака техники с несиправным оборудованием" label="Например: 54-32 УА 161"></v-text-field>
                 </v-col>                  
             </v-row>
             <v-row class="mb-n6">
@@ -34,7 +34,7 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea v-model="cmnt" outlined solo :error-messages="cmnt_err" label="Для указания дополнительной информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" outlined solo @input="cmnt_err = ''" :error-messages="cmnt_err" label="Для указания дополнительной информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>
             <v-row class="mb-n6">
@@ -92,8 +92,9 @@ import axios from 'axios';
             btnLoader: false
     }),
     created(){
-            bus.$on('SelectOrg', data=>{
+            bus.$on('selectOrg', data=>{
                 this.org_name = data;
+                this.org_err = '';
             });
             bus.$on('inputFile', data=>{
                 this.file = data;               
@@ -103,9 +104,9 @@ import axios from 'axios';
         //Отправка формы
         formSend: function(){            
             //Проверка полей тип
-            if ( this.nmbr && this.cmnt) {
+            if (this.org_name && this.nmbr && this.cmnt) {
                 this.btnLoader = true
-                 this.btnLoader = true;
+                this.btnLoader = true;
                 var formData = new FormData();
                     for( var i = 0; i < this.file.length; i++ ){
                         let file = this.file[i];
@@ -117,13 +118,8 @@ import axios from 'axios';
                 axios({
                     method: 'post',
                     withCredentials: true,
-                    auth: {
-                        username: 'zaikin.ni',
-                        password: 'Vbufhwbz75'
-
-                    },
                     headers: { 'Content-Type': 'multipart/form-data'},
-                    url: 'https://portal.ahstep.ru/ahstep/services/ajax/ajax_ms003.php',
+                    url: './ajax/ajax_ms003.php',
                     data: formData,                    
                 })
                 .then(response => {

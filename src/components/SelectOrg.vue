@@ -49,7 +49,6 @@ export default {
     mounted() {
          axios
              .get('./ajax/ajax_ms001.php', {
-                
                 })
                 .then(response => (this.org = response.data))
                 .catch(error => (console.log(error)))        

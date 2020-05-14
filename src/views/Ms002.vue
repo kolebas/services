@@ -26,7 +26,7 @@
                 </v-col>
                 <v-col cols="6">
                     <v-select
-                        @change="showCmpModal()"
+                        @change="soft_err=''"
                         v-model="soft"
                         :items="items_type"
                         label="Выберите необходимую опцию"
@@ -46,7 +46,7 @@
                     </v-card-text> 
                 </v-col>
                 <v-col cols="6">
-                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
+                    <v-textarea v-model="cmnt" @input="cmnt_err=''" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
                 </v-col>                   
             </v-row>          
             <hr/>
@@ -80,7 +80,7 @@ import axios from 'axios';
         data:() => ({
             title: "Доступ к программам мониторинга",
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
-            items_type: ['История поля', 'Wialon'],
+            items_type: ['История поля', 'Wialon', 'ГЕОМИКСЕР'],
             dialog: false,
             dialogMessage: '',
             users: [],
@@ -89,6 +89,7 @@ import axios from 'axios';
             soft: '',
             userId_err: '',
             cmnt: '',
+            cmnt_err: '',
             btnLoader: false
     }),
     created(){
@@ -131,6 +132,9 @@ import axios from 'axios';
             }
             if (!this.soft) {               
                 this.soft_err = 'Необходимо выбрать программное обеспечение'
+            }
+            if (!this.cmnt) {               
+                this.cmnt_err = 'Укажите обоснование'
             }
         },
         //Действие кнопки "назад"

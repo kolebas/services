@@ -45,8 +45,8 @@
             <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
             <hr/>
             <SelectUsr
-                    cols_title='4'
-                    cols_input='6'
+                    :cols_title='4'
+                    :cols_input='6'
                     title='ФИО:'
                     :userId_err="userId_err"                    
                 />                    
