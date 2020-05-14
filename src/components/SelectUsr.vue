@@ -26,7 +26,11 @@
                                 <v-chip
                                     label
                                 ><v-avatar left>
-                                    <v-icon>mdi-account-circle</v-icon>
+                                    <img 
+                                        v-if="data.item.PHOTO"
+                                        :src=data.item.PHOTO
+                                    >
+                                    <v-icon v-else>mdi-account-circle</v-icon>
                                   </v-avatar>{{ data.item.NAME }}
                                 </v-chip>
                             </template>
@@ -59,8 +63,7 @@ export default {
     //Получение списка пользователей
     mounted() {
          axios
-             .get('./ajax/ajax_user.php', {
-                 
+             .get('./ajax/ajax_user.php', {                 
                 })
                 .then(response => (this.users = response.data))        
     }
