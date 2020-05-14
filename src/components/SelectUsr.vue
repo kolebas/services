@@ -24,15 +24,35 @@
                     > 
                         <template v-slot:selection="data">
                                 <v-chip
+                                    color="#bcedfc"
                                     label
+                                    close
+                                    @click:close="userId=''"
                                 ><v-avatar left>
                                     <img 
                                         v-if="data.item.PHOTO"
                                         :src=data.item.PHOTO
                                     >
                                     <v-icon v-else>mdi-account-circle</v-icon>
-                                  </v-avatar>{{ data.item.NAME }}
+                                  </v-avatar><span color="red">{{ data.item.NAME }}</span>
                                 </v-chip>
+                            </template>
+                            <template v-slot:item="data">
+                                <template v-if="typeof data.item !== 'object'">
+                                <v-list-item-content v-text="data.item.NAME"></v-list-item-content>
+                                </template>
+                                <template v-else>
+                                <v-list-item-avatar v-if="data.item.PHOTO">
+                                    <img :src="data.item.PHOTO">
+                                </v-list-item-avatar>
+                                <v-list-item-avatar v-else color="#bcedfc">
+                                    <v-icon color="white">mdi-account-circle</v-icon>
+                                </v-list-item-avatar>
+                                <v-list-item-content>
+                                    <v-list-item-title v-html="data.item.NAME"></v-list-item-title>
+                                    <v-list-item-subtitle v-html="data.item.POSITION"></v-list-item-subtitle>
+                                </v-list-item-content>
+                                </template>
                             </template>
                     </v-autocomplete>
         </v-col>

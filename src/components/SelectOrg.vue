@@ -23,7 +23,10 @@
                             >
                             <template v-slot:selection="data">
                                 <v-chip
+                                    color="#bcedfc"
                                     label
+                                    close
+                                    @click:close="org_name=''"
                                 ><v-icon left>mdi-city</v-icon>
                                     {{ data.item.NAME }}
                                 </v-chip>
