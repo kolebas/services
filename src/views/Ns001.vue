@@ -62,13 +62,20 @@
                         v-model="type"
                         :items="items_type"
                         label="Выберите тип устройства"
-                        chips
-                        deletable-chips
                         solo
                         outlined
                         dense
                         :error-messages="type_err"
-                    ></v-select>
+                    ><template v-slot:selection="{ item }">
+                                <v-chip
+                                    color="#bcedfc"
+                                    close
+                                    label
+                                    @click:close="type=''"
+                                >{{ item }}
+                                </v-chip>
+                            </template>
+                    </v-select>
                 </v-col>                   
             </v-row>
             <v-row class="mb-n6" v-if="type == 'Служебный компьютер'">
@@ -113,7 +120,7 @@ import axios from 'axios';
             title: "Удаленный доступ (VPN)",
             sub_message: "В рамках исполнения данной заявки вам будет предоставлен доступ к программному обеспечения из предложенного списка. Статус созданной заявки вы моежете отслеживать в разделе ",
             dialogMessage: '',
-            items_type: ['Служебный компьютер', 'Личный компьютер', 'Мобильное устройство'],
+            items_type: ['Служебный компьютер','Личный компьютер','Мобильное устройство'],
             dialog: false,
             users: [],
             userId: '',
@@ -134,6 +141,7 @@ import axios from 'axios';
     methods: {
         //Показ предупреждения о Консультанте
         showCmpModal: function(){
+            this.type_err = ''; 
             if(this.type == 'Служебный компьютер'){
                 this.cmpNameModal = true;
             }            

@@ -36,7 +36,16 @@
                         outlined
                         dense
                         :error-messages="soft_err"
-                    ></v-select>
+                    ><template v-slot:selection="{ item }">
+                                <v-chip
+                                    color="#bcedfc"
+                                    close
+                                    label
+                                    @click:close="soft=''"
+                                >{{ item }}
+                                </v-chip>
+                            </template>
+                    </v-select>
                 </v-col>                   
             </v-row>
            <v-row class="mb-n6">

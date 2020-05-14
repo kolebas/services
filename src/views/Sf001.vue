@@ -62,13 +62,21 @@
                         v-model="soft"
                         :items="items_type"
                         label="Выберите необходимое ПО"
-                        chips
-                        deletable-chips
                         solo
                         outlined
                         dense
                         :error-messages="type_err"
-                    ></v-select>
+                    >
+                    <template v-slot:selection="{ item }">
+                                <v-chip
+                                    color="#bcedfc"
+                                    close
+                                    label
+                                    @click:close="soft=''"
+                                >{{ item }}
+                                </v-chip>
+                            </template>
+                    </v-select>
                 </v-col>                   
             </v-row>
             <v-row class="mb-n6">
