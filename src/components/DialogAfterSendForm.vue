@@ -35,10 +35,12 @@
 </template>
 
 <script>
+import { bus } from '@/main.js';
 export default {
     props: {
         dialog: {type: Boolean},
-        warnMessage: {type: String}
+        warnMessage: {type: String},
+        route: {type: Number}
     },
     data:() => ({
         title: 'Статус',
@@ -46,7 +48,15 @@ export default {
     }),
     methods: {
         funcDialog(){
-            this.$router.go(-1);
+            if(this.route == 1){
+                this.dialog = false;
+                bus.$emit('chngSwitch', this.dialog);
+            }
+            else{
+                console.log(this.route);
+                this.$router.go(-1);
+            }
+            
         }
     }
 }
