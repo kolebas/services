@@ -94,7 +94,7 @@ import axios from 'axios';
                 img: "1s.png",
                 items: [
                     {name:"Предоставление доступа к 1С", img:"1s.png", lnk:"../../it-uslugi/uslugi/1c-001.php"},
-                    {name:"Запрос на доработку 1С", img:"1s.png", lnk:"../../it-uslugi/uslugi/1c-002.php"}                    
+                    {name:"Запрос на доработку 1С", img:"1s.png", route:"/1c002"}                    
                 ]
                 },
             {

@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" :route="route"/> 
+        <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage"/> 
         <v-row>
             <v-card
                 width="65%"
@@ -63,10 +63,12 @@
 </template>
 
 <script>
+import { bus } from '@/main.js';
 import RqCardTitle from '@/components/RqCardTitle.vue';
 import DialogAfterSendFrom from '@/components/DialogAfterSendForm.vue';
 import Select from '@/components/Select.vue';
 import inputFileCard from '@/components/InputFileCard.vue';
+import axios from 'axios';
 export default {
     components:{
         RqCardTitle,
@@ -80,6 +82,56 @@ export default {
         btnLoader: false,
         cmnt: '',
         cmnt_err: '',
-    })
+        db: '',
+        file: []
+    }),
+    created(){
+        bus.$on('Select', data=>{
+            this.db = data;
+        })
+        bus.$on('inputFile', data=>{
+                this.file = data;               
+            })        
+    },
+    methods: {
+        formCancl: function(){
+            this.$router.go(-1);
+        },
+        formSend(){
+            this.btnLoader = true;
+            if(this.cmnt){
+                var formData = new FormData();
+                    for( var i = 0; i < this.file.length; i++ ){
+                        let file = this.file[i];
+                        formData.append('file[' + i + ']', file);
+                    }
+                    formData.append('cmnt', this.cmnt)
+                    formData.append('db', this.db)
+                axios({
+                    method: 'post',
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'multipart/form-data'},
+                    url: './ajax/ajax_1c002.php',
+                    data: formData, 
+                })
+                .then(response => {
+                    if(response.status == 200){
+                        this.dialog = true
+                        this.dialogMessage = 'Успешно. Номер вашей заявки: ' + response.data
+                        this.btnLoader = false
+                    }                    
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.dialog = true
+                    this.dialogMessage = 'Произошла ошибка'
+                    this.btnLoader = false
+                });
+            }
+            if(!this.cmnt){
+                this.cmnt_err = 'Опишите требуемую доработку'
+            }
+        }
+    }
 }
 </script>
