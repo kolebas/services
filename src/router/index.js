@@ -56,24 +56,29 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms002.vue')
   },
   {
-    path: '/Ms003',
+    path: '/ms003',
     name: 'Ms003',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms003.vue')
   },
   {
-    path: '/Ms004',
+    path: '/ms004',
     name: 'Ms004',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms004.vue')
   },
   {
-    path: '/Inc',
+    path: '/inc',
     name: 'Inc',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Inc.vue')
   },
   {
-    path: '/Hr',
+    path: '/hr',
     name: 'Hr',
     component: () => import(/* webpackChunkName: "services" */ '../views/hr/Hr.vue')
+  },
+  {
+    path: '/market',
+    name: 'Market',
+    component: () => import(/* webpackChunkName: "services" */ '../views/hr/Market.vue')
   }
 ]
 
