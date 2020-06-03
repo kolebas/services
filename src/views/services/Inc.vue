@@ -26,7 +26,7 @@
                             :label='title_inc_label'
                         ></v-text-field>
                         <v-switch v-model="switch_1c" @change="switch_mon = false" label='Проблема связана с 1С' inset class="mt-n2"></v-switch>
-                        <v-switch v-model="switch_mon" disabled @change="switch_1c = false" label='Проблема связана с мониторингом' inset class="mt-n2"></v-switch>                        
+                        <v-switch v-model="switch_mon" @change="switch_1c = false" label='Проблема связана с мониторингом' inset class="mt-n2"></v-switch>                        
                         <v-expand-transition>
                             <div v-if="switch_1c">                            
                                 <label>Выбор направления 1С:</label>

@@ -121,8 +121,8 @@ import axios from 'axios';
                 ]
                 },
             {
-                name: "Заявки в отдел мониторинга -- Development",
-                status: "dev",
+                name: "Заявки в отдел мониторинга",
+                status: "active",
                 img: "mon.png",
                 items: [
                     {name:"Корректировка данных в путевых листах 1С", img:"mon_corr.png", route:"/ms001"},

@@ -61,8 +61,8 @@
                             <v-data-table
                             :loading="loading"
                             loading-text="Загружаю данные"
-                            :headers="headers_orders"
-                            :items="item"
+                            :headers="product_name"
+                            :items="orders"
                             :search="search"
                             >
                             </v-data-table>
@@ -144,6 +144,11 @@ export default {
             {text: "Цена", value: "PRICE"}
         ],
         item: [],
+        product_name: [
+            {text: "Заказчик", value: "created_order"},
+            {text: "Дата заказа", value: "date"}
+        ],
+        orders: [],
         item_name: "",
         item_tara: "",
         items_tara: ["Уп.", "Кг."],
@@ -156,16 +161,74 @@ export default {
     mounted() {
         this.loading = true
          axios
-             .get(this.source, {
+             .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
+                 auth:{
+                     username: "zaikin.ni",
+                     password: "Vbuhfwbz75"
+                 },
                  params:{
-                    param: 857
+                    param: "get_orders"
                  }
                 })
                 .then(response => {
                     (this.item = response.data)
                     this.loading = false
+                    for(let i=0; i < this.item.length; i++ ){
+                        if(this.item[i].PRODUCT_NAME != null){
+                            this.product_name.push({
+                                text: this.item[i].PRODUCT_NAME,
+                                value: this.item[i].PRODUCT_ID
+                            })                        
+                        }
+                        if(this.item[i].ORDER_ID != null){
+                            var value = this.item[i].PRODUCT_ID
+                            this.orders.push({
+                                created_order: this.item[i].CREATED_BY,
+                                date: this.item[i].DATE,
+                                [value]: this.item[i].VALUE
+                            })
+                            console.log(value)
+                        }                            
+                    }
+                    console.log(this.item)
+                    //console.log(this.product_name)
+                    //console.log(this.orders)
                 })                
-                .catch(error => (console.log(error)))    
+                .catch(error => (console.log(error)))
+                .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
+                 auth:{
+                     username: "zaikin.ni",
+                     password: "Vbuhfwbz75"
+                 },
+                 params:{
+                    param1: "get_products"
+                 }
+                })
+                .then(response => {
+                    (this.item = response.data)
+                    this.loading = false
+                    for(let i=0; i < this.item.length; i++ ){
+                        if(this.item[i].PRODUCT_NAME != null){
+                            this.product_name.push({
+                                text: this.item[i].PRODUCT_NAME,
+                                value: this.item[i].PRODUCT_ID
+                            })                        
+                        }
+                        if(this.item[i].ORDER_ID != null){
+                            var value = this.item[i].PRODUCT_ID
+                            this.orders.push({
+                                created_order: this.item[i].CREATED_BY,
+                                date: this.item[i].DATE,
+                                [value]: this.item[i].VALUE
+                            })
+                            console.log(value)
+                        }                            
+                    }
+                    console.log(this.item)
+                    //console.log(this.product_name)
+                    //console.log(this.orders)
+                })                
+                .catch(error => (console.log(error)))
     },
     methods:{
         getItem(type){

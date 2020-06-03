@@ -132,6 +132,12 @@ export default {
                 this.cmnt_err = 'Опишите требуемую доработку'
             }
         }
+    },
+    computed: {
+        condition() {
+        this.usrid;
+        return this.usrid == 1 || this.usrid == 2318 || this.usrid == 2416 || this.usrid == 2385 || this.usrid == 3371 || this.usrid == 1940;
+        }
     }
 }
 </script>

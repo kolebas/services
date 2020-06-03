@@ -136,12 +136,6 @@ import axios from 'axios';
         formCancl: function(){
             this.$router.go(-1);
         }
-    },
-    mounted() {
-         axios
-             .get('./ajax/ajax_rb001.php', {
-                })
-                .then(response => (this.users = response.data))        
     }
 }    
 </script>
