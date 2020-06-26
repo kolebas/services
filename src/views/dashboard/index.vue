@@ -2,8 +2,8 @@
     <v-container>        
         <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage"/>
         <v-row>
-            <div class="text-center">
-                <v-progress-circular
+            <v-progress-circular
+                class="mx-auto"
                 :rotate="360"
                 :size="80"
                 :width="10"
@@ -12,8 +12,7 @@
                 :indeterminate="indeterminate"
                 >
                 <b>{{ value }}</b>
-                </v-progress-circular>
-            </div>
+            </v-progress-circular>
             <v-col cols="12">
                 <v-tabs>
                 <v-tab 
@@ -77,6 +76,45 @@
                                             >  
                                             </v-chip>
                                         </template>
+                                    </v-data-table>
+                        </v-card>
+                    </v-tab-item>
+                    <v-tab-item>
+                        2
+                    </v-tab-item>
+                    <v-tab-item>
+                        <v-card>
+                            <v-card-title>
+                                Компьютеры
+                                <v-divider
+                                    class="mx-4"
+                                    inset
+                                    vertical
+                                >
+                                </v-divider>
+                                <v-spacer></v-spacer>
+                                <v-text-field
+                                        v-model="search"
+                                        append-icon="mdi-magnify"
+                                        label="Поиск"
+                                        single-line
+                                        hide-details
+                                >
+                                </v-text-field>
+                                <v-btn
+                                    color="primary" 
+                                    dark 
+                                    class="mb-2 ml-2"
+                                >Добавить
+                                </v-btn>
+                            </v-card-title>
+                            <v-data-table
+                                :headers="headers_comp"
+                                :items="glpi_data.data"
+                                :search="search"
+                                sortable
+                                @click="dialog=true"
+                                >
                             </v-data-table>
                         </v-card>
                     </v-tab-item>
@@ -114,6 +152,13 @@ export default {
             {text:"Задача",value:"TASK_ID"},
             {text:"Статус", value:"STATUS"}
             ],
+        headers_comp:[
+            {text:"Имя компьютера", value:"1"},
+            {text:"Местоположение", value:"3"},
+            {text:"Тип", value:"4"},
+            {text:"Пользователь", value:"70"},
+            {text:"MAC", value:"113"}
+            ],
         item:[],
         search:"",
         dialog: false,
@@ -121,7 +166,8 @@ export default {
         dialogMessage: "",
         progValue: "0",
         indeterminate: true,
-        value: "0"
+        value: "0",
+        glpi_data:[]
     }),
     methods:{
         formCancl: function(){
@@ -158,8 +204,8 @@ export default {
                         this.new_count = response.data.length - this.item.length,                                                
                         this.item = response.data                        
                         )
-                        var now = new Date();
-                        console.log(now)
+                        //var now = new Date();
+                        //console.log(this.item)
                         this.loading = false
                         this.value = this.item.length
                         this.indeterminate = false                    
@@ -171,12 +217,59 @@ export default {
                             //this.new_count = this.new_count  + 1
                             }
                     })
+        },
+        getGlpiData(){
+            axios
+             .get('https://support.ahstep.ru/apirest.php/initSession', {
+                 headers: { 
+                    "Content-Type": "application/json;"
+                     },
+                 params:{
+                     app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
+                     user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg"
+                 }
+                })
+                .then(response => {  
+                        var s_token = response.data.session_token; 
+                        axios
+                            .get("https://support.ahstep.ru/apirest.php/search/Computer",{
+                                headers:{
+                                    "Content-Type": "application/json;",
+                                    "Session-Token": s_token
+                                },
+                                params:{
+                                    app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
+                                    range: "0-2000",
+                                    forcedisplay: [3,4,70,113]
+                                }
+                            })
+                            .then(response => {
+                                this.glpi_data = response.data
+                            })
+                    })
+        },
+        getTest(){
+            axios
+             .get('https://b2btestservice.ocs.ru/b2bjson.asmx/GetCatalog', {
+                 headers: { 
+                    "Content-Type": "application/json;"
+                     },
+                 params:{
+                     Login: "VqFLDv9gY",
+                     Token: "VuivdzcaGvFtOACElaNdO?@-BKFMXy"
+                 }
+                })
+                .then(response => {   
+                        console.log(response.data)
+                    })
         }                
     },
     mounted() {
+        //this.getTest()  
         this.loading = true
         this.getData()
-        this.time()      
+        this.time()
+        this.getGlpiData()            
     }
 }
 </script>
