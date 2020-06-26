@@ -8,7 +8,7 @@
                 class="mx-auto"
                 color="grey lighten-4"            
                 >
-                <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+                <RqCardTitle :title="$router.currentRoute.name" :sub_message="sub_message"></RqCardTitle>
                 <hr/>
                 <v-row class="mb-n6">
                 <v-col cols="4">
@@ -34,7 +34,6 @@
                     :cols_title='4'
                     :cols_input='6'
                     source='./ajax/ajax_1c002.php'
-                    :error-messages='dep_err'
                     />
             <v-row class="mb-n4">
                 <v-col cols="4">
@@ -77,13 +76,14 @@ export default {
         inputFileCard
     },
     data:()=>({
-        title: 'Заявка на доработку 1С',
         sub_message: 'Опишите необходимые доработки, которые в данные момент не реализованы.',
         btnLoader: false,
         cmnt: '',
         cmnt_err: '',
         db: '',
-        file: []
+        file: [],
+        dialog: false,
+        dialogMessage: ''
     }),
     created(){
         bus.$on('Select', data=>{

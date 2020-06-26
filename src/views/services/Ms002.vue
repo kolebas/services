@@ -10,7 +10,7 @@
             class="mx-auto"
             color="grey lighten-4"            
             >
-            <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <RqCardTitle :title="$router.currentRoute.name" :sub_message="sub_message"></RqCardTitle>
             <hr/>
             <SelectUsr
                     cols_title='4'
@@ -87,7 +87,6 @@ import axios from 'axios';
             SelectUsr
         },
         data:() => ({
-            title: "Доступ к программам мониторинга",
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
             items_type: ['История поля', 'Wialon', 'ГЕОМИКСЕР'],
             dialog: false,

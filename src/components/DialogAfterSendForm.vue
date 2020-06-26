@@ -40,7 +40,7 @@ export default {
     props: {
         dialog: {type: Boolean},
         warnMessage: {type: String},
-        route: {type: Number}
+        route: {type: String}
     },
     data:() => ({
         title: 'Статус',
@@ -53,7 +53,6 @@ export default {
                 bus.$emit('chngSwitch', this.dialog);
             }
             else{
-                console.log(this.route);
                 this.$router.go(-1);
             }
             

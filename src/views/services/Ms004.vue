@@ -9,7 +9,7 @@
                 color='grey lighten-4'            
                 >
                 <RqCardTitle 
-                    :title='title' 
+                    :title='$router.currentRoute.name' 
                     :sub_message='sub_message'
                 ></RqCardTitle>
                 <hr/>
@@ -60,7 +60,6 @@ export default {
     },
 
     data: () => ({
-        title: 'Добавление основного средства в папку «Техника для выработки»',
         sub_message: 'ms004',
         id: '',
         inputs: [

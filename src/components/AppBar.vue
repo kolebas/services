@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+    <v-app>
     <v-main>
           <v-alert
             class="ml-4 mr-4"
@@ -14,17 +14,9 @@
             :key="item.text" 
             text
             @click="itemclk(item.lnk, item.route)"
-            >
-              <v-icon left color="green">{{item.icon}}</v-icon>
-              {{item.text}}
+            > {{item.text}}
           </v-btn>
-          <v-btn 
-            text 
-            disabled
-            > 
-              <v-icon left>mdi-file-cog</v-icon>
-              {{ this.$router.currentRoute.name}}
-            </v-btn>
+          <v-btn text disabled>{{ this.$router.currentRoute.name}}</v-btn>
           </v-alert>
       <router-view/>
     </v-main>
@@ -33,15 +25,12 @@
 
 <script>
 export default {
-  name: 'App',
-
-  data: () => ({   
+   data: () => ({   
       items: [
        {
           text: 'Главная',
           disabled: false,
-          lnk: '/stream',
-          icon: "mdi-home"
+          lnk: '/steam',
         }
       ],    
   }),
@@ -55,34 +44,17 @@ export default {
         }
   },
   mounted(){
-    if(this.$router.currentRoute.path != "/"){
+    {
+      if(this.$router.currentRoute.path != "/"){
         this.items.splice(1,1)
         let services={
           text: 'Заявки',
           route: '/'
         }
         this.items.push(services)
-      }   
+        console.log(this.items)
+      }
+    }
   }
 };
 </script>
-
-<style>
-  body{
-		overflow: unset!important;
-	}
-  .bx-layout-inner-inner-top-row{
-    display: none;
-  }
-  #uiToolbarContainer{
-    display: none;
-  }
-  .v-breadcrumbs{
-    background: #f5f5f5;
-    margin-left: 1%!important;
-    margin-right: 1%!important;
-    margin-top: 10px!important;
-    margin-bottom: 10px!important;
-    border-radius: 10px!important;
-  }
-  </style>

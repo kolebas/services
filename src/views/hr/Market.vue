@@ -149,6 +149,7 @@ export default {
             {text: "Дата заказа", value: "date"}
         ],
         orders: [],
+        value: [],
         item_name: "",
         item_tara: "",
         items_tara: ["Уп.", "Кг."],
@@ -160,41 +161,7 @@ export default {
     }),
     mounted() {
         this.loading = true
-         axios
-             .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
-                 auth:{
-                     username: "zaikin.ni",
-                     password: "Vbuhfwbz75"
-                 },
-                 params:{
-                    param: "get_orders"
-                 }
-                })
-                .then(response => {
-                    (this.item = response.data)
-                    this.loading = false
-                    for(let i=0; i < this.item.length; i++ ){
-                        if(this.item[i].PRODUCT_NAME != null){
-                            this.product_name.push({
-                                text: this.item[i].PRODUCT_NAME,
-                                value: this.item[i].PRODUCT_ID
-                            })                        
-                        }
-                        if(this.item[i].ORDER_ID != null){
-                            var value = this.item[i].PRODUCT_ID
-                            this.orders.push({
-                                created_order: this.item[i].CREATED_BY,
-                                date: this.item[i].DATE,
-                                [value]: this.item[i].VALUE
-                            })
-                            console.log(value)
-                        }                            
-                    }
-                    console.log(this.item)
-                    //console.log(this.product_name)
-                    //console.log(this.orders)
-                })                
-                .catch(error => (console.log(error)))
+            axios
                 .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
                  auth:{
                      username: "zaikin.ni",
@@ -214,21 +181,49 @@ export default {
                                 value: this.item[i].PRODUCT_ID
                             })                        
                         }
-                        if(this.item[i].ORDER_ID != null){
-                            var value = this.item[i].PRODUCT_ID
+                        
+                        if(this.item[i].ORDER != null){                            
                             this.orders.push({
                                 created_order: this.item[i].CREATED_BY,
-                                date: this.item[i].DATE,
-                                [value]: this.item[i].VALUE
+                                date: this.item[i].DATE
                             })
-                            console.log(value)
-                        }                            
+                        }
+                        if(this.item[i].VALUE != null){ 
+                            let value = this.item[i].PRODUCT_ID 
+                            this.orders[0][value] = this.item[i].VALUE
+                        }                         
                     }
-                    console.log(this.item)
-                    //console.log(this.product_name)
-                    //console.log(this.orders)
+                    
+                    console.log(this.orders)
                 })                
                 .catch(error => (console.log(error)))
+            /*axios
+                .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
+                 auth:{
+                     username: "zaikin.ni",
+                     password: "Vbuhfwbz75"
+                 },
+                 params:{
+                    param: "get_orders"
+                 }
+                })
+                .then(response => {
+                    (this.item = response.data)
+                    for(let i=0; i < this.item.length; i++ ){
+                        if(this.item[i].ORDER_ID != null){
+                                let value = this.item[i].PRODUCT_ID
+                                this.orders.push({
+                                    created_order: this.item[i].CREATED_BY,
+                                    date: this.item[i].DATE,
+                                    [value]: this.item[i].VALUE
+                                })
+                            }
+                        }
+                        
+                    console.log(this.item)
+                    
+                    console.log(this.orders)     
+                    })*/
     },
     methods:{
         getItem(type){

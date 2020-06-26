@@ -10,7 +10,7 @@
             class="mx-auto"
             color="grey lighten-4"            
             >
-            <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <RqCardTitle :title="$router.currentRoute.name" :sub_message="sub_message"></RqCardTitle>
             <hr/>
             <SelectOrg
                 :cols_title='4'
@@ -78,7 +78,6 @@ import axios from 'axios';
             InputFileCard
         },
         data:() => ({
-            title: "Заявка о неисправности телематического оборудования",
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
             dialog: false,
             dialogMessage: '',

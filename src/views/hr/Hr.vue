@@ -3,6 +3,7 @@
         <v-hover>
             <template v-slot="{ hover }">    
                 <v-card
+                disabled
                 max-width="400"        
                 @click="$router.push('/Market')"
                 :elevation="hover ? 24 : 6"

@@ -152,7 +152,8 @@ import axios from 'axios';
          axios
              .get('./ajax/ajax_usr.php', {
                 })
-                .then(response => (this.usrid = response.data))        
+                .then(response => (this.usrid = response.data))      
+            console.log(this.usrid)  
     },
     computed: {
     condition() {

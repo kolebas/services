@@ -1,73 +1,72 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-//import Ns001 from '../views/Ns001.vue'
 
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
-    name: 'Services',
+    name: 'Заявки',
     component: () => import(/* webpackChunkName: "services" */ '../views/Services.vue')
   },
   {
     path: '/1c002',
-    name: '1C002',
+    name: 'Заявка на доработку 1С',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/1C002.vue')
   },
   {
     path: '/nu001',
-    name: 'Nu001',
+    name: 'Заявка на нового сотрудника',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Nu001.vue')
   },
   {
     path: '/ns001',
-    name: 'Ns001',
-    component: () => import(/* webpackChunkName: "services" */ '../views/services/Ns001.vue')
+    name: 'Удаленный доступ (VPN)',
+    component: () => import(/* webpackChunkName: "services" */ '../views/services/Ns001.vue'),
   },
   {
     path: '/ph001',
-    name: 'Ph001',
+    name: 'Предоставление служебной сотовой связи',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ph001.vue')
   },
   {
     path: '/ar001',
-    name: 'Ar001',
+    name: 'Отключение доступов',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ar001.vue')
   },
   {
     path: '/rb001',
-    name: 'Rb001',
+    name: 'Заявка на приобретение техники/программного обеспечения',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Rb001.vue')
   },
   {
     path: '/sf001',
-    name: 'Sf001',
+    name: 'Установка программного обеспечения',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Sf001.vue')
   },
   {
     path: '/ms001',
-    name: 'Ms001',
+    name: 'Корректировка данных в путевых листах 1С',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms001.vue')
   },
   {
     path: '/ms002',
-    name: 'Ms002',
+    name: 'Предоставление доступа к программам мониторинга',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms002.vue')
   },
   {
     path: '/ms003',
-    name: 'Ms003',
+    name: 'Заявка о неисправности телематического оборудования',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms003.vue')
   },
   {
     path: '/ms004',
-    name: 'Ms004',
+    name: 'Добавление основного средства в папку «Техника для выработки»',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Ms004.vue')
   },
   {
     path: '/inc',
-    name: 'Inc',
+    name: 'Инцидент',
     component: () => import(/* webpackChunkName: "services" */ '../views/services/Inc.vue')
   },
   {
@@ -77,9 +76,15 @@ Vue.use(VueRouter)
   },
   {
     path: '/market',
-    name: 'Market',
+    name: 'Магазин',
     component: () => import(/* webpackChunkName: "services" */ '../views/hr/Market.vue')
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import(/* webpackChunkName: "services" */ '../views/dashboard/index.vue')
   }
+  
 ]
 
 const router = new VueRouter({
@@ -87,6 +92,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
 
 export default router

@@ -10,7 +10,7 @@
             class="mx-auto"
             color="grey lighten-4"            
             >
-            <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
+            <RqCardTitle :title="$router.currentRoute.name" :sub_message="sub_message"></RqCardTitle>
             <hr/>
             <SelectOrg
                 :cols_title='5'
@@ -81,7 +81,6 @@ import axios from 'axios';
             InputCard
         },
         data:() => ({
-            title: "Корректировка данных в путевых листах 1С",
             sub_message: "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы моежете отслеживать в разделе ",
             dialogMessage: '',
             dialog: false,
