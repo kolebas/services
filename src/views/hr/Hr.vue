@@ -1,24 +1,52 @@
 <template>
     <v-container>
         <v-hover>
-            <template v-slot="{ hover }">    
+            <template v-slot="{ hover }">
                 <v-card
-                disabled
-                max-width="400"        
-                @click="$router.push('/Market')"
-                :elevation="hover ? 24 : 6"
+                    disabled
+                    max-width="400"
+                    @click="$router.push('/Market')"
+                    :elevation="hover ? 24 : 6"
                 >
                     <v-list-item two-line>
                         <v-list-item-content>
-                            <v-list-item-title class="headline mb-1">Внутренний магазин</v-list-item-title>
-                            <v-list-item-subtitle>Панель управления магазином</v-list-item-subtitle>
+                            <v-list-item-title class="headline mb-1"
+                                >Внутренний магазин</v-list-item-title
+                            >
+                            <v-list-item-subtitle
+                                >Панель управления
+                                магазином</v-list-item-subtitle
+                            >
                         </v-list-item-content>
 
-                        <v-list-item-avatar                    
-                            size="60"
-                            color="grey"                    
+                        <v-list-item-avatar size="60" color="grey">
+                            <img src="@/assets/img/hr/market.png" />
+                        </v-list-item-avatar>
+                    </v-list-item>
+                </v-card>
+            </template>
+        </v-hover>
+        <br />
+        <v-hover>
+            <template v-slot="{ hover }">
+                <v-card
+                    max-width="400"
+                    @click="$router.push('/test1')"
+                    :elevation="hover ? 24 : 6"
+                >
+                    <v-list-item two-line>
+                        <v-list-item-content>
+                            <v-list-item-title class="headline mb-1"
+                                >Тестирование</v-list-item-title
                             >
-                            <img src="@/assets/img/hr/market.png">
+                            <v-list-item-subtitle
+                                >Тестовые вопросы к инструкциям по уборке
+                                нишевых культур</v-list-item-subtitle
+                            >
+                        </v-list-item-content>
+
+                        <v-list-item-avatar size="60" color="grey">
+                            <img src="@/assets/img/hr/tests/test.png" />
                         </v-list-item-avatar>
                     </v-list-item>
                 </v-card>
@@ -31,7 +59,7 @@
 export default {
     data: () => ({
         title: "HR",
-        market_title: "Магазин"
+        market_title: "Магазин",
     }),
-}
+};
 </script>
