@@ -205,12 +205,12 @@ export default {
                     {
                         name: "Создание нового каталога (папки)",
                         img: "folder_add.png",
-                        lnk: "../request/nc-002",
+                        route: "/nc002",
                     },
                     {
                         name: "Доступ к каталогу (папке)",
                         img: "folder_rep.png",
-                        lnk: "../request/nc-003",
+                        route: "/nc003",
                     },
                     {
                         name:

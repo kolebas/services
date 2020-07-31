@@ -108,7 +108,7 @@ import axios from 'axios';
             }),
             bus.$on('selectOrg', data=>{
             this.org_err = '';
-            this.org_name = data;
+            this.org_name = data.name;
             })
         },
     methods: {

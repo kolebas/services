@@ -77,7 +77,7 @@ export default {
     created(){
         bus.$on('selectOrg', data=>{
             this.org_err = '';
-            this.org_name = data;
+            this.org_name = data.name;
         });
         bus.$on('inputCard', data=>{
             this.inputs[data.input_id - 1].value = data.value;

@@ -10,6 +10,10 @@
                     {{ warnMessage }}
                 </v-card-text>
 
+                <v-card-text v-if="subMessage" color="info" class="subtitle-1 text-center mt-4">
+                    {{ subMessage }}
+                </v-card-text>
+
                 <v-divider></v-divider>
 
                 <v-card-actions>
@@ -29,6 +33,7 @@ export default {
     props: {
         dialog: { type: Boolean },
         warnMessage: { type: String },
+        subMessage: { type: String },
         route: { type: String },
     },
     data: () => ({

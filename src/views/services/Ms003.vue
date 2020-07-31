@@ -92,7 +92,7 @@ import axios from 'axios';
     }),
     created(){
             bus.$on('selectOrg', data=>{
-                this.org_name = data;
+                this.org_name = data.name;
                 this.org_err = '';
             });
             bus.$on('inputFile', data=>{
