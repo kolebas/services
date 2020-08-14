@@ -298,10 +298,6 @@ export default {
             headers: {
               "Content-Type": "application/json; charset=utf-8"
             },
-            auth: {
-              username: "admin",
-              password: "Htdjk.wbz17"
-            },
             params: {
               result: param
             }
@@ -416,10 +412,6 @@ export default {
             headers: {
               "Content-Type": "application/json; charset=utf-8"
             },
-            auth: {
-              username: "admin",
-              password: "Htdjk.wbz17"
-            },
             params: {
               getVesy: "getVesy"
             }
@@ -464,11 +456,6 @@ export default {
       if (id == 3) {
         this.getPreviewTask = this.getIncNotApproved;
       }
-    },
-    test1(param1) {
-      console.log(param1);
-      let res = param1.filter(test => test.text.includes("в"));
-      console.log(res);
     },
     close() {
       this.dialog = false;

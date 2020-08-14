@@ -102,6 +102,11 @@ const routes = [{
     path: '/test1',
     name: 'Тестирование',
     component: () => import( /* webpackChunkName: "services" */ '../views/hr/test/test1.vue')
+  },
+  {
+    path: '/marketing',
+    name: 'Маркетинг',
+    component: () => import( /* webpackChunkName: "services" */ '../views/marketing/mediabank.vue')
   }
 
 ]
