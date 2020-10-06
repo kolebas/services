@@ -9,6 +9,11 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/Services.vue')
   },
   {
+    path: '/1c001',
+    name: 'Предоставление доступа к информационным базам 1С',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/1C001.vue')
+  },
+  {
     path: '/1c002',
     name: 'Заявка на доработку 1С',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/1C002.vue')
@@ -107,6 +112,16 @@ const routes = [{
     path: '/marketing',
     name: 'Маркетинг',
     component: () => import( /* webpackChunkName: "services" */ '../views/marketing/mediabank.vue')
+  },
+  {
+    path: '/dvka',
+    name: 'Аудит',
+    component: () => import( /* webpackChunkName: "services" */ '../views/dvka/puns.vue')
+  },
+  {
+    path: '/docs',
+    name: 'Документация',
+    component: () => import( /* webpackChunkName: "services" */ '../views/docs/learning.vue')
   }
 
 ]
