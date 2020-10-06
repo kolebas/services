@@ -177,7 +177,8 @@ export default {
                     {
                         name: "Предоставление доступа к 1С",
                         img: "1s.png",
-                        lnk: "../../it-uslugi/uslugi/1c-001.php",
+                        route: "/1c001",
+                        //lnk: "../../it-uslugi/uslugi/1c-001.php",
                     },
                     {
                         name: "Запрос на доработку 1С",
