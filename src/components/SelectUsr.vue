@@ -1,6 +1,6 @@
 <template>
-  <v-row class="mb-n6">
-    <v-col :cols="cols_title">
+  <v-row :class="classItem">
+    <v-col :cols="cols_title" v-if="title">
       <v-card-text class="subtitle-1 text-right pt-2">{{ title }}</v-card-text>
     </v-col>
     <v-col :cols="cols_input">
@@ -13,6 +13,7 @@
         solo
         dense
         chips
+        class=""
         deletable-chips
         cache-items
         autofocus
@@ -22,7 +23,7 @@
         :error-messages="userId_err"
       >
         <template v-slot:selection="data">
-          <v-chip color="#bcedfc" label close @click:close="userId=''">
+          <v-chip color="#bcedfc" label close @click:close="value='';userId=''">
             <v-avatar left>
               <img v-if="data.item.PHOTO" :src="data.item.PHOTO" />
               <v-icon v-else>mdi-account-circle</v-icon>
@@ -58,6 +59,7 @@ import axios from "axios";
 export default {
   props: {
     title: { type: String },
+    classItem: {type: String, default: "mb-n6"},
     userId_err: { type: String },
     cols_title: { type: Number },
     cols_input: { type: Number },
