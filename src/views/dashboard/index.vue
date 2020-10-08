@@ -112,7 +112,7 @@
                 :loading="loading"
                 @click="dialog = true"
               >
-                <template v-slot:item.NAME_UZ="{ item }">
+                <!--<template v-slot:item.NAME_UZ={ item }>
                   <v-chip @click="editVesyItem(item.ID)">
                     {{ item.NAME_UZ }}<v-divider class="mx-4" color="warning" inset vertical></v-divider>
                     <v-edit-dialog :return-value.sync="item.NAME_UZ">                      
@@ -122,7 +122,7 @@
                       </template>
                     </v-edit-dialog>
                   </v-chip>
-                </template>
+                </template>-->
               </v-data-table>
               <DataTables
                 :headers="headers_vesy"

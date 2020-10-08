@@ -13,7 +13,7 @@
         <v-text-field
           v-if="item.type == 'string'"
           v-model="item.value"
-          :label="item.name"
+          :label="item.label"
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
@@ -33,7 +33,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="item.value"
-              :label="item.name"
+              :label="item.label"
               :outlined="item.outlined"
               :dense="item.dense"
               :solo="item.solo"
@@ -62,12 +62,15 @@
           required
           :multiple="item.multiple"
           :error-messages="item.err"
-          @change="input; item.err=''"
+          @change="
+            input;
+            item.err = '';
+          "
         ></v-select>
         <v-textarea
           v-if="item.type == 'textarea'"
           v-model="item.value"
-          :label="item.name"
+          :label="item.label"
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
@@ -91,6 +94,7 @@
           :id="item.id"
           :userId_err="item.err"
         />
+        <InputFileCard v-if="item.type == 'file'" />
       </v-col>
     </v-row>
   </v-container>
@@ -100,9 +104,11 @@
 <script>
 import { bus } from "../main.js";
 import SelectUsr from "@/components/SelectUsr.vue";
+import InputFileCard from '@/components/InputFileCard.vue';
 export default {
   components: {
     SelectUsr,
+    InputFileCard
   },
   props: {
     arrInput: { type: Array },
@@ -123,7 +129,7 @@ export default {
     },
   }),
   methods: {
-    change (){
+    change() {
       this.item.err = "";
     },
     input: function () {

@@ -243,9 +243,6 @@ export default {
             this.btnLoader = false;
           });
       }
-      if (!this.cmnt) {
-        this.cmnt_err = "Опишите требуемую доработку";
-      }
     },
   },
   computed: {
