@@ -9,6 +9,7 @@
         @change="selectUsr()"
         v-model="userId"
         :multiple="multiple"
+        :search-input.sync="searchInput"
         outlined
         solo
         dense
@@ -70,11 +71,13 @@ export default {
     users: [],
     userId: "",
     userIdErr: "",
+    searchInput: "",
     error: [],
     value: []
   }),
   methods: {
     selectUsr: function() {
+      this.searchInput = "";
       //Условие когда необходимо использовать несколько селектов на одной форме
       if (this.id != null) {
         this.value.input_id = this.id;
