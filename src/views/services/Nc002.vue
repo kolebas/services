@@ -9,7 +9,12 @@
       <v-card max-width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle :title="title" :sub_message="subtitle"></RqCardTitle>
         <hr />
-        <SelectOrg :cols_title="5" :cols_input="6" title="ФИО:" :org_err="org_err" />
+        <SelectOrg
+          :cols_title="5"
+          :cols_input="6"
+          title="ФИО:"
+          :org_err="org_err"
+        />
         <InputCard
           v-for="item in inputs"
           :key="item.id"
@@ -23,10 +28,18 @@
         ></InputCard>
         <v-row class="mb-n6">
           <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2">{{ fldNameText }}</v-card-text>
+            <v-card-text class="subtitle-1 text-right pt-2">{{
+              fldNameText
+            }}</v-card-text>
           </v-col>
           <v-col cols="6">
-            <v-text-field v-model="fldName" readonly outlined solo dense></v-text-field>
+            <v-text-field
+              v-model="fldName"
+              readonly
+              outlined
+              solo
+              dense
+            ></v-text-field>
           </v-col>
         </v-row>
         <SelectUsr
@@ -41,7 +54,9 @@
         />
         <v-row class="mb-n6">
           <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2">Описание каталога:</v-card-text>
+            <v-card-text class="subtitle-1 text-right pt-2"
+              >Описание каталога:</v-card-text
+            >
           </v-col>
           <v-col cols="6">
             <v-textarea
@@ -60,7 +75,8 @@
               :loading="btnLoader"
               color="green lighten-2 white--text"
               @click="formSend()"
-            >Отправить</v-btn>
+              >Отправить</v-btn
+            >
             <v-btn class="mx-1" @click="formCancl()">Отмена</v-btn>
           </div>
         </v-card-actions>
@@ -83,7 +99,7 @@ export default {
     RqCardTitle,
     SelectUsr,
     SelectOrg,
-    InputCard
+    InputCard,
   },
   data: () => ({
     title: "Заявка на создание сетевого каталога",
@@ -99,7 +115,7 @@ export default {
         label: "Например: Отдел кадров",
         value: "",
         cols_title: "5",
-        cols_input: "6"
+        cols_input: "6",
       },
       {
         id: "2",
@@ -108,31 +124,31 @@ export default {
         label: "Например: График отпусков",
         value: "",
         cols_title: "5",
-        cols_input: "6"
-      }
+        cols_input: "6",
+      },
     ],
     users: [
       {
-        id: "1",
+        id: 1,
         title: "Бизнес-владелец",
         value: "",
         multiple: false,
-        err: ""
+        err: "",
       },
       {
-        id: "2",
+        id: 2,
         title: "Пользователи с возможность записи:",
         value: "",
         multiple: true,
-        err: ""
+        err: "",
       },
       {
-        id: "3",
+        id: 3,
         title: "Пользователи с возможность просмотра:",
         value: "",
         multiple: true,
-        err: ""
-      }
+        err: "",
+      },
     ],
     fldName: "",
     fldNameText: "Название каталога для диска L:",
@@ -140,47 +156,39 @@ export default {
     cmnt: "",
     dialog: false,
     dialogMessage: "",
-    subDialogMessage: ""
+    subDialogMessage: "",
   }),
   created() {
-    bus.$on("SelectUsr", data => {
+    bus.$on("SelectUsr", (data) => {
       this.users[data.input_id - 1].value = data.userId;
       this.users[data.input_id - 1].err = "";
     });
-    bus.$on("inputCard", data => {
+    bus.$on("inputCard", (data) => {
       this.inputs[data.input_id - 1].value = data.value;
       this.inputs[data.input_id - 1].err = "";
+      let dep = (this.inputs[1].value)
+          ? "-" + this.inputs[1].value
+          : this.inputs[1].value;
       this.fldName =
-        this.org_name.rdt +
-        "-" +
-        this.inputs[0].value +
-        "-" +
-        this.inputs[1].value;
+        this.org_name.rdt + "-" + this.inputs[0].value + dep
     }),
-      bus.$on("selectOrg", data => {
+      bus.$on("selectOrg", (data) => {
         this.org_err = "";
         this.org_name = data;
-        this.fldName =
-          this.org_name.rdt +
-          "-" +
-          this.inputs[0].value +
-          "-" +
-          this.inputs[1].value;
-        console.log(this.org_name);
       });
   },
   methods: {
     //Показ предупреждения
-    showSoftModal: function() {
+    showSoftModal: function () {
       if (this.soft == "Консультант +") {
         this.softModal = true;
       }
     },
     //Закрыть предупреждение
-    closeSoftModal: function() {
+    closeSoftModal: function () {
       this.softModal = false;
     },
-    formSend: function() {
+    formSend: function () {
       //Проверка полей тип
       if (this.users[0].value && this.users[1].value) {
         this.btnLoader = true;
@@ -197,10 +205,10 @@ export default {
             bp_usr: this.users[0].value,
             rw_usr_all: this.users[1].value,
             ro_usr_all: this.users[2].value,
-            cmnt: this.cmnt
-          }
+            cmnt: this.cmnt,
+          },
         })
-          .then(response => {
+          .then((response) => {
             if (response.status == 200) {
               this.dialog = true;
               this.dialogMessage =
@@ -210,7 +218,7 @@ export default {
               this.btnLoader = false;
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.dialog = true;
             this.dialogMessage = "Произошла ошибка";
@@ -231,10 +239,10 @@ export default {
         this.inputs[1].err = "Необходимо указать название каталога";
       }
     },
-    formCancl: function() {
+    formCancl: function () {
       this.$router.go(-1);
-    }
-  }
+    },
+  },
 };
 </script>
 
