@@ -39,6 +39,7 @@
               :solo="item.solo"
               v-bind="attrs"
               :error-messages="item.err"
+              readonly
               v-on="on"
               @input="item.err = ''"
               @change="input"
@@ -48,6 +49,8 @@
             v-model="item.value"
             @input="menu = false"
             range
+            locale="ru-RU"
+            @change="input"
           ></v-date-picker>
         </v-menu>
 
@@ -104,11 +107,11 @@
 <script>
 import { bus } from "../main.js";
 import SelectUsr from "@/components/SelectUsr.vue";
-import InputFileCard from '@/components/InputFileCard.vue';
+import InputFileCard from "@/components/InputFileCard.vue";
 export default {
   components: {
     SelectUsr,
-    InputFileCard
+    InputFileCard,
   },
   props: {
     arrInput: { type: Array },
@@ -128,6 +131,11 @@ export default {
       value: "",
     },
   }),
+  computed: {
+    dateRangeText() {
+      return this.item.value.join(" ~ ");
+    },
+  },
   methods: {
     change() {
       this.item.err = "";
