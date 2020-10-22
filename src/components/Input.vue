@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row v-for="item in arrInput" class="mb-n6" :key="item.name">
-      <v-col :cols="item.cs - 7">
+      <v-col v-if="item.name" :cols="item.cs - 7">
         <v-card-text
           v-if="item.visible != false"
           class="subtitle-1 text-right pt-2"
@@ -13,12 +13,14 @@
         <v-text-field
           v-if="item.type == 'string'"
           v-model="item.value"
+          :class="item.class"
           :label="item.label"
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
           required
           :error-messages="item.err"
+          :append-icon="item.aicon"
           @input="item.err = ''"
           @change="input"
         ></v-text-field>
@@ -48,7 +50,8 @@
           <v-date-picker
             v-model="item.value"
             @input="menu = false"
-            range
+            :range="item.range"
+            :allowed-dates="item.allowed-dates"
             locale="ru-RU"
             @change="input"
           ></v-date-picker>
@@ -71,25 +74,25 @@
           "
         ></v-select>
         <v-textarea
-          v-if="item.type == 'textarea'"
+          v-if="item.type == 'textarea' && item.visible != false"
           v-model="item.value"
-          :label="item.label"
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
-          required
           :error-messages="item.err"
+          :hint="item.hint"
           @input="item.err = ''"
           @change="input"
-        ></v-textarea>
+          >
+        </v-textarea>
         <v-switch
           v-if="item.type == 'switch'"
           v-model="item.value"
           :label="item.label"
           inset
           :class="item.class"
-          @change="input"
-        ></v-switch>
+          @change="input"          
+        ><template slot="label"><span class="green--text text-uppercase">{{item.label}}</span></template></v-switch>
         <SelectUsr
           v-if="item.type == 'selectUsr'"
           @change="input"
