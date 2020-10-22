@@ -52,12 +52,9 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-list>
-                <v-list-item-group>
-                  <v-list-item
-                    v-for="(item, i) in cat.items"
-                    :key="i"
-                    @click="itemclk(item.lnk, item.route)"
-                  >
+                <v-list-item-group v-for="(item, i) in cat.items" :key="i">
+                  <template>
+                  <v-list-item @click="itemclk(item.lnk, item.route)" v-if="condition && item.status == 'dev' || item.status != 'dev'">
                     <v-list-item-icon>
                       <img :src="require('../assets/img/' + item.img)" />
                     </v-list-item-icon>
@@ -65,6 +62,8 @@
                       <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
+                  </template>
+                  <v-divider />
                 </v-list-item-group>
               </v-list>
             </v-expansion-panel-content>
@@ -100,7 +99,7 @@ export default {
     usrid: "",
     title: "Заявки на доступ к ИТ услугам",
     sub_message:
-      "Для получения доступа к сервису или услуге, выберите нужую категорию, а затем услугу, после заполнения необходимых полей формы заявка будет отправлена на согласование отвественных сотрудникам. Статус заявки вы можете отслеживать в разделе",
+      "Для получения доступа к сервису или услуге, выберите нужную категорию, а затем услугу. После заполнения необходимых полей формы, заявка будет отправлена на согласование ответственным сотрудникам. Статус заявки вы можете отслеживать в разделе.",
     cats: [
       {
         name: "Нормативно-справочная информация",
@@ -142,6 +141,11 @@ export default {
             img: "user_del.png",
             route: "/ar001",
           },
+          {
+            name: "Запись онлайн мероприятий (вебинар, обучение)",
+            img: "rc001.png",
+            route: "/rc001",
+          },
         ],
       },
       {
@@ -152,7 +156,6 @@ export default {
             name: "Предоставление доступа к 1С",
             img: "1s.png",
             route: "/1c001",
-            //lnk: "../../it-uslugi/uslugi/1c-001.php",
           },
           {
             name: "Запрос на доработку 1С",
@@ -241,7 +244,7 @@ export default {
             name: "Заявка на проведение агрономического опыта",
             img: "op001.png",
             route: "/op001",
-          }
+          },
         ],
       },
     ],
@@ -265,7 +268,6 @@ export default {
     axios
       .get("./ajax/ajax_usr.php", {})
       .then((response) => (this.usrid = response.data));
-    console.log(this.usrid);
   },
   computed: {
     condition() {
@@ -276,7 +278,7 @@ export default {
         this.usrid == 2416 ||
         this.usrid == 2385 ||
         this.usrid == 3371 ||
-        this.usrid == 1940
+        this.usrid == 1940 
       );
     },
   },
