@@ -36,16 +36,6 @@
             ></v-switch>
           </v-col>
         </v-row>
-        <!--<v-row class="mb-n6" v-if="out_user">
-                    <v-col cols="4">
-                        <v-card-text class="subtitle-1 text-right pt-2">
-                            Электронная почта (внешнего сотрудника)
-                        </v-card-text>                
-                    </v-col>
-                    <v-col cols="4">
-                        <v-text-field v-model='out_user_mail' outlined solo dense :error-messages='out_user_err' label='Например: user@contoso.com' append-icon="mdi-email"></v-text-field>              
-                    </v-col>                    
-                </v-row>-->
         <v-expand-transition>
           <v-card v-if="out_user" outlined max-width="90%" class="mx-auto" elevation="1">
               <v-card-subtitle>
