@@ -48,7 +48,7 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="funcDialog()">
+                    <v-btn color="primary" :disabled="btnDisable" text @click="funcDialog()">
                         {{ btnText }}
                     </v-btn>
                 </v-card-actions>
@@ -70,6 +70,7 @@ export default {
         widthDialogParam: { type: String },
         titleDialogParam: { type: String },
         btnTextParam: { type: String },
+        btnDisable: { type: Boolean, default: false },
         dataArray: { type: Array },
     },
     data: () => ({
@@ -80,6 +81,7 @@ export default {
     }),
     methods: {
         funcDialog() {
+            this.btnDisable = true 
             if (this.route == 1) {
                 this.dialog = false;
                 bus.$emit("chngSwitch", this.dialog);
