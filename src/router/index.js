@@ -132,6 +132,11 @@ const routes = [{
     path: '/rc001',
     name: 'Заявка на запись онлайн мероприятий',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Rc001.vue')
+  },
+  {
+    path: '/ml001',
+    name: 'Заявка на создание/изменение электронного почтового ящика',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Ml001.vue')
   }
 
 ]
