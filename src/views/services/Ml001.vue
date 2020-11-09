@@ -127,5 +127,4 @@ export default {
 </script>
 
 <style>
-1
 </style>
