@@ -11,7 +11,9 @@
         <hr />
         <v-row class="mb-n6">
           <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2">Каталог:</v-card-text>
+            <v-card-text class="subtitle-1 text-right pt-2"
+              >Каталог:</v-card-text
+            >
           </v-col>
           <v-col cols="6">
             <v-autocomplete
@@ -29,7 +31,12 @@
               :error-messages="fld_err"
             >
               <template v-slot:selection="data">
-                <v-chip color="#bcedfc" label close @click:close="fld_name=''">
+                <v-chip
+                  color="#bcedfc"
+                  label
+                  close
+                  @click:close="fld_name = ''"
+                >
                   <v-icon left>mdi-folder</v-icon>
                   {{ data.item.NAME }}
                 </v-chip>
@@ -49,7 +56,9 @@
         />
         <v-row class="mb-n6">
           <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2">Комментарий:</v-card-text>
+            <v-card-text class="subtitle-1 text-right pt-2"
+              >Комментарий:</v-card-text
+            >
           </v-col>
           <v-col cols="6">
             <v-textarea
@@ -68,7 +77,8 @@
               :loading="btnLoader"
               color="green lighten-2 white--text"
               @click="formSend()"
-            >Отправить</v-btn>
+              >Отправить</v-btn
+            >
             <v-btn class="mx-1" @click="formCancl()">Отмена</v-btn>
           </div>
         </v-card-actions>
@@ -87,7 +97,7 @@ export default {
   components: {
     DialogAfterSendForm,
     RqCardTitle,
-    SelectUsr
+    SelectUsr,
   },
   data: () => ({
     title: "Заявка на добавление/изменение доступа к сетевому каталогу",
@@ -102,32 +112,32 @@ export default {
         title: "Пользователи с возможность записи:",
         value: "",
         multiple: true,
-        err: ""
+        err: "",
       },
       {
         id: 2,
         title: "Пользователи с возможность просмотра:",
         value: "",
         multiple: true,
-        err: ""
+        err: "",
       },
       {
         id: 3,
         title: "Пользователи которых нужно отключить от каталога:",
         value: "",
         multiple: true,
-        err: ""
-      }
+        err: "",
+      },
     ],
     btnLoader: false,
     userId_err: "",
     cmnt: "",
     dialog: false,
     dialogMessage: "",
-    subDialogMessage: ""
+    subDialogMessage: "",
   }),
   created() {
-    bus.$on("SelectUsr", data => {
+    bus.$on("SelectUsr", (data) => {
       this.users[data.input_id - 1].value = data.userId;
       this.users[data.input_id - 1].err = "";
     });
@@ -136,16 +146,19 @@ export default {
     axios
       .post("./ajax/ajax_nc.php", {
         data: {
-          type: "getFldr"
-        }
+          type: "getFldr",
+        },
       })
-      .then(response => (this.fldrs = response.data))
-      .catch(error => console.log(error));
+      .then((response) => (this.fldrs = response.data))
+      .catch((error) => console.log(error));
   },
   methods: {
-    formSend: function() {
+    formSend: function () {
       //Проверка полей тип
-      if (this.fld_name && this.users[0].value || this.fld_name && this.users[1].value) {
+      if (
+        (this.fld_name && this.users[0].value) ||
+        (this.fld_name && this.users[1].value)
+      ) {
         this.btnLoader = true;
         console.log(this.fld_name);
         axios({
@@ -159,38 +172,38 @@ export default {
             rw_usr_all: this.users[0].value,
             ro_usr_all: this.users[1].value,
             rm_usr_all: this.users[2].value,
-            cmnt: this.cmnt
-          }
+            cmnt: this.cmnt,
+          },
         })
-          .then(response => {
+          .then((response) => {
             if (response.status == 200) {
               this.dialog = true;
               this.dialogMessage =
                 "Успешно. Номер вашей заявки: " + response.data;
               this.subDialogMessage =
-                "Важно: после выполнения заявик необходимо выполнить перезагрузку";
+                "Важно: после выполнения заявки необходимо выполнить перезагрузку";
               this.btnLoader = false;
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.dialog = true;
             this.dialogMessage = "Произошла ошибка";
           });
       }
-      if (!this.fld_name && !this.users[0].value){
+      if (!this.fld_name && !this.users[0].value) {
         this.fld_err = "Необходимо выбрать каталог";
         this.users[0].err = "Необходимо выбрать сотрудника";
       }
-      if (!this.fld_name && !this.users[1].value){
+      if (!this.fld_name && !this.users[1].value) {
         this.fld_err = "Необходимо выбрать каталог";
         this.users[1].err = "Необходимо выбрать сотрудника";
       }
     },
-    formCancl: function() {
+    formCancl: function () {
       this.$router.go(-1);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -11,7 +11,7 @@
       </v-col>
       <v-col :cols="item.cs" :sm="item.sm" :md="item.md">
         <v-text-field
-          v-if="item.type == 'string'"
+          v-if="item.type == 'string' && item.visible != false"
           v-model="item.value"
           :class="item.class"
           :label="item.label"
@@ -21,6 +21,7 @@
           required
           :error-messages="item.err"
           :append-icon="item.aicon"
+          :suffix="item.suffix"
           @input="item.err = ''"
           @change="input"
         ></v-text-field>
@@ -94,7 +95,7 @@
           @change="input"          
         ><template slot="label"><span class="green--text text-uppercase">{{item.label}}</span></template></v-switch>
         <SelectUsr
-          v-if="item.type == 'selectUsr'"
+          v-if="item.type == 'selectUsr' && item.visible != false"
           @change="input"
           :classItem="item.class"
           :id="item.id"

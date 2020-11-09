@@ -444,10 +444,10 @@ export default {
         method: "post",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         url: this.source,
-        auth: {
+        /*auth: {
           username: "zaikin.ni",
           password: "Vbuhfwbz75",
-        },
+        },*/
         data: {
           type: type,
           data: data,
