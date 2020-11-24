@@ -37,7 +37,7 @@
                   close
                   @click:close="fld_name = ''"
                 >
-                  <v-icon left>mdi-folder</v-icon>
+                  <v-icon color="orange lighten-3" left>mdi-folder</v-icon>
                   {{ data.item.NAME }}
                 </v-chip>
               </template>

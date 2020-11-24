@@ -402,7 +402,6 @@ export default {
           params: {
             type: "get",
           },
-
           auth: {
             username: "zaikin.ni",
             password: "Vbuhfwbz75",
