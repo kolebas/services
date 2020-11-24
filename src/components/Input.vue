@@ -102,6 +102,7 @@
           :userId_err="item.err"
         />
         <InputFileCard v-if="item.type == 'file'" />
+        <InputAutocomplete :items="item" v-if="item.type == 'autocomplete'" />
       </v-col>
     </v-row>
   </v-container>
@@ -112,10 +113,12 @@
 import { bus } from "../main.js";
 import SelectUsr from "@/components/SelectUsr.vue";
 import InputFileCard from "@/components/InputFileCard.vue";
+import InputAutocomplete from "@/components/InputAutocomplete.vue";
 export default {
   components: {
     SelectUsr,
     InputFileCard,
+    InputAutocomplete,
   },
   props: {
     arrInput: { type: Array },
