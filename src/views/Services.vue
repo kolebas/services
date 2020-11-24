@@ -194,6 +194,11 @@ export default {
             img: "folder_add.png",
             lnk: "../request/nc-004",
           },
+          {
+            name: "Заявка на увеличение квоты для сетевого каталога",
+            img: "folder_chg.png",
+            route: "/nc005",
+          },
         ],
       },
       {

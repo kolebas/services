@@ -84,6 +84,11 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nc004.vue')
   },
   {
+    path: '/nc005',
+    name: 'Заявка на увеличение квоты для сетевого каталога',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Nc005.vue')
+  },
+  {
     path: '/inc',
     name: 'Инцидент',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Inc.vue')
