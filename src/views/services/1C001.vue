@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" />
+    <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
     <v-row>
       <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle
@@ -48,7 +48,7 @@ import { bus } from "@/main.js";
 import SelectUsr from "@/components/SelectUsr.vue";
 import SelectOrg from "@/components/SelectOrg.vue";
 import RqCardTitle from "@/components/RqCardTitle.vue";
-import DialogAfterSendFrom from "@/components/DialogAfterSendForm.vue";
+import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
 export default {
@@ -56,7 +56,7 @@ export default {
     SelectUsr,
     SelectOrg,
     RqCardTitle,
-    DialogAfterSendFrom,
+    DialogAfterSendForm,
     Input,
   },
   data: () => ({
