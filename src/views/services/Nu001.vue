@@ -41,8 +41,7 @@
               <v-card-subtitle>
                   Настройки временного доступа
                   <v-divider />
-              </v-card-subtitle>
-              
+              </v-card-subtitle>              
             <Input :arrInput="input" />
           </v-card>
         </v-expand-transition>
@@ -258,7 +257,8 @@ export default {
         type: "date",
         outlined: true,
         dense: true,
-        solo: true,
+        solo: true,        
+        range: true,
         err: "",
       },
     ],
