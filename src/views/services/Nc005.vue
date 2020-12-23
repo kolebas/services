@@ -110,16 +110,12 @@ export default {
     },
     getFolder() {
       axios
-        .get("https://portal.ahstep.ru/ahstep/services/ajax/ajax_nc.php", {
-          auth:{
-            login: "admin",
-            pssword: "Htdjk.wbz17"
-          },
+        .get("./ajax/ajax_nc.php", {
           data: {
             type: "getFldr",
           },
         })
-        .then((response) => (this.input[0].items = response.data))
+        .then((response) => (this.input[1].items = response.data))
         .catch(
           (error) => (
             (this.dialogMessage = "Произошла ошибка: " + error),
