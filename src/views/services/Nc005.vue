@@ -50,6 +50,13 @@ export default {
     input: [
       {
         id: 0,
+        name: "Подтвердите отсуствие дублирующей информации, а также видеоматериалов и другой ифнормации не относящейся с служебной деятельности",
+        value: "",
+        type: "switch",
+        class: "mt-2",
+      },
+      {
+        id: 1,
         name: "Имя каталога:",
         type: "autocomplete",
         value: [],
@@ -68,18 +75,34 @@ export default {
         value: "",
         cs: "13",
         md: "2",
-        select_arr: [10, 50, 100, 150],
+        select_arr: ["10 Гб.", "50 Гб.", "100 Гб.", "150 Гб."],
         outlined: true,
         dense: true,
         solo: true,
         err: "",
-      },
+      },      
     ],
   }),
   created() {
     bus.$on("valueAutocomplete", (data) => {
       this.input[0].value = data;
     });
+  },
+  computed: {
+    change_switch1() {
+      return this.input[0].value;
+    },
+  },
+  watch: {
+    change_switch1(newValue) {
+      if (newValue == true) {
+        this.input[0].label = "Подтверждаю";
+        this.btnStatus = false
+      } else {
+        this.input[0].label = "";
+        this.btnStatus = true
+      }
+    },
   },
   methods: {
     formCancl: function () {
@@ -100,7 +123,7 @@ export default {
         .catch(
           (error) => (
             (this.dialogMessage = "Произошла ошибка: " + error),
-            (this.dialog = true)
+            (this.dialog = false)
           )
         );
     },
@@ -154,6 +177,7 @@ export default {
       }
     },
   },
+  
 
   mounted() {
     this.getFolder();
