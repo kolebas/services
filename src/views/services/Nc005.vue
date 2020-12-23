@@ -87,7 +87,11 @@ export default {
     },
     getFolder() {
       axios
-        .get("./ajax/ajax_nc.php", {
+        .get("https://portal.ahstep.ru/ahstep/services/ajax/ajax_nc.php", {
+          auth:{
+            login: "admin",
+            pssword: "Htdjk.wbz17"
+          },
           data: {
             type: "getFldr",
           },
