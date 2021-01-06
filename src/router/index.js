@@ -142,6 +142,11 @@ const routes = [{
     path: '/ml001',
     name: 'Заявка на создание/изменение электронного почтового ящика',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Ml001.vue')
+  },
+  {
+    path: '/test',
+    name: 'Тест',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/test.vue')
   }
 
 ]
