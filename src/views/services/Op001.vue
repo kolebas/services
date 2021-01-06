@@ -10,6 +10,104 @@
         <hr />
         <Input :arrInput="input" />
         <hr />
+        <v-toolbar flat>
+          <v-toolbar-title>Агрономические параметры</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <div>
+            <v-btn
+              color="primary"
+              elevation="2"
+              :disabled="disableBtn"
+              class="mb-2"
+              small
+              @click="dialogParam = true"
+              >Добавить параметры</v-btn
+            >
+          </div>
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-dialog v-model="dialogParam" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Новый параметр</span>
+            </v-card-title>
+            <v-divider />
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="12">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      label="Наименование"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.amount"
+                      label="Количество шт."
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.dv"
+                      label="ДВ"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.phase"
+                      label="Фаза внесения"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="12">
+                    <v-text-field
+                      v-model="editedItem.price"
+                      label="Расход и стоимость л/кг на га"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close"> Отмена </v-btn>
+              <v-btn color="blue darken-1" text @click="save">
+                Сохранить
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogDelete" max-width="650px">
+          <v-card>
+            <v-card-title class="headline"
+              >Вы действитель хотите удалить данный параметр?</v-card-title
+            >
+            <v-divider />
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelete">Нет</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                >Да</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-data-table
+          :headers="headers"
+          :items="params"
+          class="elevation-1"
+          hide-default-footer
+        >
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">
+              mdi-pencil
+            </v-icon>
+            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          </template></v-data-table
+        >
         <v-card-actions class="py-4">
           <div class="mx-auto">
             <v-btn
@@ -78,7 +176,8 @@ export default {
       {
         id: 2,
         name: "Контактная информация:",
-        label: "Пример: Телефон: +7901001020, Электронная почта: agro@example.com",
+        label:
+          "Пример: Телефон: +7901001020, Электронная почта: agro@example.com",
         value: "",
         cs: "12",
         sm: "6",
@@ -149,79 +248,6 @@ export default {
         dense: true,
         solo: true,
       },
-      
-      {
-        id: 8,
-        name: "Аг-ие пар-ры (Наименование)",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-      },
-      {
-        id: 9,
-        name: "Аг-ие пар-ры (Производитель)",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-      },
-      {
-        id: 10,
-        name: "Аг-ие пар-ры (Кол-во шт.)",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-      },
-      {
-        id: 11,
-        name: "Аг-ие пар-ры (ДВ)",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-      },
-      {
-        id: 12,
-        name: "Аг-ие пар-ры (Фаза внесения)",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-      },
-      {
-        id: 13,
-        name: "Расход и стоимость л/кг на га",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-      },
       {
         id: 14,
         name: "Реквизиты организации:",
@@ -234,21 +260,31 @@ export default {
         dense: true,
         solo: true,
       },
-      {
-        id: 15,
-        name: "Комментарий:",
-        label: "Напишите что по вашему мнению должны знать согласующие",
-        value: "",
-        cs: "12",
-        sm: "6",
-        md: "6",
-        type: "textarea",
-        outlined: true,
-        dense: true,
-        solo: true,
-        err: "",
-      }
     ],
+    headers: [
+      { text: "Наименование", value: "name", sortable: false },
+      { text: "Кол-во шт.", value: "amount", sortable: false },
+      { text: "ДВ", value: "dv", sortable: false },
+      { text: "Фаза внесения", value: "phase", sortable: false },
+      {
+        text: "Расход и стоимость л/кг на га",
+        value: "price",
+        sortable: false,
+      },
+      { text: "Действия", value: "actions", sortable: false },
+    ],
+    editedItem: {
+      name: "",
+      amount: "",
+      dv: "",
+      phase: "",
+      price: ""
+    },
+    params: [],
+    disableBtn: false,
+    dialogParam: false,
+    dialogDelete: false,
+    editedIndex: -1,
   }),
   created() {
     bus.$on("inputFile", (data) => {
@@ -256,18 +292,66 @@ export default {
     });
   },
   methods: {
+    editItem(item) {
+      this.editedIndex = this.params.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogParam = true;
+    },
+
+    deleteItem(item) {
+      this.editedIndex = this.params.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+      console.log(item);
+    },
+
+    deleteItemConfirm() {
+      this.params.splice(this.editedIndex, 1);
+      this.disableBtn = false;
+      this.closeDelete();
+    },
+
+    close() {
+      this.dialogParam = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.params[this.editedIndex], this.editedItem);
+      } else {
+        this.params.push(this.editedItem);
+      }
+      this.disableBtn = true;
+      this.close();
+    },
     formCancl() {
       this.$router.go(-1);
     },
     formSend() {
       this.btnLoader = true;
       if (this.input) {
+        this.input = this.input.concat(this.params);
         console.log(this.input);
         axios({
           method: "post",
           headers: { "Content-Type": "multipart/form-data" },
           url: "./ajax/ajax_op001.php",
-          data: this.input,
+          data: {
+            input: this.input,
+            params: this.params
+          }
         })
           .then((response) => {
             if (response.status == 200) {
