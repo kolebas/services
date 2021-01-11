@@ -45,7 +45,7 @@ export default {
     sub_message: "Данная услуга позволяет увеличить размер сетевого каталога. Также вы сможете отслеживать статус заявки в разделе",
     dialog: false,
     btnLoader: false,
-    btnStatus: false,
+    btnStatus: true,
     dialogMessage: "",
     input: [
       {
@@ -75,7 +75,7 @@ export default {
         value: "",
         cs: "13",
         md: "2",
-        select_arr: ["10 Гб.", "50 Гб.", "100 Гб.", "150 Гб."],
+        select_arr: ["10 Гб.", "50 Гб.", "100 Гб.", "150 Гб.", "200 Гб."],
         outlined: true,
         dense: true,
         solo: true,
@@ -85,7 +85,7 @@ export default {
   }),
   created() {
     bus.$on("valueAutocomplete", (data) => {
-      this.input[0].value = data;
+      this.input[1].value = data;
     });
   },
   computed: {
