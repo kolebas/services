@@ -104,6 +104,11 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/hr/Market.vue')
   },
   {
+    path: '/agro',
+    name: 'Dashboard',
+    component: () => import( /* webpackChunkName: "services" */ '../views/dashboard/agro.vue')
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import( /* webpackChunkName: "services" */ '../views/dashboard/index.vue')
@@ -142,6 +147,11 @@ const routes = [{
     path: '/ml001',
     name: 'Заявка на создание/изменение электронного почтового ящика',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Ml001.vue')
+  },
+  {
+    path: '/adm001',
+    name: 'Заявка на предоставление администраторского доступа.',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Adm001.vue')
   },
   {
     path: '/test',

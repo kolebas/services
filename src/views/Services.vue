@@ -27,19 +27,6 @@
 
         <v-expansion-panels :inset="inset" :focusable="focusable" :tile="tile">
           <v-expansion-panel v-for="(cat, i) in cats" :key="i">
-            <v-expansion-panel-header
-              v-if="condition && cat.status == 'dev'"
-              class="py-0"
-            >
-              <v-col cols="1" class="px-0">
-                <img :src="require('../assets/img/' + cat.img)" />
-              </v-col>
-              <v-col cols="10" class="px-0">
-                <p class="subtitle-1 font-weight-medium mb-0">
-                  {{ cat.name }}
-                </p>
-              </v-col>
-            </v-expansion-panel-header>
             <v-expansion-panel-header v-if="cat.status != 'dev'" class="py-0">
               <v-col cols="1" class="px-0">
                 <img :src="require('../assets/img/' + cat.img)" />
@@ -54,14 +41,32 @@
               <v-list>
                 <v-list-item-group v-for="(item, i) in cat.items" :key="i">
                   <template>
-                  <v-list-item @click="itemclk(item.lnk, item.route)" v-if="condition && item.status == 'dev' || item.status != 'dev'">
-                    <v-list-item-icon>
-                      <img :src="require('../assets/img/' + item.img)" />
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="item.name"></v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
+                    <v-list-item
+                      @click="itemclk(item.lnk, item.route)"
+                      v-if="
+                        (condition && item.status == 'dev') ||
+                        item.status != 'dev'
+                      "
+                    >
+                      <v-list-item-icon>
+                        <img :src="require('../assets/img/' + item.img)" />
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title v-text="item.name" />
+                      </v-list-item-content>
+                      <v-list-item-action>
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon v-bind="attrs" v-on="on">
+                              <v-icon color="grey"
+                                >mdi-information-outline</v-icon
+                              >
+                            </v-btn>
+                          </template>
+                          <span>{{ item.info }}</span>
+                        </v-tooltip>
+                      </v-list-item-action>
+                    </v-list-item>
                   </template>
                   <v-divider />
                 </v-list-item-group>
@@ -97,6 +102,7 @@ export default {
       },
     ],
     usrid: "",
+    usrGroup: "",
     title: "Заявки на доступ к ИТ услугам",
     sub_message:
       "Для получения доступа к сервису или услуге, выберите нужную категорию, а затем услугу. После заполнения необходимых полей формы, заявка будет отправлена на согласование ответственным сотрудникам. Статус заявки вы можете отслеживать в разделе.",
@@ -119,32 +125,49 @@ export default {
           {
             name: "Новый пользователь",
             img: "user_add.png",
+            info:
+              "Создание нового пользователь в информационных системах общества.",
             route: "/nu001",
           },
           {
             name: "Удаленный доступ (VPN)",
             img: "vpn.png",
+            info:
+              "Предоставление удаленного доступа с мобильного, лмчного или корпоративного устройства к информационным системам общества",
             route: "/ns001",
           },
           {
             name: "Служебная сотовая связь",
             img: "sim_add.png",
+            info: "Выдача корпоративной SIM карты",
             route: "/ph001",
           },
           {
             name: "Установка программного обеспечения",
             img: "soft.png",
+            info:
+              "Установка програмнного обечпечения на корпоративный компьютер",
             route: "/sf001",
           },
           {
             name: "Отключение доступов",
             img: "user_del.png",
+            info: "Блокировние пользователя в информационных систмах",
             route: "/ar001",
           },
           {
             name: "Запись онлайн мероприятий (вебинар, обучение)",
             img: "rc001.png",
+            info: "Запись видео и аудио мероприятий",
             route: "/rc001",
+          },
+          {
+            name: "Заявка на предоставление администраторского доступа",
+            img: "admin.png",
+            route: "/adm001",
+            info:
+              "Предоставление высокопривеллегированнх прав к информационным системам",
+            status: "dev",
           },
         ],
       },
@@ -155,11 +178,14 @@ export default {
           {
             name: "Предоставление доступа к 1С",
             img: "1s.png",
+            info:
+              "Предоставление прав просмотра или редактрования в базах данных 1С",
             route: "/1c001",
           },
           {
             name: "Запрос на доработку 1С",
             img: "1s.png",
+            info: "Запрос на доработку функционала в базах данных 1С",
             route: "/1c002",
           },
         ],
@@ -271,20 +297,18 @@ export default {
   },
   mounted() {
     axios
-      .get("./ajax/ajax_usr.php", {})
-      .then((response) => (this.usrid = response.data));
-  },
-  computed: {
-    condition() {
-      this.usrid;
-      return (
-        this.usrid == 1 ||
-        this.usrid == 2318 ||
-        this.usrid == 2416 ||
-        this.usrid == 2385 ||
-        this.usrid == 3371 ||
-        this.usrid == 1940 
+      .get("./ajax/ajax_usr.php", {
+        auth: {}
+      })
+      .then(
+        (response) => (
+          (this.usrid = response.data[0]["ID"]), (this.usrGroup = response.data[0]["GROUP"])
+        )
       );
+  },
+  computed: {    
+    condition() {
+      return this.usrid == 1 || this.usrGroup.includes("4");
     },
   },
 };
