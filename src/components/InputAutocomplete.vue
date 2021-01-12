@@ -21,7 +21,7 @@
                   close
                   @click:close="items.value = []"
                 >
-                  <v-icon :color="items.color" left>{{items.icon}}</v-icon>
+                  <v-icon :color="items.color || data.item.COLOR" left>{{items.icon}} || {{ data.item.ICON }}</v-icon>
                   {{ data.item.NAME }}
                 </v-chip>
               </template>
