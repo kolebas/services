@@ -166,11 +166,10 @@ export default {
     bus.$on("inputCard", (data) => {
       this.inputs[data.input_id - 1].value = data.value;
       this.inputs[data.input_id - 1].err = "";
-      let dep = (this.inputs[1].value)
-          ? "-" + this.inputs[1].value
-          : this.inputs[1].value;
-      this.fldName =
-        this.org_name.rdt + "-" + this.inputs[0].value + dep
+      let dep = this.inputs[1].value
+        ? "-" + this.inputs[1].value
+        : this.inputs[1].value;
+      this.fldName = this.org_name.rdt + "-" + this.inputs[0].value + dep;
     }),
       bus.$on("selectOrg", (data) => {
         this.org_err = "";
