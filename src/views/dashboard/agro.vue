@@ -87,70 +87,72 @@
               </v-col>
             </v-row>
             <br />
-            <v-btn
-              color="blue-grey lighten-4"
-              class="mx-auto"
-              small
-              @click="(addInfo = !addInfo), (log = false)"
-              ><v-icon color="indigo" left>mdi-format-list-bulleted</v-icon
-              >Дополнительная информация</v-btn
-            >
-            <v-btn
-              color="blue-grey lighten-4"
-              class="ml-2"
-              small
-              @click="(log = !log), (addInfo = false)"
-              ><v-icon color="info" left>mdi-history</v-icon>История
-              заявки</v-btn
-            >
+            <v-container>
+              <v-btn
+                color="blue-grey lighten-4"
+                class="mx-auto"
+                small
+                @click="(addInfo = !addInfo), (log = false)"
+                ><v-icon color="indigo" left>mdi-format-list-bulleted</v-icon
+                >Дополнительная информация</v-btn
+              >
+              <v-btn
+                color="blue-grey lighten-4"
+                class="ml-2"
+                small
+                @click="(log = !log), (addInfo = false)"
+                ><v-icon color="info" left>mdi-history</v-icon>История
+                заявки</v-btn
+              >
+            </v-container>
             <v-expand-transition>
-              <v-row class="mb-n8" v-if="addInfo">
-                <v-col>
-                  <v-textarea
-                    label="Контактная информация"
-                    rows="1"
-                    auto-grow
-                    outlined
-                    filled
-                    :value="task.KONTAKTNAYA_INFORMATSIYA"
-                    readonly
-                  />
-                </v-col>
-              </v-row>
+              <v-container v-if="addInfo" class="mb-n6">
+                <v-row class="mb-n6">
+                  <v-col>
+                    <v-textarea
+                      label="Контактная информация"
+                      rows="1"
+                      auto-grow
+                      outlined
+                      filled
+                      :value="task.KONTAKTNAYA_INFORMATSIYA"
+                      readonly
+                    />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      label="Реквизиты организации"
+                      rows="1"
+                      auto-grow
+                      outlined
+                      filled
+                      :value="task.REKVIZITY_ORGANIZATSII"
+                      readonly
+                    />
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-expand-transition>
             <v-expand-transition>
-              <v-row class="mb-n8" v-if="addInfo">
-                <v-col>
-                  <v-textarea
-                    label="Реквизиты организации"
-                    rows="1"
-                    auto-grow
-                    outlined
-                    filled
-                    :value="task.REKVIZITY_ORGANIZATSII"
-                    readonly
-                  />
-                </v-col>
-              </v-row>
-            </v-expand-transition>
-            <v-expand-transition>
-              <v-row class="mb-n8" v-if="log">
-                <v-col>
-                  <v-textarea
-                    label="История заявки"
-                    auto-grow
-                    outlined
-                    filled
-                    :value="task.LOG"
-                    readonly
-                  />
-                </v-col>
-              </v-row>
+              <v-container class="mb-n12">
+                <v-row v-if="log">
+                  <v-col>
+                    <v-textarea
+                      label="История заявки"
+                      auto-grow
+                      outlined
+                      filled
+                      :value="task.LOG"
+                      readonly
+                    />
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-expand-transition>
           </v-card-text>
-
           <v-divider></v-divider>
-
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="dialog = false">
@@ -160,43 +162,7 @@
         </v-card>
       </v-dialog>
       <h1>{{ $router.currentRoute.name }}</h1>
-      <hr />
-      <!--<v-row>
-      <v-col cols="3" v-for="card in cards" :key="card.name">
-        <v-card class="mt-1" elevation="1" outlined>
-          <v-row>
-            <v-col cols="8">
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <v-list-item-title class="headline mb-1">
-                    {{ card.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ card.name }} опытов:
-                    <span class="title ml-1">{{ card.value }}</span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-col>
-            <v-col cols="4">
-              <v-progress-circular
-                :rotate="-90"
-                :size="100"
-                :width="15"
-                :value="(card.value / items.length) * 100 + '%'"
-                :color="card.color"
-              >
-                <v-card-title class="headline mb-1">
-                  {{
-                    ((card.value / items.length) * 100 + "").split(".")[0]
-                  }}%</v-card-title
-                >
-              </v-progress-circular>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>-->
+      <v-divider class="mb-2" />
       <v-row>
         <v-col cols="6">
           <v-row>
@@ -224,21 +190,23 @@
                     </v-list-item>
                   </v-col>
                   <v-col cols="2">
-                    <v-progress-circular
-                      :rotate="-90"
-                      :size="100"
-                      :width="15"
-                      :value="(card.value / items.length) * 100 + '%'"
-                      :color="card.color"
-                    >
-                      <v-card-title class="headline mb-1">
-                        {{
-                          ((card.value / items.length) * 100 + "").split(
-                            "."
-                          )[0]
-                        }}%</v-card-title
+                    <v-container class="px-0">
+                      <v-progress-circular
+                        :rotate="-90"
+                        :size="100"
+                        :width="15"
+                        :value="(card.value / items.length) * 100 + '%'"
+                        :color="card.color"
                       >
-                    </v-progress-circular>
+                        <v-card-title class="headline mb-1">
+                          {{
+                            ((card.value / items.length) * 100 + "").split(
+                              "."
+                            )[0]
+                          }}%</v-card-title
+                        >
+                      </v-progress-circular>
+                    </v-container>
                   </v-col>
                 </v-row>
               </v-card>
@@ -264,21 +232,23 @@
                     </v-list-item>
                   </v-col>
                   <v-col cols="4">
-                    <v-progress-circular
-                      :rotate="-90"
-                      :size="100"
-                      :width="15"
-                      :value="(card.value / items.length) * 100 + '%'"
-                      :color="card.color"
-                    >
-                      <v-card-title class="headline mb-1">
-                        {{
-                          ((card.value / items.length) * 100 + "").split(
-                            "."
-                          )[0]
-                        }}%</v-card-title
+                    <v-container class="px-0">
+                      <v-progress-circular
+                        :rotate="-90"
+                        :size="100"
+                        :width="15"
+                        :value="(card.value / items.length) * 100 + '%'"
+                        :color="card.color"
                       >
-                    </v-progress-circular>
+                        <v-card-title class="headline mb-1">
+                          {{
+                            ((card.value / items.length) * 100 + "").split(
+                              "."
+                            )[0]
+                          }}%</v-card-title
+                        >
+                      </v-progress-circular>
+                    </v-container>
                   </v-col>
                 </v-row>
               </v-card>
@@ -286,7 +256,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <hr class="mb-6" />
+      <v-divider class="my-4" />
       <v-card class="mx-auto" width="100%">
         <v-card-title>
           <v-toolbar-title>Агрономические опыты</v-toolbar-title>
@@ -309,6 +279,14 @@
           <template v-slot:item.STATUS="{ item }">
             <v-chip :color="getStatus(item.STATUS)" dark>
               {{ item.STATUS }}
+            </v-chip>
+          </template>
+          <template v-slot:item.RESPONSIBLE="{ item }">
+            <v-chip  :href="'../../company/personal/user/'+ item.RESPONSIBLEID + '/'" v-if="item.RESPONSIBLE != ' '"  color="grey" outlined>
+              <v-avatar left>
+                <img v-if="item.PHOTO" :src="item.PHOTO" />
+                <v-icon v-else>mdi-account-circle</v-icon>
+              </v-avatar><span>{{ item.RESPONSIBLE }}</span>
             </v-chip>
           </template>
         </v-data-table>
@@ -353,7 +331,7 @@ export default {
       },
       {
         text: "Отвественный",
-        value: "OTVESTVENNYY",
+        value: "RESPONSIBLE",
       },
     ],
     items: [],
@@ -372,8 +350,8 @@ export default {
     ],
     addInfo: false,
     log: false,
-    //source: "./ajax/ajax_op002.php",
-    source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_op002.php",
+    source: "./ajax/ajax_op002.php",
+    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_op002.php",
   }),
   created() {
     axios
@@ -381,15 +359,12 @@ export default {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
-        auth: {
-          username: "zaikin.ni",
-          password: "Vbuhfwbz75",
-        },
         params: {
           getItems: "getItems",
         },
       })
       .then((response) => ((this.items = response.data), this.getValue()));
+      
   },
   computed: {
     mainCard() {
@@ -439,10 +414,6 @@ export default {
         .get(this.source, {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-          },
-          auth: {
-            username: "zaikin.ni",
-            password: "Vbuhfwbz75",
           },
           params: {
             getTask: id,
