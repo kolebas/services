@@ -9,7 +9,8 @@
       <v-card max-width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle :title="title" :sub_message="subtitle"></RqCardTitle>
         <hr />
-        <v-row class="mb-n6">
+        <br>
+        <v-row>
           <v-col cols="5">
             <v-card-text class="subtitle-1 text-right pt-2"
               >Каталог:</v-card-text

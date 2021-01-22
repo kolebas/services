@@ -148,7 +148,6 @@ export default {
     btnStatus: false,
     input: [
       {
-        id: 0,
         name: "Название организации:",
         label: "Пример: ПАО Родина",
         value: "",
@@ -161,7 +160,6 @@ export default {
         solo: true,
       },
       {
-        id: 1,
         name: "Контактное лицо:",
         label: "Пример: Кисс Николай Николаевич",
         value: "",
@@ -174,7 +172,6 @@ export default {
         solo: true,
       },
       {
-        id: 2,
         name: "Контактная информация:",
         label:
           "Пример: Телефон: +7901001020, Электронная почта: agro@example.com",
@@ -188,7 +185,6 @@ export default {
         solo: true,
       },
       {
-        id: 3,
         name: "Тема опыта:",
         labbel: "Пример: тестирование нового препарата",
         value: "",
@@ -201,7 +197,6 @@ export default {
         solo: true,
       },
       {
-        id: 4,
         name: "Цели опыта:",
         value: "",
         cs: "12",
@@ -213,7 +208,6 @@ export default {
         solo: true,
       },
       {
-        id: 5,
         name: "Задачи опыта:",
         value: "",
         cs: "12",
@@ -225,7 +219,6 @@ export default {
         solo: true,
       },
       {
-        id: 6,
         name: "Объект опыта:",
         value: "",
         cs: "12",
@@ -237,7 +230,6 @@ export default {
         solo: true,
       },
       {
-        id: 7,
         name: "Экономическая эффективность: ",
         value: "",
         cs: "12",
@@ -249,13 +241,22 @@ export default {
         solo: true,
       },
       {
-        id: 14,
         name: "Реквизиты организации:",
         value: "",
         cs: "12",
         sm: "6",
         md: "6",
         type: "textarea",
+        outlined: true,
+        dense: true,
+        solo: true,
+      },
+      {
+        name: "Файл:",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "file",
         outlined: true,
         dense: true,
         solo: true,
@@ -278,17 +279,20 @@ export default {
       amount: "",
       dv: "",
       phase: "",
-      price: ""
-    },
+      price: "",
+    },    
+    file: [],
     params: [],
     disableBtn: false,
     dialogParam: false,
     dialogDelete: false,
     editedIndex: -1,
+    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_optest.php",
+    source: "./ajax/ajax_op001.php",
   }),
   created() {
     bus.$on("inputFile", (data) => {
-      this.input[3].value = data;
+      this.file = data;
     });
   },
   methods: {
@@ -343,15 +347,22 @@ export default {
       this.btnLoader = true;
       if (this.input) {
         this.input = this.input.concat(this.params);
-        console.log(this.input);
+
+        //formData объект для отправки файлов и других данных на сервер
+        var formData = new FormData();
+        for (var i = 0; i < this.file.length; i++) {
+          let file = this.file[i];
+          formData.append("file[" + i + "]", file);
+        }
+
+        //Добавляем в объект fromData массив input
+        formData.append("input", JSON.stringify(this.input));
+        formData.append("params", JSON.stringify(this.params));
         axios({
           method: "post",
           headers: { "Content-Type": "multipart/form-data" },
-          url: "./ajax/ajax_op001.php",
-          data: {
-            input: this.input,
-            params: this.params
-          }
+          url: this.source,
+          data: formData,
         })
           .then((response) => {
             if (response.status == 200) {
@@ -359,6 +370,8 @@ export default {
               this.dialogMessage =
                 "Успешно. Номер вашей заявки: " + response.data;
               this.btnLoader = false;
+              console.log(response.data);
+
             }
           })
           .catch((error) => {
