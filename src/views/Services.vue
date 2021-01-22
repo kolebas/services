@@ -1,15 +1,5 @@
 <template>
   <v-container>
-    <!--<v-tabs>
-            <v-tab
-                v-for="tab in tabs"
-                :key="tab.id"
-                @click="itemclk(tab.lnk, tab.route)"
-                >{{ tab.text }}</v-tab
-            >
-        </v-tabs>-->
-    <v-divider></v-divider>
-    <br />
     <v-row>
       <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
         <v-card-text class="pa-0">
@@ -83,24 +73,6 @@
 import axios from "axios";
 export default {
   data: () => ({
-    tabs: [
-      { id: "0", text: "Отправить заявку", route: "/" },
-      {
-        id: "1",
-        text: "Мои заявки",
-        lnk: "../../it-uslugi/helpdesk/my_ticket.php",
-      },
-      {
-        id: "2",
-        text: "Заявки НСИ",
-        lnk: "../../it-uslugi/vse-zayavki.php",
-      },
-      {
-        id: "3",
-        text: "AdminPanel",
-        lnk: "../../it-uslugi/adminpanel.php",
-      },
-    ],
     usrid: "",
     usrGroup: "",
     title: "Заявки на доступ к ИТ услугам",
@@ -298,15 +270,16 @@ export default {
   mounted() {
     axios
       .get("./ajax/ajax_usr.php", {
-        auth: {}
+        auth: {},
       })
       .then(
         (response) => (
-          (this.usrid = response.data[0]["ID"]), (this.usrGroup = response.data[0]["GROUP"])
+          (this.usrid = response.data[0]["ID"]),
+          (this.usrGroup = response.data[0]["GROUP"])
         )
       );
   },
-  computed: {    
+  computed: {
     condition() {
       return this.usrid == 1 || this.usrGroup.includes("4");
     },
