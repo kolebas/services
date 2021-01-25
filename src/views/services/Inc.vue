@@ -7,7 +7,8 @@
           <p class="text-center pt-4 headline text--primary">{{ title }}</p>
           <p class="subtitle-1 font-weight-medium mx-8">{{ sub_title }}</p>
         </v-card-text>
-        <hr />
+        <v-divider />
+        <br>
         <v-row>
           <v-col cols="11" class="mx-auto">
             <label>Краткое описание:</label>
@@ -59,8 +60,8 @@
             ></v-textarea>
             <InputFileCard />
           </v-col>
-        </v-row>
-        <hr />
+        </v-row>        
+        <v-divider />
         <v-card-actions class="py-4">
           <div class="mx-auto">
             <v-btn

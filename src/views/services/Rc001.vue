@@ -144,9 +144,6 @@ export default {
     change_switch1() {
       return this.input1[0].value;
     },
-    /*change_switch2() {
-      return this.input[5].value;
-    },*/
   },
   watch: {
     change_switch1(newValue) {
@@ -158,15 +155,6 @@ export default {
         this.btnStatus = true
       }
     },
-    /*change_switch2(newValue) {
-      if (newValue == true) {
-        this.input[5].label = "ДА";
-        this.input[6].visible = true
-      } else {
-        this.input[5].label = "";
-        this.input[6].visible = false
-      }
-    },*/
   },
   methods: {
     formCancl() {
