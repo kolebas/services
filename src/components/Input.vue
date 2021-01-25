@@ -94,7 +94,7 @@
           :class="item.class"
           @change="input"          
         ><template slot="label"><span class="green--text text-uppercase">{{item.label}}</span></template></v-switch>
-        <SelectUsr
+        <AutocompleteUsr
           v-if="item.type == 'selectUsr' && item.visible != false"
           @change="input"
           :classItem="item.class"
@@ -111,12 +111,12 @@
 
 <script>
 import { bus } from "../main.js";
-import SelectUsr from "@/components/SelectUsr.vue";
+import AutocompleteUsr from "@/components/AutocompleteUsr.vue";
 import InputFileCard from "@/components/InputFileCard.vue";
 import InputAutocomplete from "@/components/InputAutocomplete.vue";
 export default {
   components: {
-    SelectUsr,
+    AutocompleteUsr,
     InputFileCard,
     InputAutocomplete,
   },
