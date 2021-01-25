@@ -19,7 +19,7 @@
                   color="#bcedfc"
                   label
                   close
-                  @click:close="items.value = []"
+                  @click:close="items.value = ''"
                 >
                   <v-icon :color="items.color || data.item.COLOR" left>{{items.icon}} || {{ data.item.ICON }}</v-icon>
                   {{ data.item.NAME }}
