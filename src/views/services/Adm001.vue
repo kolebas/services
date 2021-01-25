@@ -2,13 +2,16 @@
   <v-container>
     <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" />
     <v-row>
-        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle
           :title="$router.currentRoute.name"
-          :sub_message="sub_message"
+          :sub_message_enable="false"
         ></RqCardTitle>
         <hr />
         <Input :arrInput="input" />
+        <v-card-text>
+          * Поля обязательные для заполнения
+        </v-card-text>
         <hr />
         <v-card-actions class="py-4">
           <div class="mx-auto">
@@ -24,31 +27,31 @@
             <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
           </div>
         </v-card-actions>
-        </v-card>
+      </v-card>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { bus } from "@/main.js";
 import RqCardTitle from "@/components/RqCardTitle.vue";
 import DialogAfterSendFrom from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
 export default {
-    components: {
+  components: {
     RqCardTitle,
     DialogAfterSendFrom,
     Input,
   },
-  data:() => ({
-      sub_message: "Заявка для ????????????????????????????????????????????????????",
-      dialog: false,
-        dialogMessage: "",
-        btnLoader: false,
-        btnStatus: true,
-      input: [{
-        id: 0,
-        name: "ФИО:",
+  data: () => ({
+    dialog: false,
+    dialogMessage: "",
+    btnLoader: false,
+    btnStatus: true,
+    input: [
+      {
+        name: "ФИО*:",
         label: "Пример: Крючков Иван Петрович",
         value: "",
         cs: "12",
@@ -58,13 +61,13 @@ export default {
         type: "selectUsr",
       },
       {
-        id: 1,
-        name: "Тип доступа:",
+        name: "Тип доступа*:",
         value: "",
         items: [
-            {NAME: "Микротики", ICON: "mdi-router-network"},
-            {NAME: "Сервера", ICON: "mdi-server"}
-            ],
+          { NAME: "Сетевое", ICON: "mdi-router-network" },
+          { NAME: "Серверное", ICON: "mdi-server" },
+          { NAME: "Другое", ICON: "mdi-crosshairs-question" },
+        ],
         cs: "12",
         sm: "6",
         md: "6",
@@ -72,10 +75,9 @@ export default {
         color: "green",
         outlined: true,
         dense: true,
-        solo: true,          
+        solo: true,
       },
       {
-        id: 2,
         name: "Комментарий:",
         value: "",
         cs: "12",
@@ -85,9 +87,14 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
-      }
-      ],
+      },
+    ],
   }),
+  created() {
+    bus.$on("SelectUsr", (data) => {
+      this.input[0].value = data;
+    });
+  },
   computed: {
     getValue() {
       return this.input[0].value && this.input[1].value;
@@ -95,31 +102,28 @@ export default {
   },
   watch: {
     getValue(newValue) {
-        console.log(newValue)
       if (newValue) {
-        //this.input[0].label = "Подтверждаю";
-        this.btnStatus = false
+        this.btnStatus = false;
       } else {
-        //this.input[0].label = "";
-        this.btnStatus = true
+        this.btnStatus = true;
       }
     },
   },
   methods: {
-      formCancl() {
+    formCancl() {
       this.$router.go(-1);
     },
     formSend() {
-      this.btnLoader = true;
-      if (this.input) {
+      if (this.input[1].value) {
+        this.btnLoader = true;
         axios({
           method: "post",
           headers: { "Content-Type": "multipart/form-data" },
-          url: "./ajax/ajax_adm001.php",
+          url: "./ajax/ajax_service.php",
           data: {
             input: this.input,
-            params: this.params
-          }
+            type: "adm001"
+          },
         })
           .then((response) => {
             if (response.status == 200) {
@@ -130,17 +134,15 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
+            this.dialogMessage = "Произошла ошибка " + error;
             this.btnLoader = false;
           });
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
-
 </style>

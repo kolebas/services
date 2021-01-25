@@ -150,7 +150,7 @@ const routes = [{
   },
   {
     path: '/adm001',
-    name: 'Заявка на предоставление администраторского доступа.',
+    name: 'Заявка на предоставление дополнительных доступов',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Adm001.vue')
   },
   {
