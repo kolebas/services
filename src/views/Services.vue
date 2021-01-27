@@ -75,6 +75,7 @@ export default {
   data: () => ({
     usrid: "",
     usrGroup: "",
+    usrSocGroup: "",
     title: "Заявки на доступ к ИТ услугам",
     sub_message:
       "Для получения доступа к сервису или услуге, выберите нужную категорию, а затем услугу. После заполнения необходимых полей формы, заявка будет отправлена на согласование ответственным сотрудникам. Статус заявки вы можете отслеживать в разделе.",
@@ -134,7 +135,7 @@ export default {
             route: "/rc001",
           },
           {
-            name: "Заявка на предоставление администраторского доступа",
+            name: "Заявка на предоставление дополнительных доступов",
             img: "admin.png",
             route: "/adm001",
             info:
@@ -275,13 +276,14 @@ export default {
       .then(
         (response) => (
           (this.usrid = response.data[0]["ID"]),
-          (this.usrGroup = response.data[0]["GROUP"])
+          (this.usrGroup = response.data[0]["GROUP"]),
+          (this.usrSocGroup = response.data[0]["SocGROUP"])
         )
       );
   },
   computed: {
     condition() {
-      return this.usrid == 1 || this.usrGroup.includes("4");
+      return this.usrid == 1 || this.usrSocGroup != "";
     },
   },
 };
