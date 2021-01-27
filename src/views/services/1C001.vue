@@ -98,14 +98,8 @@ export default {
         sm: "6",
         md: "6",
         type: "select",
-        select_arr: [
-          "Агрокомплекс",
-          "Документооборот",
-          "КУСХП 2017",
-          "КУСХП",
-          "Управление холдингом",
-          "НЕТ В СПИСКЕ",
-        ],
+        select_arr: [],
+        selectDB: [],
         outlined: true,
         dense: true,
         solo: true,
@@ -173,6 +167,7 @@ export default {
     file: [],
     dialog: false,
     dialogMessage: "",
+    source: "./ajax/ajax_1c001.php",
   }),
   created() {
     bus.$on("resultArray", (data) => {
@@ -193,6 +188,15 @@ export default {
         this.input[3].value = "user_" + data.userId;
       }
     });
+  },
+  mounted() {
+    axios
+      .get(this.source, {
+        params: {
+              getDB: true
+            }
+      })
+      .then((response) => (this.input[2].select_arr = response.data))
   },
   methods: {
     formCancl: function () {
@@ -227,8 +231,11 @@ export default {
           method: "post",
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
-          url: "./ajax/ajax_1c001.php",
-          data: this.input,
+          url: this.source,
+          data: {
+            type: "1c001",
+            input: this.input
+          }
         })
           .then((response) => {
             if (response.status == 200) {
@@ -239,9 +246,8 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
+            this.dialogMessage = "Произошла ошибка: " + error;
             this.btnLoader = false;
           });
       }
