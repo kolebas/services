@@ -103,6 +103,7 @@
         />
         <InputFileCard v-if="item.type == 'file'" />
         <InputAutocomplete :items="item" v-if="item.type == 'autocomplete'" />
+        <SelectOrg :title='item.name' :cols_title='item.cols_title' :cols_input='item.cols_input' :org_err='item.org_err' v-if="item.type == 'selectOrg'" />
       </v-col>
     </v-row>
   </v-container>
@@ -114,11 +115,13 @@ import { bus } from "../main.js";
 import AutocompleteUsr from "@/components/AutocompleteUsr.vue";
 import InputFileCard from "@/components/InputFileCard.vue";
 import InputAutocomplete from "@/components/InputAutocomplete.vue";
+import SelectOrg from '@/components/SelectOrg.vue';
 export default {
   components: {
     AutocompleteUsr,
     InputFileCard,
     InputAutocomplete,
+    SelectOrg,
   },
   props: {
     arrInput: { type: Array },
