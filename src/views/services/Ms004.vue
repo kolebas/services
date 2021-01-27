@@ -1,66 +1,63 @@
 <template>
-    <v-container>
-        <v-row>
-            <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage"/>
-            <v-card
-                width='65%'
-                raised
-                class='mx-auto'
-                color='grey lighten-4'            
-                >
-                <RqCardTitle 
-                    :title='$router.currentRoute.name' 
-                    :sub_message='sub_message'
-                ></RqCardTitle>
-                <hr/>
-                <Input :arrInput="input" />
-                
-        <v-card-text>
-          * Поля обязательные для заполнения
-        </v-card-text>
-                <hr/>                
-                <v-card-actions class='py-4'>
-                    <div class='mx-auto'>
-                        <v-btn class='mx-1' :loading="btnLoader" :disabled="btnStatus" color='green lighten-2 white--text' @click='formSend()'>
-                            Отправить
-                        </v-btn>
-                        <v-btn class='mx-1' @click='formCancl()'>
-                            Отмена
-                        </v-btn>
-                    </div>
-                </v-card-actions>
-            </v-card>
-        </v-row>
-    </v-container>
+  <v-container>
+    <v-row>
+      <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
+      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+        <RqCardTitle
+          :title="$router.currentRoute.name"
+          :sub_message="sub_message"
+        ></RqCardTitle>
+        <hr />
+        <Input :arrInput="input" />
+
+        <v-card-text> * Поля обязательные для заполнения </v-card-text>
+        <hr />
+        <v-card-actions class="py-4">
+          <div class="mx-auto">
+            <v-btn
+              class="mx-1"
+              :loading="btnLoader"
+              :disabled="btnStatus"
+              color="green lighten-2 white--text"
+              @click="formSend()"
+            >
+              Отправить
+            </v-btn>
+            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { bus } from '@/main.js';
-import DialogAfterSendForm from '@/components/DialogAfterSendForm.vue';
-import RqCardTitle from '@/components/RqCardTitle.vue';
-import Input from '@/components/Input.vue';
-import axios from 'axios';
+import { bus } from "@/main.js";
+import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
+import RqCardTitle from "@/components/RqCardTitle.vue";
+import Input from "@/components/Input.vue";
+import axios from "axios";
 export default {
-    components: {
-        DialogAfterSendForm,
-        RqCardTitle,
-        Input,
-    },
-    data: () => ({
-        sub_message: 'ms004',
-        id: '',
-       input: [
-           {
+  components: {
+    DialogAfterSendForm,
+    RqCardTitle,
+    Input,
+  },
+  data: () => ({
+    sub_message: "ms004",
+    id: "",
+    input: [
+      {
         value: "",
         cols_title: 5,
-        cols_input: 6, 
-        org_err: '',
+        cols_input: 6,
+        org_err: "",
         type: "selectOrg",
         outlined: true,
         dense: true,
         solo: true,
       },
-           {
+      {
         name: "Наименование ОС:*",
         value: "",
         cs: "12",
@@ -81,12 +78,12 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
-      },      
+      },
       {
         name: "Арендованная техника:",
         value: "",
         type: "switch",
-        class: "mt-2",        
+        class: "mt-2",
         cs: "12",
         sm: "6",
         md: "6",
@@ -102,82 +99,87 @@ export default {
         dense: true,
         solo: true,
       },
-      ],
-      btnStatus: true,
-        btnLoader: false,
-        dialog: false,
-        dialogMessage: ''
-    }),
-    
-    created(){
-        bus.$on('selectOrg', data=>{
-            this.input[0].org_err = '';
-            this.input[0].value = data.name;
-        });
-    },
-    computed: {
+    ],
+    btnStatus: true,
+    btnLoader: false,
+    dialog: false,
+    dialogMessage: "",
+  }),
+
+  created() {
+    bus.$on("selectOrg", (data) => {
+      this.input[0].org_err = "";
+      this.input[0].value = data.name;
+    });
+  },
+  computed: {
     getValue() {
-            return  this.input[0].value && this.input[1].value && this.input[2].value && this.input[4].value 
+      return (
+        this.input[0].value &&
+        this.input[1].value &&
+        this.input[2].value &&
+        this.input[4].value
+      );
     },
     getValueSwitch() {
-            return this.input[3].value
+      return this.input[3].value;
     },
   },
   watch: {
     getValue(newValue) {
       if (newValue) {
-          if (this.input[3].value == true){
-                this.btnStatus = false;
-                this.getValueSwitch()
-          }
-          if (this.input[3].value == false){
-                this.btnStatus = false;
-          }         
+        if (this.input[3].value == true) {
+          this.btnStatus = false;
+          this.getValueSwitch();
+        }
+        if (this.input[3].value == false) {
+          this.btnStatus = false;
+        }
       } else {
         this.btnStatus = true;
       }
     },
     getValueSwitch(newValue) {
-        if(!newValue) {
-            this.input[4].visible = true;
-            this.input[4].value = "";
-            this.input[3].label = "";
-            this.btnStatus = true;
-        }
-        else {
-            this.input[4].visible = false;
-            this.input[3].label = "Да";
-            this.btnStatus = false;
-        }
-    }
+      if (!newValue) {
+        this.input[4].visible = true;
+        this.input[4].value = "";
+        this.input[3].label = "";
+        this.btnStatus = true;
+      } else {
+        this.input[4].visible = false;
+        this.input[3].label = "Да";
+        this.btnStatus = false;
+      }
+    },
   },
-    methods: {
-        formSend: function(){
-            console.log(this.input);
-                this.btnLoader = true;              
-                axios({
-                    method: 'post',
-                    withCredentials: true,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-                    url: './ajax/ajax_ms004.php',
-                    data: {
-                        input: this.input
-                    }
-                })
-                .then(response => {
-                    if(response.status == 200){
-                        this.dialog = true
-                        this.dialogMessage = 'Успешно. Номер вашей заявки: ' + response.data
-                        this.btnLoader = false
-                    }                    
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.dialog = true
-                    this.dialogMessage = 'Произошла ошибка'
-                    this.btnLoader = false
-                }); 
-            /*if(!this.org_name){
+  methods: {
+    formSend: function () {
+      console.log(this.input);
+      this.btnLoader = true;
+      axios({
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        url: "./ajax/ajax_ms004.php",
+        data: {
+          input: this.input,
+        },
+      })
+        .then((response) => {
+          if (response.status == 200) {
+            this.dialog = true;
+            this.dialogMessage =
+              "Успешно. Номер вашей заявки: " + response.data;
+            this.btnLoader = false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.dialog = true;
+          this.dialogMessage = "Произошла ошибка";
+          this.btnLoader = false;
+        });
+      /*if(!this.org_name){
                 this.org_err = 'Не выбрана организация';                
             }
             if(!this.inputs[0].value){
@@ -188,12 +190,12 @@ export default {
             }
             if(!this.inputs[2].value){
                 this.inputs[2].err = 'Не указан код ОС 1С'                
-            } */      
-        },
-        //Действие кнопки "назад"
-        formCancl: function(){
-            this.$router.go(-1);
-        }       
-    }       
-}
+            } */
+    },
+    //Действие кнопки "назад"
+    formCancl: function () {
+      this.$router.go(-1);
+    },
+  },
+};
 </script>

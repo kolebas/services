@@ -66,7 +66,7 @@ export default {
     btnStatus: false,
     input: [
       {
-          id: 0,
+        id: 0,
         name: "Временный доступ:",
         value: false,
         cs: "12",
@@ -77,7 +77,7 @@ export default {
         class: "mt-2",
       },
       {
-          id: 1,
+        id: 1,
         name: "Период временного доступа:",
         value: [],
         cs: "12",
@@ -91,7 +91,7 @@ export default {
         visible: false,
       },
       {
-          id: 2,
+        id: 2,
         name: "Список БД 1С:",
         value: "",
         cs: "12",
@@ -121,7 +121,7 @@ export default {
         err: "",
       },
       {
-          id: 4,
+        id: 4,
         name: "Описать уровень доступа:",
         value: "",
         cs: "12",
@@ -134,7 +134,7 @@ export default {
         err: "",
       },
       {
-          id: 5,
+        id: 5,
         name: "Комментарий:",
         value: "",
         cs: "12",
@@ -193,10 +193,10 @@ export default {
     axios
       .get(this.source, {
         params: {
-              getDB: true
-            }
+          getDB: true,
+        },
       })
-      .then((response) => (this.input[2].select_arr = response.data))
+      .then((response) => (this.input[2].select_arr = response.data));
   },
   methods: {
     formCancl: function () {
@@ -216,8 +216,8 @@ export default {
       return arr.value != "";
     },
     checkData() {
-        let tempArr = this.input.filter(test => test.id > 1);
-        let sts = tempArr.every(this.checkArr);
+      let tempArr = this.input.filter((test) => test.id > 1);
+      let sts = tempArr.every(this.checkArr);
       if (sts) {
         this.formSend();
       } else {
@@ -234,8 +234,8 @@ export default {
           url: this.source,
           data: {
             type: "1c001",
-            input: this.input
-          }
+            input: this.input,
+          },
         })
           .then((response) => {
             if (response.status == 200) {

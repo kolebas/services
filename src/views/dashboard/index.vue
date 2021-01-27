@@ -1,40 +1,5 @@
 <template>
   <v-container>
-    <!--<DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage"/>-->
-    <!--<v-dialog v-model="dialog" max-width="65%">
-            <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>
-                </v-card-title>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-col
-                                v-for="v in headers_vesy"
-                                :key="v.text"
-                                cols="6"
-                                sm="6"
-                                md="8"
-                            >
-                                <v-text-field
-                                    :v-model="v.value"
-                                    :label="v.text"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="close()">Отмена</v-btn>
-                    <v-btn color="primary" text @click="addItem(856)"
-                        >Сохранить</v-btn
-                    >
-                </v-card-actions>
-            </v-card>
-    </v-dialog>-->
     <v-dialog v-model="dialog" transition="slide-x-reverse-transition">
       <v-data-table
         :headers="headers_inc"
@@ -48,12 +13,42 @@
       <v-col cols="12">
         <v-tabs>
           <v-tab
-            v-for="tab in tabs"
+            v-for="tab in getTabs"
             :key="tab.text"
             @click="getData(tab.source, tab.param, tab.result_ar)"
           >
-            <v-badge color="green" :value="b_value" :content="tab.new_count" bordered>{{ tab.text }}</v-badge>
+            <v-badge
+              color="green"
+              :value="b_value"
+              :content="tab.new_count"
+              bordered
+              >{{ tab.text }}</v-badge
+            >
           </v-tab>
+          <v-tab-item>
+            <v-divider />
+            <v-container>
+              <v-row>
+                <v-col cols="3" v-for="card in tabs[0].cards" :key="card.title">
+                  <v-card @click="console.log('111')" outlined
+                    ><v-card-title>{{ card.title }}</v-card-title
+                    ><v-card-subtitle>{{
+                      card.subtitle
+                    }}</v-card-subtitle></v-card
+                  >
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-container>
+              <DataTables
+                class="mx-auto"
+                :headers="tabs[0].cards[0].tableHeaders"
+                :item="tabs[0].cards[0].tableItems"
+                :title="tabs[0].cards[0].title"
+                :loading="loading"
+              />
+            </v-container>
+          </v-tab-item>
           <v-tab-item>
             <v-row>
               <v-col cols="3" v-for="report in reports" :key="report.id">
@@ -61,17 +56,26 @@
                   <v-card-text>
                     <v-row align="center">
                       <v-card-text>{{ report.text }}</v-card-text>
-                      <v-col class="display-3" cols="12">{{ report.value }}</v-col>
+                      <v-col class="display-3" cols="12">{{
+                        report.value
+                      }}</v-col>
                     </v-row>
                   </v-card-text>
                   <v-divider></v-divider>
-                  <v-card-text @click="showPreview(report.id)">Подробнее</v-card-text>
+                  <v-card-text @click="showPreview(report.id)"
+                    >Подробнее</v-card-text
+                  >
                 </v-card>
               </v-col>
             </v-row>
           </v-tab-item>
           <v-tab-item>
-            <DataTables :headers="headers_items" :item="item" title="Заявки" :loading="loading" />
+            <DataTables
+              :headers="headers_items"
+              :item="item"
+              title="Заявки"
+              :loading="loading"
+            />
           </v-tab-item>
           <v-tab-item>
             <DataTables
@@ -93,7 +97,7 @@
             <v-card>
               <v-card-title>
                 Весовые
-                <v-divider class="mx-4" inset vertical></v-divider>                
+                <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-text-field
                   v-model="search"
@@ -103,7 +107,7 @@
                   hide-details
                 ></v-text-field>
                 <v-btn color="primary" dark class="mb-2 ml-2">Добавить</v-btn>
-              </v-card-title>              
+              </v-card-title>
               <v-data-table
                 :headers="headers_vesy"
                 :items="vesy_item"
@@ -112,17 +116,6 @@
                 :loading="loading"
                 @click="dialog = true"
               >
-                <!--<template v-slot:item.NAME_UZ={ item }>
-                  <v-chip @click="editVesyItem(item.ID)">
-                    {{ item.NAME_UZ }}<v-divider class="mx-4" color="warning" inset vertical></v-divider>
-                    <v-edit-dialog :return-value.sync="item.NAME_UZ">                      
-                      {{ item.NAME_UZ}}
-                      <template v-slot:input>
-                        <v-text-field v-model="item.NAME_UZ" label="Edit" single-line counter></v-text-field>
-                      </template>
-                    </v-edit-dialog>
-                  </v-chip>
-                </template>-->
               </v-data-table>
               <DataTables
                 :headers="headers_vesy"
@@ -148,19 +141,33 @@
 </template>
 
 <script>
-//import { bus } from "@/main.js";
+import { bus } from "@/main.js";
 import axios from "axios";
 import DataTables from "@/components/DataTables.vue";
 export default {
   components: {
-    DataTables
+    DataTables,
   },
   data: () => ({
-    title: "Тестовые вопросы к инструкциям по уборке нишевых культур",
     name: "",
     tabs: [
       {
-        text: "Отчеты"
+        text: "Панель управления 1C",
+        source: "https://portal.ahstep.ru/ahstep/services/ajax/1c001.php",
+        param: "req",
+        aclGroup: true,
+        cards: [
+          {
+            title: "Базы данных",
+            subtitle: "Редактирование списка баз данных",
+            tableHeaders: [
+              { text: "Имя БД", value: "NAME" },
+              { text: "Действия", value: "ACTIONS" },
+              { actions: ["chg", "rem"] },
+            ],
+            tableItems: [],
+          },
+        ],
       },
       {
         text: "Заявки",
@@ -168,7 +175,8 @@ export default {
           "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
         param: "req",
         result_ar: "request",
-        new_count: ""
+        new_count: "",
+        aclGroup: true,
       },
       {
         text: "Инциденты",
@@ -176,28 +184,36 @@ export default {
           "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
         param: "inc",
         result_ar: "request",
-        new_count: ""
+        new_count: "",
+        aclGroup: "",
       },
       {
         text: "Компьютеры",
         source: "https://support.ahstep.ru/apirest.php/search/Computer",
         param: "comp",
         result_ar: "comp",
-        new_count: ""
+        new_count: "",
+        aclGroup: "",
       },
       {
         text: "Весовые",
         source:
           "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
         param: "vesy",
-        result_ar: "vesy_item"
+        result_ar: "vesy_item",
+        aclGroup: "",
       },
       {
         text: "Пуны",
         source:
           "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
-        param: "pun"
-      }
+        param: "pun",
+        aclGroup: "",
+      },
+      {
+        text: "Отчеты",
+        aclGroup: true,
+      },
     ],
     b_value: false,
     new_count: "",
@@ -223,7 +239,7 @@ export default {
       { text: "Заземление", value: "ZAZEML_STATUS" },
       { text: "Модель камеры/кол-во/зип", value: "MODEL_CAMERA" },
       { text: "Драйвер Весовая2020", value: "DRIVER" },
-      { text: "Действия", value: "ACTIONS", sortable: false }
+      { text: "Действия", value: "ACTIONS", sortable: false },
     ],
     vesy_item: [],
     headers_inc: [
@@ -232,7 +248,7 @@ export default {
       { text: "Автор", value: "CREATED_BY" },
       { text: "Отвественный", value: "RESPONSIBLE" },
       { text: "Задача", value: "TASK_ID" },
-      { text: "Статус", value: "STATUS" }
+      { text: "Статус", value: "STATUS" },
     ],
     inc_item: [],
     newReq: [],
@@ -245,14 +261,14 @@ export default {
       { text: "Автор", value: "CREATED_BY" },
       { text: "Получатель", value: "POLUCHATEL" },
       { text: "Задача", value: "TASK_ID" },
-      { text: "Статус", value: "STATUS" }
+      { text: "Статус", value: "STATUS" },
     ],
     headers_comp: [
       { text: "Имя компьютера", value: "1" },
       { text: "Местоположение", value: "3" },
       { text: "Тип", value: "4" },
       { text: "Пользователь", value: "70" },
-      { text: "MAC", value: "113" }
+      { text: "MAC", value: "113" },
     ],
     item: [],
     search: "",
@@ -267,12 +283,25 @@ export default {
       { id: "0", text: "Общее количество заявок", value: "" },
       { id: "1", text: "Новые заявки за сегодня", value: "" },
       { id: "2", text: "Новые инциденты", value: "" },
-      { id: "3", text: "Не принятые инциденты", value: "" }
+      { id: "3", text: "Не принятые инциденты", value: "" },
     ],
-    today: ""
+    today: "",
   }),
+  created() {
+    bus.$on("newItem", (data) => {
+      this.addDB(data);
+    });
+    bus.$on("remItem", (data) => {
+      this.remDB(data);
+    });
+  },
+  computed: {
+    getTabs() {
+      return this.tabs.filter((getTab) => getTab.aclGroup == true);
+    },
+  },
   methods: {
-    formCancl: function() {
+    formCancl: function () {
       this.$router.go(-1);
     },
     progSts() {
@@ -286,7 +315,6 @@ export default {
     },
     time() {
       setInterval(() => {
-        //this.getData();
         this.getGlpiData();
       }, 30000);
     },
@@ -296,13 +324,13 @@ export default {
         axios
           .get(source, {
             headers: {
-              "Content-Type": "application/json; charset=utf-8"
+              "Content-Type": "application/json; charset=utf-8",
             },
             params: {
-              result: param
-            }
+              result: param,
+            },
           })
-          .then(response => {
+          .then((response) => {
             let today = new Date();
             let dd = String(today.getDate()).padStart(2, "0");
             let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -314,7 +342,7 @@ export default {
             }
             if (param == "req") {
               this.item = response.data;
-              this.newReq = response.data.filter(getDate =>
+              this.newReq = response.data.filter((getDate) =>
                 getDate.DATE.includes(this.today)
               );
               this.reports[0].value =
@@ -323,11 +351,11 @@ export default {
             }
             if (param == "inc") {
               this.inc_item = response.data;
-              this.getNewInc = response.data.filter(getDate =>
+              this.getNewInc = response.data.filter((getDate) =>
                 getDate.DATE.includes(this.today)
               );
               this.getIncNotApproved = response.data.filter(
-                getResponsible =>
+                (getResponsible) =>
                   getResponsible.RESPONSIBLE.includes("ИТ Поддержка") &&
                   !getResponsible.STATUS.includes("5")
               );
@@ -346,28 +374,28 @@ export default {
         axios
           .get("https://support.ahstep.ru/apirest.php/initSession", {
             headers: {
-              "Content-Type": "application/json;"
+              "Content-Type": "application/json;",
             },
             params: {
               app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
-              user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg"
-            }
+              user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg",
+            },
           })
-          .then(response => {
+          .then((response) => {
             var s_token = response.data.session_token;
             axios
               .get(source, {
                 headers: {
                   "Content-Type": "application/json;",
-                  "Session-Token": s_token
+                  "Session-Token": s_token,
                 },
                 params: {
                   app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
                   range: "0-2000",
-                  forcedisplay: [3, 4, 70, 113]
-                }
+                  forcedisplay: [3, 4, 70, 113],
+                },
               })
-              .then(response => {
+              .then((response) => {
                 this.glpi_data = response.data;
                 this.loading = false;
               });
@@ -378,31 +406,77 @@ export default {
       axios
         .get("https://support.ahstep.ru/apirest.php/initSession", {
           headers: {
-            "Content-Type": "application/json;"
+            "Content-Type": "application/json;",
           },
           params: {
             app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
-            user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg"
-          }
+            user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg",
+          },
         })
-        .then(response => {
+        .then((response) => {
           var s_token = response.data.session_token;
           axios
             .get("https://support.ahstep.ru/apirest.php/search/Computer", {
               headers: {
                 "Content-Type": "application/json;",
-                "Session-Token": s_token
+                "Session-Token": s_token,
               },
               params: {
                 app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
                 range: "0-2000",
-                forcedisplay: [3, 4, 70, 113]
-              }
+                forcedisplay: [3, 4, 70, 113],
+              },
             })
-            .then(response => {
+            .then((response) => {
               this.glpi_data = response.data;
             });
         });
+    },
+    getDB() {
+      this.loading = true;
+      axios
+        .get("https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php", {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          params: {
+            getDB: "getDbList",
+          },
+        })
+        .then((response) => {
+          this.tabs[0].cards[0].tableItems = response.data;
+          this.loading = false;
+        });
+    },
+    addDB(item) {
+      axios({
+        method: "post",
+        headers: { "Content-Type": "multipart/form-data" },
+        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
+        data: {
+          type: "addDB",
+          nameDB: item,
+        },
+      }).then((response) => {
+        if (response.status == 200) {
+          this.getDB();
+        }
+      });
+    },
+    remDB(item) {
+      axios({
+        method: "post",
+        headers: { "Content-Type": "multipart/form-data" },
+        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
+        data: {
+          type: "remDB",
+          nameDB: item,
+        },
+      }).then((response) => {
+        if (response.status == 200) {
+          this.getDB();
+        }
+      });
     },
     getVesy() {
       axios
@@ -410,14 +484,14 @@ export default {
           "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
           {
             headers: {
-              "Content-Type": "application/json; charset=utf-8"
+              "Content-Type": "application/json; charset=utf-8",
             },
             params: {
-              getVesy: "getVesy"
-            }
+              getVesy: "getVesy",
+            },
           }
         )
-        .then(response => {
+        .then((response) => {
           (this.vesy_item = response.data), console.log(this.vesy_item);
           this.loading = false;
         });
@@ -431,14 +505,14 @@ export default {
       axios
         .get("https://b2btestservice.ocs.ru/b2bjson.asmx/GetCatalog", {
           headers: {
-            "Content-Type": "application/json;"
+            "Content-Type": "application/json;",
           },
           params: {
             Login: "VqFLDv9gY",
-            Token: "VuivdzcaGvFtOACElaNdO?@-BKFMXy"
-          }
+            Token: "VuivdzcaGvFtOACElaNdO?@-BKFMXy",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
         });
     },
@@ -446,7 +520,7 @@ export default {
       this.dialog = true;
       this.loading = false;
       if (id == 1) {
-        this.getPreviewTask = this.item.filter(getDate =>
+        this.getPreviewTask = this.item.filter((getDate) =>
           getDate.DATE.includes(this.today)
         );
       }
@@ -459,16 +533,17 @@ export default {
     },
     close() {
       this.dialog = false;
-    }
+    },
   },
   mounted() {
+    this.getDB();
     //this.getTest()
     //this.loading = true
     //this.getData("vesy");
     //this.getData("inc");
     //this.time();
-    this.getVesy();
-    this.getGlpiData();
-  }
+    //this.getVesy();
+    //this.getGlpiData();
+  },
 };
 </script>
