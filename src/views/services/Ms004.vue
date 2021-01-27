@@ -13,25 +13,15 @@
                     :sub_message='sub_message'
                 ></RqCardTitle>
                 <hr/>
-                <SelectOrg
-                    :cols_title='5'
-                    :cols_input='6' 
-                    :org_err='org_err'
-                />
-                <InputCard 
-                    v-for='item in inputs'
-                    :key='item.id'
-                    :id='item.id'  
-                    :title='item.title' 
-                    :input_err='item.err' 
-                    :label='item.label'
-                    :cols_title='item.cols_title'
-                    :cols_input='item.cols_input'
-                ></InputCard>
+                <Input :arrInput="input" />
+                
+        <v-card-text>
+          * Поля обязательные для заполнения
+        </v-card-text>
                 <hr/>                
                 <v-card-actions class='py-4'>
                     <div class='mx-auto'>
-                        <v-btn class='mx-1' :loading="btnLoader" color='green lighten-2 white--text' @click='formSend()'>
+                        <v-btn class='mx-1' :loading="btnLoader" :disabled="btnStatus" color='green lighten-2 white--text' @click='formSend()'>
                             Отправить
                         </v-btn>
                         <v-btn class='mx-1' @click='formCancl()'>
@@ -48,49 +38,122 @@
 import { bus } from '@/main.js';
 import DialogAfterSendForm from '@/components/DialogAfterSendForm.vue';
 import RqCardTitle from '@/components/RqCardTitle.vue';
-import SelectOrg from '@/components/SelectOrg.vue';
-import InputCard from '@/components/InputCard.vue';
+import Input from '@/components/Input.vue';
 import axios from 'axios';
 export default {
     components: {
         DialogAfterSendForm,
         RqCardTitle,
-        SelectOrg,
-        InputCard
+        Input,
     },
-
     data: () => ({
         sub_message: 'ms004',
         id: '',
-        inputs: [
-            {id: '1', title: 'Наименование ОС:', err: '', label: '', value: null, cols_title: '5', cols_input: '6'},
-            {id: '2', title: 'Государственный регистрационный номер или инвентарный номер:', err: '', label: '', value: null, cols_title: '5', cols_input: '6'},
-            {id: '3', title: 'Код ОС 1С:', err: '', label: '', value: null, cols_title: '5', cols_input: '6'}
-        ],
-        org_name: '',
+       input: [
+           {
+        value: "",
+        cols_title: 5,
+        cols_input: 6, 
         org_err: '',
-        arr: [],
+        type: "selectOrg",
+        outlined: true,
+        dense: true,
+        solo: true,
+      },
+           {
+        name: "Наименование ОС:*",
+        value: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "string",
+        outlined: true,
+        dense: true,
+        solo: true,
+      },
+      {
+        name: "Государственный регистрационный номер или инвентарный номер:*",
+        value: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "string",
+        outlined: true,
+        dense: true,
+        solo: true,
+      },      
+      {
+        name: "Арендованная техника:",
+        value: "",
+        type: "switch",
+        class: "mt-2",        
+        cs: "12",
+        sm: "6",
+        md: "6",
+      },
+      {
+        name: "Код ОС 1С:",
+        value: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "string",
+        outlined: true,
+        dense: true,
+        solo: true,
+      },
+      ],
+      btnStatus: true,
         btnLoader: false,
         dialog: false,
         dialogMessage: ''
     }),
+    
     created(){
         bus.$on('selectOrg', data=>{
-            this.org_err = '';
-            this.org_name = data.name;
+            this.input[0].org_err = '';
+            this.input[0].value = data.name;
         });
-        bus.$on('inputCard', data=>{
-            this.inputs[data.input_id - 1].value = data.value;
-            this.inputs[data.input_id - 1].err = '';     
-            });
     },
+    computed: {
+    getValue() {
+            return  this.input[0].value && this.input[1].value && this.input[2].value && this.input[4].value 
+    },
+    getValueSwitch() {
+            return this.input[3].value
+    },
+  },
+  watch: {
+    getValue(newValue) {
+      if (newValue) {
+          if (this.input[3].value == true){
+                this.btnStatus = false;
+                this.getValueSwitch()
+          }
+          if (this.input[3].value == false){
+                this.btnStatus = false;
+          }         
+      } else {
+        this.btnStatus = true;
+      }
+    },
+    getValueSwitch(newValue) {
+        if(!newValue) {
+            this.input[4].visible = true;
+            this.input[4].value = "";
+            this.input[3].label = "";
+            this.btnStatus = true;
+        }
+        else {
+            this.input[4].visible = false;
+            this.input[3].label = "Да";
+            this.btnStatus = false;
+        }
+    }
+  },
     methods: {
         formSend: function(){
-            if(this.org_name && this.inputs[0].value && this.inputs[1].value && this.inputs[2].value){
-                this.arr.push(this.org_name);
-                for (let i = 0; i < this.inputs.length; i++){
-                    this.arr.push(this.inputs[i].value);
-                }
+            console.log(this.input);
                 this.btnLoader = true;              
                 axios({
                     method: 'post',
@@ -98,7 +161,7 @@ export default {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
                     url: './ajax/ajax_ms004.php',
                     data: {
-                        arr: this.arr
+                        input: this.input
                     }
                 })
                 .then(response => {
@@ -113,9 +176,8 @@ export default {
                     this.dialog = true
                     this.dialogMessage = 'Произошла ошибка'
                     this.btnLoader = false
-                });                
-            }
-            if(!this.org_name){
+                }); 
+            /*if(!this.org_name){
                 this.org_err = 'Не выбрана организация';                
             }
             if(!this.inputs[0].value){
@@ -126,7 +188,7 @@ export default {
             }
             if(!this.inputs[2].value){
                 this.inputs[2].err = 'Не указан код ОС 1С'                
-            }       
+            } */      
         },
         //Действие кнопки "назад"
         formCancl: function(){
