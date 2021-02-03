@@ -271,17 +271,17 @@
           ></v-text-field>
         </v-card-title>
         <v-data-table :headers="headers" :items="items" :search="search">
-          <template v-slot:item.NAME="{ item }">
+          <template v-slot:[`item.NAME`]="{ item }">
             <v-card-text @click="openTask(item.ID)">{{
               item.NAME
             }}</v-card-text>
           </template>
-          <template v-slot:item.STATUS="{ item }">
+          <template v-slot:[`item.STATUS`]="{ item }">
             <v-chip :color="getStatus(item.STATUS)" dark>
               {{ item.STATUS }}
             </v-chip>
           </template>
-          <template v-slot:item.RESPONSIBLE="{ item }">
+          <template v-slot:[`item.RESPONSIBLE`]="{ item }">
             <v-chip  :href="'../../company/personal/user/'+ item.RESPONSIBLEID + '/'" v-if="item.RESPONSIBLE != ' '"  color="grey" outlined>
               <v-avatar left>
                 <img v-if="item.PHOTO" :src="item.PHOTO" />

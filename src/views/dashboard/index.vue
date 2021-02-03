@@ -15,7 +15,7 @@
           <v-tab
             v-for="tab in getTabs"
             :key="tab.text"
-            @click="getData(tab.source, tab.param, tab.result_ar)"
+            @click="showData(tab.source, tab.param, tab.result_ar)"
           >
             <v-badge
               color="green"
@@ -28,25 +28,30 @@
           <v-tab-item>
             <v-divider />
             <v-container>
-              <v-row>
-                <v-col cols="3" v-for="card in tabs[0].cards" :key="card.title">
-                  <v-card @click="console.log('111')" outlined
-                    ><v-card-title>{{ card.title }}</v-card-title
-                    ><v-card-subtitle>{{
-                      card.subtitle
-                    }}</v-card-subtitle></v-card
-                  >
-                </v-col>
-              </v-row>
-            </v-container>
-            <v-container>
-              <DataTables
-                class="mx-auto"
-                :headers="tabs[0].cards[0].tableHeaders"
-                :item="tabs[0].cards[0].tableItems"
-                :title="tabs[0].cards[0].title"
-                :loading="loading"
-              />
+              <v-btn
+                class="mr-2"
+                @click="showTable(btn)"
+                v-for="btn in tabs[0].cards"
+                :key="btn.i"
+                ><v-icon left>{{ btn.icon }}</v-icon
+                >{{ btn.title }}</v-btn
+              ></v-container
+            >
+            <v-container v-for="table in tabs[0].cards.filter(
+                  (getTable) => getTable.visible == true
+                )" :key="table.i">
+                <DataTables
+                  class="mx-auto"
+                  :headers="getTableHeaders(table.tableHeaders)"
+                  :item="table.tableItems"
+                  :title="table.title"
+                  :img="table.img"
+                  :actions="table.actions"
+                  :loading="loading"
+                  :dialogTitle="'Добавление ИБ'"
+                  :dialogFields="table.tableHeaders"
+                  :dialogFieldsCols="3"
+                />
             </v-container>
           </v-tab-item>
           <v-tab-item>
@@ -93,47 +98,6 @@
               :loading="loading"
             />
           </v-tab-item>
-          <v-tab-item>
-            <v-card>
-              <v-card-title>
-                Весовые
-                <v-divider class="mx-4" inset vertical></v-divider>
-                <v-spacer></v-spacer>
-                <v-text-field
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="Поиск"
-                  single-line
-                  hide-details
-                ></v-text-field>
-                <v-btn color="primary" dark class="mb-2 ml-2">Добавить</v-btn>
-              </v-card-title>
-              <v-data-table
-                :headers="headers_vesy"
-                :items="vesy_item"
-                :search="search"
-                sortable
-                :loading="loading"
-                @click="dialog = true"
-              >
-              </v-data-table>
-              <DataTables
-                :headers="headers_vesy"
-                :item="vesy_item"
-                title="Весовые"
-                :loading="loading"
-              />
-            </v-card>
-          </v-tab-item>
-          <v-tab-item>
-            <DataTables
-              :headers="headers_vesy"
-              :item="vesy_item"
-              title="Пуны"
-              :loading="loading"
-              :expand="true"
-            />
-          </v-tab-item>
         </v-tabs>
       </v-col>
     </v-row>
@@ -161,18 +125,73 @@ export default {
             title: "Базы данных",
             subtitle: "Редактирование списка баз данных",
             tableHeaders: [
-              { text: "Имя БД", value: "NAME" },
-              { text: "Действия", value: "ACTIONS" },
-              { actions: ["chg", "rem"] },
+              { text: "название ИБ", value: "NAME", visibleInTable: true },
+              { text: "вид базы", value: "VID", visibleInTable: true },
+              { text: "тип базы", value: "TYPE", visibleInTable: true },
+              {
+                text: "кластер серверов",
+                value: "CLUSTER",
+                visibleInTable: true,
+              },
+              { text: "имя ИБ", value: "NAME_DB", visibleInTable: true },
+              { text: "адрес ИБ", value: "ADDRESS_DB", visibleInTable: true },
+              { text: "пользователь ", value: "USER", visibleInTable: false },
+              { text: "логин ", value: "LOGIN", visibleInTable: false },
+              { text: "конфигурация", value: "CONFIG", visibleInTable: false },
+              { text: "релиз", value: "RELEASE", visibleInTable: false },
+              { text: "лицензия ", value: "LICENSE", visibleInTable: false },
+              { text: "комментарий ", value: "COMMENT", visibleInTable: false },
+              {
+                text: "Действия",
+                value: "ACTIONS",
+                width: "10%",
+                visibleInTable: true,
+              },
             ],
+            actions: ["chg", "rem"],
             tableItems: [],
+            img:
+              "https://portal.ahstep.ru/upload/resize_cache/iblock/20a/36_30_1/db.png",
+            icon: "mdi-database-cog-outline",
+            visible: false,
+          },
+          {
+            title: "Лицензии",
+            icon: "mdi-text-box-check-outline",
+            visible: false,
+            tableHeaders: [
+              { text: "тип лицензии", value: "TYPE", visibleInTable: true },
+              { text: "вид лицензии", value: "VID", visibleInTable: true },
+              { text: "основная лицензия", value: "LICENSE", visibleInTable: true },
+              { text: "количество рабочих мест", value: "NUMBER", visibleInTable: true },
+              { text: "юр.лицо - владелец", value: "ORG", visibleInTable: false },
+              { text: "дата приобретения", value: "DATE_BUY", visibleInTable: true },
+              { text: "место активации", value: "LOCATION", visibleInTable: false },
+              { text: "действующий договор ИТС", value: "ORDER", visibleInTable: false },
+            ],
+            img: "https://img.icons8.com/office/30/000000/diploma.png",
+          },
+          {
+            title: "Договора ИТС",
+            icon: "mdi-file-document-edit-outline",
+            visible: false,
+            tableHeaders: [
+              { text: "юр лицо", value: "ORG", visibleInTable: true },
+              { text: "контрагент", value: "AGENT", visibleInTable: true },
+              { text: "тип договора", value: "DOGOVOR_TYPE", visibleInTable: true },
+              { text: "основной договор", value: "DOCOVOR", visibleInTable: true },
+              { text: "юр.лицо - владелец", value: "VLADELEC", visibleInTable: true },
+              { text: "дата начала", value: "DATE_START", visibleInTable: true },
+              { text: "дата окончания", value: "DATE_END", visibleInTable: true },
+            ],
+            img: "https://img.icons8.com/office/30/000000/bill.png"
+
           },
         ],
       },
       {
         text: "Заявки",
-        source:
-          "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
+        source: "./ajax/dashboard/ajax.php",
         param: "req",
         result_ar: "request",
         new_count: "",
@@ -204,13 +223,6 @@ export default {
         aclGroup: "",
       },
       {
-        text: "Пуны",
-        source:
-          "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
-        param: "pun",
-        aclGroup: "",
-      },
-      {
         text: "Отчеты",
         aclGroup: true,
       },
@@ -220,28 +232,6 @@ export default {
     loading: false,
     table_name: "Dashboard",
     table_inc: true,
-    headers_vesy: [
-      { text: "Название узла", value: "NAME_UZ" },
-      { text: "Код узла", value: "CODE" },
-      { text: "Юридическое лицо", value: "COMPANY" },
-      { text: "Доп. Обозначение", value: "ADD_NAME" },
-      { text: "Имя комп./домен", value: "PC_NAME" },
-      { text: "Контакты отв. сотр. IT", value: "CONTACT_IT" },
-      { text: "Контакты отв. Весовщика", value: "CONTACT_VESY" },
-      { text: "Пароль windows", value: "PASS_WIN" },
-      { text: "ID TeamViewer 13", value: "ID_TEAM" },
-      { text: "Pass TeamViewer", value: "PASS_TEAM" },
-      { text: "IP Win пом.", value: "IP_MSRA" },
-      { text: "Zabbix", value: "ZBX_STATUS" },
-      { text: "Фактический адрес", value: "ADDRESS" },
-      { text: "Весы в 1С", value: "VESY_1C" },
-      { text: "Модель терминала", value: "MODEL_TERM" },
-      { text: "Заземление", value: "ZAZEML_STATUS" },
-      { text: "Модель камеры/кол-во/зип", value: "MODEL_CAMERA" },
-      { text: "Драйвер Весовая2020", value: "DRIVER" },
-      { text: "Действия", value: "ACTIONS", sortable: false },
-    ],
-    vesy_item: [],
     headers_inc: [
       { text: "Тема", value: "NAME" },
       { text: "Дата", value: "DATE" },
@@ -289,10 +279,13 @@ export default {
   }),
   created() {
     bus.$on("newItem", (data) => {
-      this.addDB(data);
+      this.addDB(data, "addDB");
     });
     bus.$on("remItem", (data) => {
-      this.remDB(data);
+      this.addDB(data, "remDB");
+    });
+    bus.$on("updItem", (data) => {
+      this.addDB(data, "updDB");
     });
   },
   computed: {
@@ -301,6 +294,13 @@ export default {
     },
   },
   methods: {
+    getTableHeaders(headers) {
+      if (headers != "undefined") {
+        return headers.filter(
+          (getHeaders) => getHeaders.visibleInTable == true
+        );
+      }
+    },
     formCancl: function () {
       this.$router.go(-1);
     },
@@ -337,9 +337,6 @@ export default {
             let yyyy = today.getFullYear();
             this.today = dd + "." + mm + "." + yyyy;
             this.new_count = response.data.length - this.item.length;
-            if (param == "vesy") {
-              this.vesy_item = response.data;
-            }
             if (param == "req") {
               this.item = response.data;
               this.newReq = response.data.filter((getDate) =>
@@ -439,6 +436,10 @@ export default {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
+          auth: {
+            username: "zaikin.ni",
+            password: "Vbuhfwbz75",
+          },
           params: {
             getDB: "getDbList",
           },
@@ -448,14 +449,18 @@ export default {
           this.loading = false;
         });
     },
-    addDB(item) {
+    addDB(item, type) {
       axios({
         method: "post",
         headers: { "Content-Type": "multipart/form-data" },
         url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
         data: {
-          type: "addDB",
+          type: type,
           nameDB: item,
+        },
+        auth: {
+          username: "zaikin.ni",
+          password: "Vbuhfwbz75",
         },
       }).then((response) => {
         if (response.status == 200) {
@@ -463,58 +468,9 @@ export default {
         }
       });
     },
-    remDB(item) {
-      axios({
-        method: "post",
-        headers: { "Content-Type": "multipart/form-data" },
-        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
-        data: {
-          type: "remDB",
-          nameDB: item,
-        },
-      }).then((response) => {
-        if (response.status == 200) {
-          this.getDB();
-        }
-      });
-    },
-    getVesy() {
-      axios
-        .get(
-          "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
-          {
-            headers: {
-              "Content-Type": "application/json; charset=utf-8",
-            },
-            params: {
-              getVesy: "getVesy",
-            },
-          }
-        )
-        .then((response) => {
-          (this.vesy_item = response.data), console.log(this.vesy_item);
-          this.loading = false;
-        });
-    },
-    editVesyItem(id) {
-      this.dialog = true;
-      this.dialog_title = "Редактирование позиции";
-      console.log(id);
-    },
-    getTest() {
-      axios
-        .get("https://b2btestservice.ocs.ru/b2bjson.asmx/GetCatalog", {
-          headers: {
-            "Content-Type": "application/json;",
-          },
-          params: {
-            Login: "VqFLDv9gY",
-            Token: "VuivdzcaGvFtOACElaNdO?@-BKFMXy",
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-        });
+    showTable(item) {
+      console.log(item.visible);
+      item.visible = !item.visible;
     },
     showPreview(id) {
       this.dialog = true;
@@ -537,9 +493,6 @@ export default {
   },
   mounted() {
     this.getDB();
-    //this.getTest()
-    //this.loading = true
-    //this.getData("vesy");
     //this.getData("inc");
     //this.time();
     //this.getVesy();
