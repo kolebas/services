@@ -469,7 +469,6 @@ export default {
       });
     },
     showTable(item) {
-      console.log(item.visible);
       item.visible = !item.visible;
     },
     showPreview(id) {
