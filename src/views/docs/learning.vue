@@ -91,7 +91,7 @@
         :loading="loading"
         item-key="ID"
       >
-       <template v-slot:item.PROPERTY_731_VALUE="{ item }">
+       <template v-slot:[`item.PROPERTY_731_VALUE`]="{ item }">
           <v-chip
             class="ma-1 blue lighten-4"
             outlined
@@ -105,7 +105,7 @@
             {{link.NAME}}
           </v-chip>
         </template>
-        <template v-slot:item.PROPERTY_729_VALUE="{ item }">
+        <template v-slot:[`item.PROPERTY_729_VALUE`]="{ item }">
           <v-chip
             class="ma-1 blue lighten-4"
             outlined
@@ -113,6 +113,7 @@
             :key="link"
             :href="link"
             target="_blank"
+            maxlength="20"
             small
           >
               <v-icon color="primary" small left>mdi-microsoft-internet-explorer</v-icon>
