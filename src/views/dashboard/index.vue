@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-dialog v-model="dialog" transition="slide-x-reverse-transition">
+    <Alert v-if="!access" :text="accessText" />
+    <!-- <v-dialog v-model="dialog" transition="slide-x-reverse-transition">
       <v-data-table
         :headers="headers_inc"
         :items="getPreviewTask"
@@ -8,8 +9,8 @@
         sortable
         :loading="loading"
       ></v-data-table>
-    </v-dialog>
-    <v-row>
+    </v-dialog> -->
+    <v-row v-if="access">
       <v-col cols="12">
         <v-tabs>
           <v-tab
@@ -17,44 +18,53 @@
             :key="tab.text"
             @click="showData(tab.source, tab.param, tab.result_ar)"
           >
-            <v-badge
+            <!-- <v-badge
               color="green"
               :value="b_value"
               :content="tab.new_count"
               bordered
               >{{ tab.text }}</v-badge
-            >
+            > -->{{ tab.text }}
           </v-tab>
           <v-tab-item>
             <v-divider />
             <v-container>
               <v-btn
                 class="mr-2"
-                @click="showTable(btn)"
+                @click="
+                  showTable(btn),
+                    getDB(btn.sectionId),
+                    getDialogFields(btn.tableHeaders)
+                "
                 v-for="btn in tabs[0].cards"
                 :key="btn.i"
                 ><v-icon left>{{ btn.icon }}</v-icon
                 >{{ btn.title }}</v-btn
-              ></v-container
+              >
+              <v-btn @click="getGlpiData()"></v-btn
+            ></v-container>
+            <v-container
+              v-for="table in tabs[0].cards.filter(
+                (getTable) => getTable.visible == true
+              )"
+              :key="table.i"
             >
-            <v-container v-for="table in tabs[0].cards.filter(
-                  (getTable) => getTable.visible == true
-                )" :key="table.i">
-                <DataTables
-                  class="mx-auto"
-                  :headers="getTableHeaders(table.tableHeaders)"
-                  :item="table.tableItems"
-                  :title="table.title"
-                  :img="table.img"
-                  :actions="table.actions"
-                  :loading="loading"
-                  :dialogTitle="'Добавление ИБ'"
-                  :dialogFields="table.tableHeaders"
-                  :dialogFieldsCols="3"
-                />
+              <DataTables
+                class="mx-auto"
+                :headers="getTableHeaders(table.tableHeaders)"
+                :item="table.tableItems"
+                :title="table.title"
+                :img="table.img"
+                :actions="table.actions"
+                :loading="loading"
+                :dialogTitle="'Добавление ' + table.title.toLowerCase()"
+                :dialogFields="fieldArray"
+                :dialogFieldsCols="3"
+                :dialogMaxWidth="table.dialogMaxWidth"
+              />
             </v-container>
           </v-tab-item>
-          <v-tab-item>
+          <!-- <v-tab-item>
             <v-row>
               <v-col cols="3" v-for="report in reports" :key="report.id">
                 <v-card outlined>
@@ -73,8 +83,7 @@
                 </v-card>
               </v-col>
             </v-row>
-          </v-tab-item>
-          <v-tab-item>
+          </v-tab-item> <v-tab-item>
             <DataTables
               :headers="headers_items"
               :item="item"
@@ -97,7 +106,7 @@
               title="Компьютеры"
               :loading="loading"
             />
-          </v-tab-item>
+          </v-tab-item> -->
         </v-tabs>
       </v-col>
     </v-row>
@@ -108,12 +117,17 @@
 import { bus } from "@/main.js";
 import axios from "axios";
 import DataTables from "@/components/DataTables.vue";
+import Alert from "@/components/Alert.vue";
 export default {
   components: {
     DataTables,
+    Alert,
   },
   data: () => ({
     name: "",
+    accessText:
+      "Доступ к данному разделу ограничен, для получения доступа вам необходимо обратиться к руководителю службы развития и поддержки ИТ-инфраструктуры",
+    access: true,
     tabs: [
       {
         text: "Панель управления 1C",
@@ -123,24 +137,93 @@ export default {
         cards: [
           {
             title: "Базы данных",
+            sectionId: 877,
+            dialogMaxWidth: "75%",
             subtitle: "Редактирование списка баз данных",
             tableHeaders: [
-              { text: "название ИБ", value: "NAME", visibleInTable: true },
-              { text: "вид базы", value: "VID", visibleInTable: true },
-              { text: "тип базы", value: "TYPE", visibleInTable: true },
+              {
+                text: "ID",
+                value: "NAME",
+                visibleInTable: false,
+                type: "string",                
+              },
+              {
+                text: "название ИБ",
+                value: "NAME",
+                visibleInTable: true,
+                type: "string",                
+              },
+              {
+                text: "вид базы",
+                value: "VID",
+                visibleInTable: true,
+                type: "select",
+                select_arr: ["архивная", "копия", "рабочая"],
+              },
+              {
+                text: "тип базы",
+                value: "TYPE",
+                visibleInTable: true,
+                type: "select",
+                select_arr: ["серверная", "веб-сервер", "файловая"],
+              },
               {
                 text: "кластер серверов",
                 value: "CLUSTER",
                 visibleInTable: true,
+                type: "string",
               },
-              { text: "имя ИБ", value: "NAME_DB", visibleInTable: true },
-              { text: "адрес ИБ", value: "ADDRESS_DB", visibleInTable: true },
-              { text: "пользователь ", value: "USER", visibleInTable: false },
-              { text: "логин ", value: "LOGIN", visibleInTable: false },
-              { text: "конфигурация", value: "CONFIG", visibleInTable: false },
-              { text: "релиз", value: "RELEASE", visibleInTable: false },
-              { text: "лицензия ", value: "LICENSE", visibleInTable: false },
-              { text: "комментарий ", value: "COMMENT", visibleInTable: false },
+              {
+                text: "Aдрес ИБ",
+                value: "ADDRESS_DB",
+                visibleInTable: true,
+                type: "string",
+              },
+
+              {
+                text: "каталог ИБ",
+                value: "KATALOG_IB",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "пользователь ",
+                value: "USER",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "логин ",
+                value: "LOGIN",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "конфигурация",
+                value: "CONFIG",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "релиз",
+                value: "RELEASE",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "лицензия ",
+                value: "LICENSE",
+                visibleInTable: false,
+                valueField: "",
+                type: "select",
+                select_arr: [],
+              },
+              {
+                text: "комментарий ",
+                value: "COMMENT",
+                visibleInTable: false,
+                type: "textarea",
+              },
               {
                 text: "Действия",
                 value: "ACTIONS",
@@ -157,109 +240,153 @@ export default {
           },
           {
             title: "Лицензии",
+            sectionId: 875,
             icon: "mdi-text-box-check-outline",
             visible: false,
             tableHeaders: [
-              { text: "тип лицензии", value: "TYPE", visibleInTable: true },
-              { text: "вид лицензии", value: "VID", visibleInTable: true },
-              { text: "основная лицензия", value: "LICENSE", visibleInTable: true },
-              { text: "количество рабочих мест", value: "NUMBER", visibleInTable: true },
-              { text: "юр.лицо - владелец", value: "ORG", visibleInTable: false },
-              { text: "дата приобретения", value: "DATE_BUY", visibleInTable: true },
-              { text: "место активации", value: "LOCATION", visibleInTable: false },
-              { text: "действующий договор ИТС", value: "ORDER", visibleInTable: false },
+              {
+                text: "название лицензии",
+                value: "NAME",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "тип лицензии",
+                value: "TYPE",
+                visibleInTable: true,
+                type: "select",
+                select_arr: ["проф", "базовая"],
+              },
+              {
+                text: "вид лицензии",
+                value: "VID",
+                visibleInTable: true,
+                type: "select",
+                select_arr: [
+                  "основная поставка",
+                  "пользовательская",
+                  "отраслевая",
+                ],
+              },
+              {
+                text: "основная лицензия",
+                value: "LICENSE",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "количество рабочих мест",
+                value: "NUMBER",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "юр.лицо - владелец",
+                value: "ORG",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "дата приобретения",
+                value: "DATE_BUY",
+                visibleInTable: true,
+                type: "date",
+              },
+              {
+                text: "место активации",
+                value: "LOCATION",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "действующий договор ИТС",
+                value: "CONTRACT",
+                visibleInTable: true,
+                type: "select",
+                select_arr: [],
+              },
+              {
+                text: "Действия",
+                value: "ACTIONS",
+                width: "10%",
+                visibleInTable: true,
+              },
             ],
+            actions: ["rem"],
+            tableItems: [],
             img: "https://img.icons8.com/office/30/000000/diploma.png",
           },
           {
             title: "Договора ИТС",
+            sectionId: 876,
             icon: "mdi-file-document-edit-outline",
             visible: false,
             tableHeaders: [
-              { text: "юр лицо", value: "ORG", visibleInTable: true },
-              { text: "контрагент", value: "AGENT", visibleInTable: true },
-              { text: "тип договора", value: "DOGOVOR_TYPE", visibleInTable: true },
-              { text: "основной договор", value: "DOCOVOR", visibleInTable: true },
-              { text: "юр.лицо - владелец", value: "VLADELEC", visibleInTable: true },
-              { text: "дата начала", value: "DATE_START", visibleInTable: true },
-              { text: "дата окончания", value: "DATE_END", visibleInTable: true },
+              {
+                text: "название",
+                value: "NAME",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "юр лицо",
+                value: "ORG",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "контрагент",
+                value: "AGENT",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "тип договора",
+                value: "DOGOVOR_TYPE",
+                visibleInTable: true,
+                type: "select",
+                select_arr: ["основной", "доп. соглашение"],
+              },
+              {
+                text: "основной договор",
+                value: "DOGOVOR",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "юр.лицо - владелец",
+                value: "VLADELEC",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "дата начала",
+                value: "DATE_START",
+                visibleInTable: true,
+                type: "date",
+              },
+              {
+                text: "дата окончания",
+                value: "DATE_END",
+                visibleInTable: true,
+                type: "date",
+              },
+              {
+                text: "Действия",
+                value: "ACTIONS",
+                width: "10%",
+                visibleInTable: true,
+              },
             ],
-            img: "https://img.icons8.com/office/30/000000/bill.png"
-
+            actions: ["rem"],
+            tableItems: [],
+            img: "https://img.icons8.com/office/30/000000/bill.png",
           },
         ],
       },
-      {
-        text: "Заявки",
-        source: "./ajax/dashboard/ajax.php",
-        param: "req",
-        result_ar: "request",
-        new_count: "",
-        aclGroup: true,
-      },
-      {
-        text: "Инциденты",
-        source:
-          "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
-        param: "inc",
-        result_ar: "request",
-        new_count: "",
-        aclGroup: "",
-      },
-      {
-        text: "Компьютеры",
-        source: "https://support.ahstep.ru/apirest.php/search/Computer",
-        param: "comp",
-        result_ar: "comp",
-        new_count: "",
-        aclGroup: "",
-      },
-      {
-        text: "Весовые",
-        source:
-          "https://portal.ahstep.ru/ahstep/services/ajax/dashboard/ajax.php",
-        param: "vesy",
-        result_ar: "vesy_item",
-        aclGroup: "",
-      },
-      {
-        text: "Отчеты",
-        aclGroup: true,
-      },
     ],
-    b_value: false,
-    new_count: "",
     loading: false,
     table_name: "Dashboard",
-    table_inc: true,
-    headers_inc: [
-      { text: "Тема", value: "NAME" },
-      { text: "Дата", value: "DATE" },
-      { text: "Автор", value: "CREATED_BY" },
-      { text: "Отвественный", value: "RESPONSIBLE" },
-      { text: "Задача", value: "TASK_ID" },
-      { text: "Статус", value: "STATUS" },
-    ],
-    inc_item: [],
-    newReq: [],
-    getNewInc: [],
-    getIncNotApproved: [],
-    getPreviewTask: [],
-    headers_items: [
-      { text: "Наименование", value: "NAME" },
-      { text: "Дата", value: "DATE" },
-      { text: "Автор", value: "CREATED_BY" },
-      { text: "Получатель", value: "POLUCHATEL" },
-      { text: "Задача", value: "TASK_ID" },
-      { text: "Статус", value: "STATUS" },
-    ],
-    headers_comp: [
-      { text: "Имя компьютера", value: "1" },
-      { text: "Местоположение", value: "3" },
-      { text: "Тип", value: "4" },
-      { text: "Пользователь", value: "70" },
-      { text: "MAC", value: "113" },
-    ],
     item: [],
     search: "",
     dialog: false,
@@ -269,17 +396,19 @@ export default {
     indeterminate: true,
     value: "0",
     glpi_data: [],
-    reports: [
-      { id: "0", text: "Общее количество заявок", value: "" },
-      { id: "1", text: "Новые заявки за сегодня", value: "" },
-      { id: "2", text: "Новые инциденты", value: "" },
-      { id: "3", text: "Не принятые инциденты", value: "" },
-    ],
-    today: "",
+    fieldArray: [],
   }),
   created() {
     bus.$on("newItem", (data) => {
-      this.addDB(data, "addDB");
+      if (data[1].name == "название ИБ") {
+        this.addDB(data, "addDB");
+      }
+      if (data[1].name == "название лицензии") {
+        this.addDB(data, "addLic");
+      }
+      if (data[2].name == "юр лицо") {
+        this.addDB(data, "addContract");
+      }
     });
     bus.$on("remItem", (data) => {
       this.addDB(data, "remDB");
@@ -301,10 +430,26 @@ export default {
         );
       }
     },
+    getDialogFields(inputArray) {
+      inputArray = inputArray.filter((el) => el.text !== "Действия");
+      var fieldArray = [];
+      if (inputArray.length > 0) {
+        for (let i = 0; i < inputArray.length; i++) {
+          var obj = Object.assign(
+            { name: inputArray[i].text },
+            { type: inputArray[i].type },
+            { select_arr: inputArray[i].select_arr },
+            { value: null },
+          );
+          fieldArray.push(Object.assign(obj));
+        }
+        this.fieldArray = fieldArray;
+      }
+    },
     formCancl: function () {
       this.$router.go(-1);
     },
-    progSts() {
+    /*  progSts() {
       let y = 0;
       for (let i = 0; i < this.quest.length; i++) {
         if (this.quest[i].value) {
@@ -412,24 +557,28 @@ export default {
         })
         .then((response) => {
           var s_token = response.data.session_token;
+          //Параметры для поиска комьютера
+          const params1 = new URLSearchParams();
+          params1.append(
+            "app_token",
+            "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu"
+          );
+          params1.append("criteria[0][field]", "70");
+          params1.append("criteria[0][searchtype]", "contains");
+          params1.append("criteria[0][value]", "zaikin.ni");
           axios
             .get("https://support.ahstep.ru/apirest.php/search/Computer", {
               headers: {
-                "Content-Type": "application/json;",
                 "Session-Token": s_token,
               },
-              params: {
-                app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
-                range: "0-2000",
-                forcedisplay: [3, 4, 70, 113],
-              },
+              params: params1,
             })
             .then((response) => {
               this.glpi_data = response.data;
             });
         });
-    },
-    getDB() {
+    }, */
+    getDB(sectionId) {
       this.loading = true;
       axios
         .get("https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php", {
@@ -441,12 +590,34 @@ export default {
             password: "Vbuhfwbz75",
           },
           params: {
-            getDB: "getDbList",
+            getDB: true,
+            sectionId: sectionId,
           },
         })
         .then((response) => {
-          this.tabs[0].cards[0].tableItems = response.data;
-          this.loading = false;
+          if (sectionId == 877) {
+            this.tabs[0].cards[0].tableItems = response.data;
+            this.getDB(875);
+          }
+          if (sectionId == 875) {
+            this.getDB(876);
+            this.tabs[0].cards[1].tableItems = response.data;
+            for (let i = 0; i < response.data.length; i++) {
+              this.tabs[0].cards[0].tableHeaders[11].select_arr.push(
+                response.data[i].NAME
+              );
+            }
+          }
+          if (sectionId == 876) {
+            this.tabs[0].cards[2].tableItems = response.data;
+            let selectArr = this.tabs[0].cards[1].tableHeaders.filter(
+              (el) => el.type == "select"
+            );
+            for (let i = 0; i < response.data.length; i++) {
+              selectArr[0].select_arr.push(response.data[i].NAME);
+            }
+          }
+          setTimeout((this.loading = false), 1000);
         });
     },
     addDB(item, type) {
@@ -454,21 +625,24 @@ export default {
         method: "post",
         headers: { "Content-Type": "multipart/form-data" },
         url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
-        data: {
-          type: type,
-          nameDB: item,
-        },
         auth: {
           username: "zaikin.ni",
           password: "Vbuhfwbz75",
         },
+        data: {
+          type: type,
+          item: item,
+        },
       }).then((response) => {
         if (response.status == 200) {
-          this.getDB();
+          this.getDB(877);
         }
       });
     },
     showTable(item) {
+      for (let i = 0; i < this.tabs[0].cards.length; i++) {
+        this.tabs[0].cards[i].visible = false;
+      }
       item.visible = !item.visible;
     },
     showPreview(id) {
@@ -487,15 +661,21 @@ export default {
       }
     },
     close() {
-      this.dialog = false;
+      setTimeout((this.dialog = false), 1000);
+    },
+    getUserGroup() {
+      axios.get("./ajax/ajax_usr.php", {}).then((response) => {
+        if (response.status == 200) {
+          let groupArray = response.data[0]["GROUP"];
+          if (groupArray.includes("48") == true) {
+            this.access = true;
+          }
+        }
+      });
     },
   },
   mounted() {
-    this.getDB();
-    //this.getData("inc");
-    //this.time();
-    //this.getVesy();
-    //this.getGlpiData();
+    this.getUserGroup();
   },
 };
 </script>
