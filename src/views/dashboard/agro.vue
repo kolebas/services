@@ -270,7 +270,7 @@
             hide-details
           ></v-text-field>
         </v-card-title>
-        <v-data-table :headers="headers" :items="items" :search="search">
+        <v-data-table :headers="headers.filter((getHeader) => getHeader.visibleInTable == true)" :items="items" :search="search">
           <template v-slot:[`item.NAME`]="{ item }">
             <v-card-text @click="openTask(item.ID)">{{
               item.NAME
@@ -315,23 +315,33 @@ export default {
     headers: [
       {
         text: "Название",
-        value: "NAME",
+        value: "NAME",        
+        visibleInTable: true,
       },
       {
         text: "Автор",
         value: "CREATED_BY",
+        visibleInTable: true,
       },
       {
         text: "Дата",
         value: "DATE",
+        visibleInTable: true,
+      },      
+      {
+        text: "Организация",
+        value: "NAZVANIE_ORGANIZATSII",
+        visibleInTable: true,
       },
       {
         text: "Статус",
         value: "STATUS",
+        visibleInTable: true,
       },
       {
         text: "Отвественный",
         value: "RESPONSIBLE",
+        visibleInTable: true,
       },
     ],
     items: [],
