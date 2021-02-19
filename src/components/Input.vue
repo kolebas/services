@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row v-for="item in arrInput" class="mb-n6" :key="item.name">
+    <v-row v-for="item in inputFields" class="mb-n6" :key="item.name">
       <v-col v-if="item.name" :cols="item.cs - 7">
         <v-card-text
           v-if="item.visible != false"
@@ -52,7 +52,6 @@
             v-model="item.value"
             @input="menu = false"
             :range="item.range"
-            :allowed-dates="item.allowed-dates"
             locale="ru-RU"
             @change="input"
           ></v-date-picker>
@@ -84,7 +83,7 @@
           :hint="item.hint"
           @input="item.err = ''"
           @change="input"
-          >
+        >
         </v-textarea>
         <v-switch
           v-if="item.type == 'switch'"
@@ -92,8 +91,13 @@
           :label="item.label"
           inset
           :class="item.class"
-          @change="input"          
-        ><template slot="label"><span class="green--text text-uppercase">{{item.label}}</span></template></v-switch>
+          @change="input"
+          ><template slot="label"
+            ><span class="green--text text-uppercase">{{
+              item.label
+            }}</span></template
+          ></v-switch
+        >
         <AutocompleteUsr
           v-if="item.type == 'selectUsr' && item.visible != false"
           @change="input"
@@ -103,7 +107,13 @@
         />
         <InputFileCard v-if="item.type == 'file'" />
         <InputAutocomplete :items="item" v-if="item.type == 'autocomplete'" />
-        <SelectOrg :title='item.name' :cols_title='item.cols_title' :cols_input='item.cols_input' :org_err='item.org_err' v-if="item.type == 'selectOrg'" />
+        <SelectOrg
+          :title="item.name"
+          :cols_title="item.cols_title"
+          :cols_input="item.cols_input"
+          :org_err="item.org_err"
+          v-if="item.type == 'selectOrg'"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -115,7 +125,7 @@ import { bus } from "../main.js";
 import AutocompleteUsr from "@/components/AutocompleteUsr.vue";
 import InputFileCard from "@/components/InputFileCard.vue";
 import InputAutocomplete from "@/components/InputAutocomplete.vue";
-import SelectOrg from '@/components/SelectOrg.vue';
+import SelectOrg from "@/components/SelectOrg.vue";
 export default {
   components: {
     AutocompleteUsr,
@@ -145,14 +155,17 @@ export default {
     dateRangeText() {
       return this.item.value.join(" ~ ");
     },
-  },
+    inputFields() {
+      return this.arrInput.filter((input) => input.name !== "ID");
+    },
+  }, 
   methods: {
     change() {
       this.item.err = "";
     },
     input: function () {
-      /*this.value.input_id = this.id;*/
       bus.$emit("resultArray", this.arrInput);
+      return
     },
   },
 };
