@@ -6,22 +6,7 @@
           <span class="headline">{{ dialogTitle }}</span>
         </v-card-title>
         <v-divider />
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                v-for="field in getDialogFields"
-                :key="field.i"
-                :cols="dialogFieldsCols"
-              >
-                <v-text-field
-                  v-model="field.val"
-                  :label="field.text"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+        <Input :arrInput="getDialogFields" />
         <v-divider />
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -38,25 +23,28 @@
         <v-divider />
         <v-card-text>
           <v-container>
-            <v-row>
+            <Input :arrInput="getDialogFields" />
+            <!-- <v-row>
               <v-col
                 v-for="field in getDialogFields"
                 :key="field.i"
                 :cols="dialogFieldsCols"
               >
                 <v-text-field
-                  v-model="field.val"
-                  :label="field.text"
+                  v-model="field.value"
+                  :label="field.name"
                 ></v-text-field>
               </v-col>
-            </v-row>
+            </v-row> -->
           </v-container>
         </v-card-text>
         <v-divider />
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close"> Отмена </v-btn>
-          <v-btn color="blue darken-1" text @click="newItem"> Сохранить </v-btn>
+          <v-btn color="blue darken-1" text @click="updItem()">
+            Сохранить
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -73,7 +61,13 @@
         single-line
         hide-details
       ></v-text-field>
-      <v-btn color="primary" @click="dialogAdd = true" class="mb-2 ml-2"
+      <v-btn
+        color="primary"
+        @click="
+          dialogAdd = true;
+          clearValue();
+        "
+        class="mb-2 ml-2"
         >Добавить</v-btn
       >
     </v-card-title>
@@ -98,20 +92,20 @@
       <template v-slot:[`item.ACTIONS`]="{ item }">
         <v-icon
           class="mr-2"
-          v-if="actions.includes('add')"
+          v-if="actions && actions.includes('add')"
           @click="add(item)"
           color="blue"
           >mdi-plus</v-icon
         >
         <v-icon
           class="mr-2"
-          v-if="actions.includes('chg')"
-          @click="updItem(item)"
+          v-if="actions && actions.includes('chg')"
+          @click="loadItem(item)"
           color="green"
           >mdi-pencil</v-icon
         >
         <v-icon
-          v-if="actions.includes('rem')"
+          v-if="actions && actions.includes('rem')"
           @click="remItem(item)"
           color="red"
           >mdi-delete</v-icon
@@ -140,7 +134,11 @@
 
 <script>
 import { bus } from "@/main.js";
+import Input from "@/components/Input.vue";
 export default {
+  components: {
+    Input,
+  },
   props: {
     title: { type: String },
     dialogTitle: { type: String, default: "Новый параметр" },
@@ -157,7 +155,6 @@ export default {
   data: () => ({
     dialogAdd: false,
     dialogUpd: false,
-    itemValue: [],
     search: "",
     expanded: [],
   }),
@@ -175,16 +172,29 @@ export default {
     close() {
       this.dialogAdd = false;
       this.dialogUpd = false;
-      this.itemValue = "";
+      //setTimeout(this.clearValue, 1000);
+    },
+    loadItem(item) {
+      this.dialogUpd = true;
+      let obj_arr = Object.values(item);
+      for (let i = 0; i < this.dialogFields.length; i++) {
+        this.dialogFields[i].value = obj_arr[i];
+      }
+      console.log(item);
     },
     updItem() {
-      this.dialogUpd = true;
       bus.$emit("updItem", this.dialogFields);
+      this.close();
     },
     newItem() {
       this.dialogAdd = true;
       bus.$emit("newItem", this.dialogFields);
       this.close();
+    },
+    clearValue() {
+      for (let i = 0; i < this.dialogFields.length; i++) {
+        this.dialogFields[i].value = null;
+      }
     },
   },
 };
