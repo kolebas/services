@@ -33,7 +33,7 @@
                 class="mr-2"
                 @click="
                   showTable(btn),
-                    getDB(btn.sectionId),
+                    getData1C(btn.type, btn.sectionId),
                     getDialogFields(btn.tableHeaders)
                 "
                 v-for="btn in tabs[0].cards"
@@ -127,7 +127,7 @@ export default {
     name: "",
     accessText:
       "Доступ к данному разделу ограничен, для получения доступа вам необходимо обратиться к руководителю службы развития и поддержки ИТ-инфраструктуры",
-    access: true,
+    access: false,
     tabs: [
       {
         text: "Панель управления 1C",
@@ -140,18 +140,20 @@ export default {
             sectionId: 877,
             dialogMaxWidth: "75%",
             subtitle: "Редактирование списка баз данных",
+            visible: false,
+            type: "getDB",
             tableHeaders: [
               {
                 text: "ID",
                 value: "NAME",
                 visibleInTable: false,
-                type: "string",                
+                type: "string",
               },
               {
                 text: "название ИБ",
                 value: "NAME",
                 visibleInTable: true,
-                type: "string",                
+                type: "string",
               },
               {
                 text: "вид базы",
@@ -236,14 +238,20 @@ export default {
             img:
               "https://portal.ahstep.ru/upload/resize_cache/iblock/20a/36_30_1/db.png",
             icon: "mdi-database-cog-outline",
-            visible: false,
           },
           {
             title: "Лицензии",
             sectionId: 875,
             icon: "mdi-text-box-check-outline",
             visible: false,
+            type: "getDB",
             tableHeaders: [
+              {
+                text: "ID",
+                value: "NAME",
+                visibleInTable: false,
+                type: "string",
+              },
               {
                 text: "название лицензии",
                 value: "NAME",
@@ -312,7 +320,7 @@ export default {
                 visibleInTable: true,
               },
             ],
-            actions: ["rem"],
+            actions: ["chg", "rem"],
             tableItems: [],
             img: "https://img.icons8.com/office/30/000000/diploma.png",
           },
@@ -321,9 +329,16 @@ export default {
             sectionId: 876,
             icon: "mdi-file-document-edit-outline",
             visible: false,
+            type: "getDB",
             tableHeaders: [
               {
-                text: "название",
+                text: "ID",
+                value: "NAME",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "название договора",
                 value: "NAME",
                 visibleInTable: true,
                 type: "string",
@@ -378,9 +393,56 @@ export default {
                 visibleInTable: true,
               },
             ],
-            actions: ["rem"],
+            actions: ["chg", "rem"],
             tableItems: [],
             img: "https://img.icons8.com/office/30/000000/bill.png",
+          },
+          {
+            title: "Пользователи баз 1С",
+            sectionId: null,
+            icon: "mdi-account-multiple-outline",
+            visible: false,
+            type: "getUsers",
+            tableHeaders: [
+              {
+                text: "ID",
+                value: "ID",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "Имя пользователя",
+                value: "USER",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "Дата подключения",
+                value: "DATE_CONNECT",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "Задача на подключениe",
+                value: "TASK_CONNECT",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "Дата отключения",
+                value: "DATE_DISCONNECT",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "Задача на отключение",
+                value: "TASK_DISCONNECT",
+                visibleInTable: true,
+                type: "string",
+              },
+            ],
+            tableItems: [],
+            img: "https://img.icons8.com/office/30/000000/groups.png",
           },
         ],
       },
@@ -401,20 +463,20 @@ export default {
   created() {
     bus.$on("newItem", (data) => {
       if (data[1].name == "название ИБ") {
-        this.addDB(data, "addDB");
+        this.addData1C(data, "addDB");
       }
       if (data[1].name == "название лицензии") {
-        this.addDB(data, "addLic");
+        this.addData1C(data, "addLic");
       }
       if (data[2].name == "юр лицо") {
-        this.addDB(data, "addContract");
+        this.addData1C(data, "addContract");
       }
     });
     bus.$on("remItem", (data) => {
-      this.addDB(data, "remDB");
+      this.addData1C(data, "remDB");
     });
     bus.$on("updItem", (data) => {
-      this.addDB(data, "updDB");
+      this.addData1C(data, "updDB");
     });
   },
   computed: {
@@ -439,7 +501,7 @@ export default {
             { name: inputArray[i].text },
             { type: inputArray[i].type },
             { select_arr: inputArray[i].select_arr },
-            { value: null },
+            { value: null }
           );
           fieldArray.push(Object.assign(obj));
         }
@@ -578,29 +640,29 @@ export default {
             });
         });
     }, */
-    getDB(sectionId) {
+    getData1C(type, sectionId) {
       this.loading = true;
       axios
         .get("https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php", {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-          auth: {
+          /*  auth: {
             username: "zaikin.ni",
             password: "Vbuhfwbz75",
-          },
+          }, */
           params: {
-            getDB: true,
+            type: type,
             sectionId: sectionId,
           },
         })
         .then((response) => {
           if (sectionId == 877) {
             this.tabs[0].cards[0].tableItems = response.data;
-            this.getDB(875);
+            this.getData1C("getDB", 875);
           }
           if (sectionId == 875) {
-            this.getDB(876);
+            this.getData1C("getDB", 876);
             this.tabs[0].cards[1].tableItems = response.data;
             for (let i = 0; i < response.data.length; i++) {
               this.tabs[0].cards[0].tableHeaders[11].select_arr.push(
@@ -611,31 +673,30 @@ export default {
           if (sectionId == 876) {
             this.tabs[0].cards[2].tableItems = response.data;
             let selectArr = this.tabs[0].cards[1].tableHeaders.filter(
-              (el) => el.type == "select"
+              (el) => el.value == "CONTRACT"
             );
             for (let i = 0; i < response.data.length; i++) {
               selectArr[0].select_arr.push(response.data[i].NAME);
             }
           }
+          if (type == "getUsers") {
+            this.tabs[0].cards[3].tableItems = response.data;
+          }
           setTimeout((this.loading = false), 1000);
         });
     },
-    addDB(item, type) {
+    addData1C(item, type) {
       axios({
         method: "post",
         headers: { "Content-Type": "multipart/form-data" },
         url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
-        auth: {
-          username: "zaikin.ni",
-          password: "Vbuhfwbz75",
-        },
         data: {
           type: type,
           item: item,
         },
       }).then((response) => {
         if (response.status == 200) {
-          this.getDB(877);
+          this.getData1C("getDB", 877);
         }
       });
     },
