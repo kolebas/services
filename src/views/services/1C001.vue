@@ -193,7 +193,7 @@ export default {
     axios
       .get(this.source, {
         params: {
-          getDB: true,
+          type: "getDB",
         },
       })
       .then((response) => (this.input[2].select_arr = response.data));
