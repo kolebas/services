@@ -2,35 +2,10 @@
   <v-container>
     <div class="text-center">
       <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
-      <v-dialog v-model="cmpNameModal" width="500" persistent>
-        <v-card>
-          <v-card-title class="headline red lighten-1" primary-title>
-            Внимание!!!
-          </v-card-title>
-
-          <v-card-text class="subtitle-1 text-center mt-4">
-            {{ cmpNameModalMsg }}
-          </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="closeCmpModal()">
-              Понятно
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </div>
     <v-row>
       <v-col cols="12">
-        <v-card
-          max-width="55%"
-          raised
-          class="mx-auto"
-          color="grey lighten-4"
-        >
+        <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
           <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
           <hr />
           <SelectUsr
@@ -39,53 +14,18 @@
             title="ФИО:"
             :userId_err="userId_err"
           />
-          <v-row class="mb-n6">
-            <v-col cols="4">
-              <v-card-text class="subtitle-1 text-right pt-2">
-                Выберите тип устройства:
-              </v-card-text>
-            </v-col>
-            <v-col cols="6">
-              <v-select
-                @change="showCmpModal()"
-                v-model="type"
-                :items="items_type"
-                label="Выберите тип устройства"
-                solo
-                outlined
-                dense
-                :error-messages="type_err"
-                ><template v-slot:selection="{ item }">
-                  <v-chip color="#bcedfc" close label @click:close="type = ''"
-                    >{{ item }}
-                  </v-chip>
-                </template>
-              </v-select>
-            </v-col>
-          </v-row>
-          <v-row class="mb-n6" v-if="type == 'Служебный компьютер'">
-            <v-col cols="4">
-              <v-card-text class="subtitle-1 text-right pt-2">
-                Имя компьютера:
-              </v-card-text>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model="cmpName"
-                outlined
-                solo
-                dense
-                :error-messages="cmpNameErr"
-                label="Укажите имя служебного компьютера"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-              <v-expand-transition>
-              <v-card-text v-if="type">
-              <v-icon color="blue darken-2"> mdi-information-outline</v-icon>
-              {{ typeInfo }}</v-card-text
-            >
-            </v-expand-transition>
+
+          <v-container>
+            <v-alert
+              outlined
+              type="info"
+              icon="mdi-information-outline"
+              dense
+              prominent
+              border="left"
+              >{{ typeInfo }}
+            </v-alert>
+          </v-container>
           <hr />
           <v-card-actions class="py-4">
             <div class="mx-auto">
@@ -132,11 +72,8 @@ export default {
     users: [],
     userId: "",
     type: "",
-    typeInfo: "",
-    cmpNameModal: "",
-    cmpNameModalMsg:
-      "Для исполнения данной заявки: служебный компьютер должен находится в корпоративной сети, и после её исполнения необходимо выполнить перезагрузку",
-    cmpName: "",
+    typeInfo:
+      "После предоставления данной услуги вы сможете подключаться к корпоративным ресурсам компании с помощью мобильного устройства, домашнего или рабочего компьютера.",
     cmpNameErr: "",
     userId_err: "",
     type_err: "",
@@ -161,10 +98,7 @@ export default {
     //Отправка формы
     formSend: function () {
       //Проверка полей тип
-      if (
-        (this.userId && this.type && this.type != "Служебный компьютер") ||
-        (this.userId && this.type && this.cmpName)
-      ) {
+      if (this.userId) {
         this.btnLoader = true;
         axios({
           method: "post",
@@ -173,8 +107,6 @@ export default {
           url: "./ajax/ajax_ns001.php",
           data: {
             userId: this.userId,
-            type: this.type,
-            cmpname: this.cmpName,
           },
         })
           .then((response) => {
@@ -193,14 +125,6 @@ export default {
       }
       if (!this.userId) {
         this.userId_err = "Необходимо выбрать сотрудника";
-      }
-      if (!this.type) {
-        this.type_err = "Необходимо выбрать тип устройства";
-      }
-      if (this.type == "Служебный компьютер") {
-        if (!this.cmpName) {
-          this.cmpNameErr = "Необходимо указать имя компьютера";
-        }
       }
     },
     //Действие кнопки "назад"
