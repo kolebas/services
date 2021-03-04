@@ -99,7 +99,7 @@
                                 :items="item"
                                 :search="search"
                                 >
-                                <template v-slot:item.ACTIONS="{ item }">
+                                <template `v-slot:item.ACTIONS`="{ item }">
                                     <v-icon
                                         small
                                         class="mr-2"
@@ -163,10 +163,10 @@ export default {
         this.loading = true
             axios
                 .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
-                 auth:{
+                 /* auth:{
                      username: "zaikin.ni",
                      password: "Vbuhfwbz75"
-                 },
+                 }, */
                  params:{
                     param1: "get_products"
                  }
