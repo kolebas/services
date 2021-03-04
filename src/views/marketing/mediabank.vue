@@ -1,20 +1,17 @@
 <template >
-  <v-row class="mx-auto grey lighten-3" >
-    <div class="text-center">
-      <v-dialog v-if="itemPreview" v-model="dialogPreview" width="60%">
-        <v-card>
-          <v-card-title>{{ itemPreview.text }}</v-card-title>
-          <v-divider />
+  <v-row class="mx-auto grey lighten-3">
+    <v-dialog v-if="itemPreview" v-model="dialogPreview" width="60%">
+      <v-card>
+        <v-card-title>{{ itemPreview.text }}</v-card-title>
+        <v-divider />
+        <v-container>
           <v-row class="mx-auto">
             <v-col cols="5">
               <v-img
                 max-height="480"
                 max-width="320"
                 class="mx-auto"
-                :src="
-                  'https://portal.ahstep.ru/ahstep/services/img/marketing/inventory/' +
-                  itemPreview.img
-                "
+                :src="'https://portal.ahstep.ru' + itemPreview.img"
               />
             </v-col>
             <v-divider inset vertical />
@@ -33,13 +30,14 @@
                   </v-row>
                 </v-col>
               </v-row>
+              <br />
               <v-row>
                 <v-btn
                   large
                   class="mx-auto"
                   outlined
                   color="indigo"
-                  @click="addOrder(itemPreview.id)"
+                  @click="addOrder(itemPreview)"
                 >
                   в заявку
                   <v-icon right color="green">mdi-plus-circle-outline</v-icon>
@@ -47,50 +45,46 @@
               </v-row>
             </v-col>
           </v-row>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="dialog" width="60%">
-        <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>{{
-            titleCard
-          }}</v-card-title>
-          <template>
-            <Input :arrInput="input" />
-            <v-divider />
-            <v-list-item
-              dense
-              v-for="item in items.filter((getItem) => getItem.value != '')"
-              :key="item.id"
-            >
-              <v-col cols="8" class="my-n4">
-                <v-card-title>{{ item.text }}</v-card-title>
-              </v-col>
-              <v-col cols="2" class="my-n4">
-                <v-text-field
-                  outlined
-                  solo
-                  prepend-icon="mdi-minus"
-                  @click:prepend="item.value--"
-                  append-outer-icon="mdi-plus"
-                  @click:append-outer="item.value++"
-                  dense
-                  suffix="шт."
-                  v-model="item.value"
-                  class="pt-4"
-                />
-              </v-col>
-            </v-list-item>
-          </template>
+        </v-container>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialog" width="60%">
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>{{
+          titleCard
+        }}</v-card-title>
+        <template>
+          <Input :arrInput="input" />
           <v-divider />
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" :loading="btnLoader" text @click="formSend()"
-              >Отправить</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+          <v-list-item dense v-for="item in OrderItems" :key="item.id">
+            <v-col cols="8" class="my-n4">
+              <v-card-title>{{ item.text }}</v-card-title>
+            </v-col>
+            <v-col cols="2" class="my-n4">
+              <v-text-field
+                outlined
+                solo
+                prepend-icon="mdi-minus"
+                @click:prepend="item.value--"
+                append-outer-icon="mdi-plus"
+                @click:append-outer="item.value++"
+                dense
+                suffix="шт."
+                v-model="item.value"
+                class="pt-4"
+              />
+            </v-col>
+          </v-list-item>
+        </template>
+        <v-divider />
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" :loading="btnLoader" text @click="formSend()"
+            >Отправить</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-col cols="12">
       <v-card-title class="text-xl-h4 ml-8 text-uppercase font-weight-medium">
         <img
@@ -120,14 +114,15 @@
       <v-divider />
     </v-col>
 
-    <v-col v-for="section in sections" :key="section.name" cols="6">
+    <v-col v-for="section in sections" :key="section.name" cols="4">
       <v-card
         @click="
           type = section.id;
           selectItem = true;
+          getStoreItems(95, 856);
         "
         class="mx-auto"
-        max-width="60%"
+        max-width="70%"
       >
         <v-card-title shaped>
           <v-icon large left :color="section.color">
@@ -138,6 +133,42 @@
       </v-card>
     </v-col>
 
+    <template v-if="type === 2">
+      <v-col v-for="item in storeItems" :key="item.items" cols="2">
+        <v-card shaped class="mx-auto" max-width="90%">
+          <v-list-item @click="showDialogItem(item)">
+            <v-list-item-avatar tile rounded size="80">
+              <v-img :src="'https://portal.ahstep.ru' + item.img"></v-img>
+            </v-list-item-avatar>
+            <v-list-title>{{ item.text }}</v-list-title>
+          </v-list-item>
+          <v-divider />
+          <v-card-actions>
+            <template>
+              <v-btn
+                class="my-2"
+                outlined
+                color="indigo"
+                @click="addOrder(item)"
+              >
+                в заявку
+                <v-icon right color="green">mdi-plus-circle-outline</v-icon>
+              </v-btn>
+
+              <v-spacer></v-spacer>
+              <template v-if="condition">
+                <v-btn fab x-small color="primary"
+                  ><v-icon>mdi-pencil</v-icon></v-btn
+                >
+                <v-btn fab x-small color="error"
+                  ><v-icon>mdi-delete</v-icon></v-btn
+                >
+              </template>
+            </template>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </template>
     <template v-if="type === 1">
       <v-col v-for="bi in bankItems" :key="bi.link" cols="3">
         <v-card shaped class="mx-auto" max-width="344">
@@ -163,7 +194,7 @@
     <template v-if="type === 0">
       <v-col v-for="item in items" :key="item.items" cols="3">
         <v-card shaped class="mx-auto" max-width="344">
-          <v-list-item @click="(dialogPreview = true), (idPreview = item.id)">
+          <v-list-item @click="showDialogItem(item)">
             <v-list-item-avatar tile size="80">
               <v-img
                 :src="
@@ -233,6 +264,12 @@ export default {
         name: "Медиа банк",
         img: "mdi-video-vintage",
         color: "green",
+      },
+      {
+        id: 2,
+        name: "Магазин молочной продукции",
+        img: "mdi-store",
+        color: "red",
       },
     ],
     cats: [
@@ -334,6 +371,120 @@ export default {
         img: "12.jpg",
       },
     ],
+    storeItemsTest: [
+      {
+        id: 0,
+        text: "Масло сливочное",
+        img: "store/milk/maslo.jpg",
+        subText: [
+          {
+            id: "0",
+            title: "Описание",
+            text: "Масло сливочное: 72,5% ",
+          },
+          {
+            id: "1",
+            title: "Цена",
+            text: "600р/кг.",
+          },
+        ],
+      },
+      {
+        id: 1,
+        text: "Сыр костромской: 45%",
+        img: "store/milk/syr_01.jpg",
+        subText: [
+          {
+            id: "0",
+            title: "Описание",
+            text: "Масло сливочное: 72,5% ",
+          },
+          {
+            id: "1",
+            title: "Цена",
+            text: "600р/кг.",
+          },
+        ],
+      },
+      {
+        id: 2,
+        text: "Сыр российский: 50%",
+        img: "store/milk/syr_02.jpg",
+        subText: [
+          {
+            id: "0",
+            title: "Описание",
+            text: "Масло сливочное: 72,5% ",
+          },
+          {
+            id: "1",
+            title: "Цена",
+            text: "600р/кг.",
+          },
+        ],
+      },
+      {
+        id: 3,
+        text: "Творог: 1,8%",
+        img: "store/milk/tvorog.jpg",
+        subText: [
+          {
+            id: "0",
+            title: "Описание",
+            text: "Масло сливочное: 72,5% ",
+          },
+          {
+            id: "1",
+            title: "Цена",
+            text: "600р/кг.",
+          },
+        ],
+      },
+      {
+        id: 4,
+        text: "Творог: 5%",
+        img: "store/milk/tvorog.jpg",
+        subText: [
+          {
+            id: "0",
+            title: "Описание",
+            text: "Масло сливочное: 72,5% ",
+          },
+          {
+            id: "1",
+            title: "Цена",
+            text: "600р/кг.",
+          },
+        ],
+      },
+      { id: 5, text: "Творог: 9%", img: "store/milk/tvorog.jpg" },
+      {
+        id: 6,
+        text: "Сметана: 15% 450Гр",
+        img: "store/milk/smetana_15_450.jpg",
+      },
+      {
+        id: 7,
+        text: "Сметана: 15% 250Гр",
+        img: "store/milk/smetana_15_250.jpg",
+      },
+      {
+        id: 8,
+        text: "Йогурт (с ароматом малины): 2,5%",
+        img: "store/milk/iog_malina_2,5_500.jpg",
+      },
+      { id: 9, text: "Снежок: 2,5%", img: "store/milk/snegok_2,5_500.jpg" },
+      { id: 10, text: "Ряженка: 2,5%", img: "store/milk/ruagenka_2.5_500.jpg" },
+      { id: 11, text: "Молоко: 2,5%", img: "store/milk/moloko_plenka_2.5.jpg" },
+      { id: 12, text: "Молоко: 3,2%", img: "store/milk/moloko_plenka.jpg" },
+      { id: 13, text: "Простокваша: 1%", img: "store/milk/prost_1_500.jpg" },
+      {
+        id: 14,
+        text: "Простокваша: 2,5%",
+        img: "store/milk/prost_2,5_500.jpg",
+      },
+    ],
+    storeItems: [],
     selectItem: "",
     input: [
       {
@@ -535,17 +686,18 @@ export default {
     ordersShow: "",
     itemsOrder: [],
     dialogPreview: false,
-    idPreview: "",
+    itemPreview: [],
     dialog: false,
     btnLoader: false,
+    OrderItems: [],
   }),
   computed: {
-    itemPreview() {
+    /*  itemPreview() {
       return this.items[this.idPreview];
-    },
+    }, */
     condition() {
       this.userId;
-      return this.userId == 1 || this.userId == 3764 || this.userId == 1940;
+      return this.userId == 1 || this.userId == 1940;
     },
   },
   mounted() {
@@ -587,15 +739,37 @@ export default {
     selectedItem() {
       this.selectItem = true;
     },
-    addOrder(id) {
-      this.items[id].value = 1;
+    addOrder(item) {
+      let obj = { id: item.id, text: item.text, value: 1 };
+      this.OrderItems.push(obj);
       //this.itemsOrder = this.items.filter((getItem) => getItem.value != null);
-      this.order = this.items.filter((getItem) => getItem.value != "").length;
+      this.order = this.OrderItems.length;
       this.ordersShow = true;
     },
     clickOrders() {
-      //this.dialogParam = true;
       this.dialog = true;
+    },
+    showDialogItem(item) {
+      (this.dialogPreview = true), (this.itemPreview = item);
+      console.log(item);
+    },
+    getStoreItems(infoblockID, sectionID) {
+      axios
+        .get(
+          "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
+          {
+            params: {
+              type: "getStoreItems",
+              id: infoblockID,
+              sectionID: sectionID,
+            },
+            auth: {
+              username: "zaikin.ni",
+              password: "Vbuhfwbz75",
+            },
+          }
+        )
+        .then((response) => (this.storeItems = response.data));
     },
   },
 };
