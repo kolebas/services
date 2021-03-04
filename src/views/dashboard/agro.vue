@@ -261,6 +261,14 @@
         <v-card-title>
           <v-toolbar-title>Агрономические опыты</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-tooltip v-for="item in tableButtons" :key="item.name" bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" :color="item.color" fab x-small
+                ><v-icon>{{item.icon}}</v-icon></v-btn
+              >
+            </template>
+            <span>{{item.tooltip}}</span>
+          </v-tooltip>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -270,7 +278,13 @@
             hide-details
           ></v-text-field>
         </v-card-title>
-        <v-data-table :headers="headers.filter((getHeader) => getHeader.visibleInTable == true)" :items="items" :search="search">
+        <v-data-table
+          :headers="
+            headers.filter((getHeader) => getHeader.visibleInTable == true)
+          "
+          :items="items"
+          :search="search"
+        >
           <template v-slot:[`item.NAME`]="{ item }">
             <v-card-text @click="openTask(item.ID)">{{
               item.NAME
@@ -282,11 +296,16 @@
             </v-chip>
           </template>
           <template v-slot:[`item.RESPONSIBLE`]="{ item }">
-            <v-chip  :href="'../../company/personal/user/'+ item.RESPONSIBLEID + '/'" v-if="item.RESPONSIBLE != ' '"  color="grey" outlined>
+            <v-chip
+              :href="'../../company/personal/user/' + item.RESPONSIBLEID + '/'"
+              v-if="item.RESPONSIBLE != ' '"
+              color="grey"
+              outlined
+            >
               <v-avatar left>
                 <img v-if="item.PHOTO" :src="item.PHOTO" />
-                <v-icon v-else>mdi-account-circle</v-icon>
-              </v-avatar><span>{{ item.RESPONSIBLE }}</span>
+                <v-icon v-else>mdi-account-circle</v-icon> </v-avatar
+              ><span>{{ item.RESPONSIBLE }}</span>
             </v-chip>
           </template>
         </v-data-table>
@@ -315,7 +334,7 @@ export default {
     headers: [
       {
         text: "Название",
-        value: "NAME",        
+        value: "NAME",
         visibleInTable: true,
       },
       {
@@ -327,7 +346,7 @@ export default {
         text: "Дата",
         value: "DATE",
         visibleInTable: true,
-      },      
+      },
       {
         text: "Организация",
         value: "NAZVANIE_ORGANIZATSII",
@@ -343,11 +362,22 @@ export default {
         value: "RESPONSIBLE",
         visibleInTable: true,
       },
+      {
+        text: "test",
+        value: "test",
+        visibleInTable: false,
+      },
     ],
     items: [],
     search: "",
     dialog: false,
     taskInfo: [],
+    tableButtons: [{
+      text: "Настройка полей",
+      icon: "mdi-cog-transfer-outline",
+      color: "info",
+      tooltip: "Настройка полей"
+    }],
     taskInfoNew: [
       {
         text: "Отвественый:",
@@ -374,7 +404,6 @@ export default {
         },
       })
       .then((response) => ((this.items = response.data), this.getValue()));
-      
   },
   computed: {
     mainCard() {
@@ -414,7 +443,7 @@ export default {
         status == "Согласование"
       )
         return "orange";
-      else if (status == "Просрочен") return "red";
+      else if (status == "Просрочен" || status == "Отклонен") return "red";
       else if (status == "Проведён") return "grey";
       else return "green";
     },
