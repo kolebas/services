@@ -131,6 +131,7 @@ export default {
       },
     ],
     btnLoader: false,
+    userField: false,
     userId_err: "",
     cmnt: "",
     dialog: false,
@@ -141,6 +142,8 @@ export default {
     bus.$on("SelectUsr", (data) => {
       this.users[data.input_id - 1].value = data.userId;
       this.users[data.input_id - 1].err = "";
+      this.userField = true;
+      this.setErrorMsg ("");
     });
   },
   mounted() {
@@ -157,11 +160,9 @@ export default {
     formSend: function () {
       //Проверка полей тип
       if (
-        (this.fld_name && this.users[0].value) ||
-        (this.fld_name && this.users[1].value)
+        (this.fld_name && this.userField)
       ) {
         this.btnLoader = true;
-        console.log(this.fld_name);
         axios({
           method: "post",
           withCredentials: true,
@@ -192,18 +193,22 @@ export default {
             this.dialogMessage = "Произошла ошибка";
           });
       }
-      if (!this.fld_name && !this.users[0].value) {
-        this.fld_err = "Необходимо выбрать каталог";
-        this.users[0].err = "Необходимо выбрать сотрудника";
+      if (!this.userField) {
+        this.setErrorMsg ("Необходимо любое из трех полей с пользователями")
       }
-      if (!this.fld_name && !this.users[1].value) {
-        this.fld_err = "Необходимо выбрать каталог";
-        this.users[1].err = "Необходимо выбрать сотрудника";
+      if (!this.fld_name) {
+          this.fld_err = "Необходимо выбрать каталог";
       }
     },
     formCancl: function () {
       this.$router.go(-1);
     },
+    setErrorMsg (msg) {
+      for ( let i =0; i < this.users.length; i++ )
+        {
+          this.users[i].err = msg;
+        }
+    }
   },
 };
 </script>
