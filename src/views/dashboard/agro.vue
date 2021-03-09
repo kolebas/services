@@ -73,7 +73,7 @@
                 <v-text-field :value="task.OBEKT_OPYTA" readonly></v-text-field>
               </v-col>
             </v-row>
-            <v-row class="mb-n8">
+            <v-row>
               <v-col cols="2">
                 <v-subheader class="mt-2"
                   >Экономическая эффективность:</v-subheader
@@ -86,71 +86,82 @@
                 ></v-text-field>
               </v-col>
             </v-row>
-            <br />
             <v-container>
-              <v-btn
-                color="blue-grey lighten-4"
-                class="mx-auto"
-                small
-                @click="(addInfo = !addInfo), (log = false)"
-                ><v-icon color="indigo" left>mdi-format-list-bulleted</v-icon
-                >Дополнительная информация</v-btn
-              >
-              <v-btn
-                color="blue-grey lighten-4"
-                class="ml-2"
-                small
-                @click="(log = !log), (addInfo = false)"
-                ><v-icon color="info" left>mdi-history</v-icon>История
-                заявки</v-btn
-              >
+              <v-row>
+                <v-btn
+                  color="blue-grey lighten-4"
+                  class="ml-2 my-1"
+                  small
+                  @click="(addInfo = !addInfo), (log = false)"
+                  ><v-icon color="indigo" left>mdi-format-list-bulleted</v-icon
+                  >Дополнительная информация</v-btn
+                >
+                <v-btn
+                  color="blue-grey lighten-4"
+                  class="ml-2 my-1"
+                  small
+                  @click="(log = !log), (addInfo = false)"
+                  ><v-icon color="info" left>mdi-history</v-icon>История
+                  заявки</v-btn
+                >
+                <v-btn
+                  v-for="item in task.FILE"
+                  :key="item"
+                  color="blue-grey lighten-4"
+                  class="ml-2 my-1"
+                  :href="item.path"
+                  small
+                  ><v-icon color="deep-orange" left>mdi-file-link-outline</v-icon
+                  >{{ item.name }}</v-btn
+                >
+                <v-expand-transition>
+                  <v-container v-if="addInfo" class="mb-n6">
+                    <v-row class="mb-n6">
+                      <v-col>
+                        <v-textarea
+                          label="Контактная информация"
+                          rows="1"
+                          auto-grow
+                          outlined
+                          filled
+                          :value="task.KONTAKTNAYA_INFORMATSIYA"
+                          readonly
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-textarea
+                          label="Реквизиты организации"
+                          rows="1"
+                          auto-grow
+                          outlined
+                          filled
+                          :value="task.REKVIZITY_ORGANIZATSII"
+                          readonly
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-expand-transition>
+                <v-expand-transition>
+                  <v-container class="mb-n12">
+                    <v-row v-if="log">
+                      <v-col>
+                        <v-textarea
+                          label="История заявки"
+                          auto-grow
+                          outlined
+                          filled
+                          :value="task.LOG"
+                          readonly
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-expand-transition>
+              </v-row>
             </v-container>
-            <v-expand-transition>
-              <v-container v-if="addInfo" class="mb-n6">
-                <v-row class="mb-n6">
-                  <v-col>
-                    <v-textarea
-                      label="Контактная информация"
-                      rows="1"
-                      auto-grow
-                      outlined
-                      filled
-                      :value="task.KONTAKTNAYA_INFORMATSIYA"
-                      readonly
-                    />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-textarea
-                      label="Реквизиты организации"
-                      rows="1"
-                      auto-grow
-                      outlined
-                      filled
-                      :value="task.REKVIZITY_ORGANIZATSII"
-                      readonly
-                    />
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-expand-transition>
-            <v-expand-transition>
-              <v-container class="mb-n12">
-                <v-row v-if="log">
-                  <v-col>
-                    <v-textarea
-                      label="История заявки"
-                      auto-grow
-                      outlined
-                      filled
-                      :value="task.LOG"
-                      readonly
-                    />
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-expand-transition>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -171,12 +182,11 @@
                 v-for="card in mainCard"
                 :key="card.name"
                 class="mt-1"
-                height="215%"
                 elevation="1"
                 outlined
               >
                 <v-row>
-                  <v-col cols="10">
+                  <v-col cols="4">
                     <v-list-item three-line>
                       <v-list-item-content>
                         <v-list-item-title class="headline mb-1">
@@ -189,24 +199,8 @@
                       </v-list-item-content>
                     </v-list-item>
                   </v-col>
-                  <v-col cols="2">
-                    <v-container class="px-0">
-                      <v-progress-circular
-                        :rotate="-90"
-                        :size="100"
-                        :width="15"
-                        :value="(card.value / items.length) * 100 + '%'"
-                        :color="card.color"
-                      >
-                        <v-card-title class="headline mb-1">
-                          {{
-                            ((card.value / items.length) * 100 + "").split(
-                              "."
-                            )[0]
-                          }}%</v-card-title
-                        >
-                      </v-progress-circular>
-                    </v-container>
+                  <v-col cols="8">
+                    <v-card tile height="282px" id="chartdiv"> </v-card>
                   </v-col>
                 </v-row>
               </v-card>
@@ -264,10 +258,10 @@
           <v-tooltip v-for="item in tableButtons" :key="item.name" bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn v-bind="attrs" v-on="on" :color="item.color" fab x-small
-                ><v-icon>{{item.icon}}</v-icon></v-btn
+                ><v-icon>{{ item.icon }}</v-icon></v-btn
               >
             </template>
-            <span>{{item.tooltip}}</span>
+            <span>{{ item.tooltip }}</span>
           </v-tooltip>
           <v-spacer></v-spacer>
           <v-text-field
@@ -316,6 +310,11 @@
 
 <script>
 import axios from "axios";
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+
+am4core.useTheme(am4themes_animated);
 export default {
   data: () => ({
     cards: [
@@ -362,22 +361,19 @@ export default {
         value: "RESPONSIBLE",
         visibleInTable: true,
       },
-      {
-        text: "test",
-        value: "test",
-        visibleInTable: false,
-      },
     ],
     items: [],
     search: "",
     dialog: false,
     taskInfo: [],
-    tableButtons: [{
-      text: "Настройка полей",
-      icon: "mdi-cog-transfer-outline",
-      color: "info",
-      tooltip: "Настройка полей"
-    }],
+    tableButtons: [
+      {
+        text: "Настройка полей",
+        icon: "mdi-cog-transfer-outline",
+        color: "info",
+        tooltip: "Настройка полей",
+      },
+    ],
     taskInfoNew: [
       {
         text: "Отвественый:",
@@ -392,6 +388,7 @@ export default {
     log: false,
     source: "./ajax/ajax_op002.php",
     //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_op002.php",
+    mainChart: [],
   }),
   created() {
     axios
@@ -432,10 +429,50 @@ export default {
       let doneTask = this.items.filter((getTask) =>
         getTask.STATUS.includes("Проведён")
       );
+      let rejectedTask = this.items.filter((getTask) =>
+        getTask.STATUS.includes("Отклонен")
+      );
       this.cards[1].value = workTask.length;
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: workTask.length },
+          { taskStatus: "В работе" },
+          { color: am4core.color("#4CAF50") }
+        )
+      );
       this.cards[2].value = newTask.length;
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: newTask.length },
+          { taskStatus: "Согласование" },
+          { color: am4core.color("#FF9800") }
+        )
+      );
       this.cards[3].value = badTask.length;
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: badTask.length },
+          { taskStatus: "Просрочено" }
+        )
+      );
       this.cards[4].value = doneTask.length;
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: doneTask.length },
+          { taskStatus: "Проведено" },
+          { color: am4core.color("#9E9E9E") }
+        )
+      );
+
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: rejectedTask.length },
+          { taskStatus: "Отклонено" },
+          { color: am4core.color("#F44336") }
+        )
+      );
+
+      this.addCharts();
     },
     getStatus(status) {
       if (
@@ -467,7 +504,37 @@ export default {
           )
         );
     },
+    addCharts() {
+      {
+        let chart = am4core.create("chartdiv", am4charts.PieChart);
+        chart.data = this.mainChart;
+        let label = chart.seriesContainer.createChild(am4core.Label);
+        label.text = this.items.length;
+        label.horizontalCenter = "middle";
+        label.verticalCenter = "middle";
+        label.fontSize = 50;
+        // Set inner radius
+        chart.innerRadius = am4core.percent(50);
+
+        // Add and configure Series
+        let pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "taskLenght";
+        pieSeries.dataFields.category = "taskStatus";
+        pieSeries.slices.template.propertyFields.fill = "color";
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+
+        // This creates initial animation
+        pieSeries.hiddenState.properties.opacity = 1;
+        pieSeries.hiddenState.properties.endAngle = -90;
+        pieSeries.hiddenState.properties.startAngle = -90;
+
+        // end am4core.ready()
+      }
+    },
   },
+  mounted() {},
 };
 </script>
 
