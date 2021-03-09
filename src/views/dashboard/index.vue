@@ -1,15 +1,6 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <Alert v-if="!access" :text="accessText" />
-    <!-- <v-dialog v-model="dialog" transition="slide-x-reverse-transition">
-      <v-data-table
-        :headers="headers_inc"
-        :items="getPreviewTask"
-        :search="search"
-        sortable
-        :loading="loading"
-      ></v-data-table>
-    </v-dialog> -->
     <v-row v-if="access">
       <v-col cols="12">
         <v-tabs>
@@ -17,18 +8,11 @@
             v-for="tab in getTabs"
             :key="tab.text"
             @click="showData(tab.source, tab.param, tab.result_ar)"
-          >
-            <!-- <v-badge
-              color="green"
-              :value="b_value"
-              :content="tab.new_count"
-              bordered
-              >{{ tab.text }}</v-badge
-            > -->{{ tab.text }}
+            >{{ tab.text }}
           </v-tab>
           <v-tab-item>
             <v-divider />
-            <v-container>
+            <v-container fluid>
               <v-btn
                 class="mr-2"
                 @click="
@@ -44,6 +28,7 @@
               <v-btn @click="getGlpiData()"></v-btn
             ></v-container>
             <v-container
+              fluid
               v-for="table in tabs[0].cards.filter(
                 (getTable) => getTable.visible == true
               )"
@@ -647,10 +632,6 @@ export default {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-          /*  auth: {
-            username: "zaikin.ni",
-            password: "Vbuhfwbz75",
-          }, */
           params: {
             type: type,
             sectionId: sectionId,

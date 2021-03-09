@@ -1,59 +1,67 @@
 <template>
   <v-container>
-    <h1>test</h1>
-    <v-btn @click="sendData()">112313</v-btn>
+    <div class="hello" id="chartdiv"></div>
   </v-container>
 </template>
 
 <script>
-import axios from "axios";
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+
+am4core.useTheme(am4themes_animated);
+
 export default {
+  name: "HelloWorld",
   data: () => ({
-    array: [
+datatest: [
       {
-        ДатаУвольнения: "16.01.1986",
-        Сотрудник: "Заикин Николай Игоревич",
-        ДатаРождения: "16.01.1986",
-        Организация: "Ставропольское Руно ООО",
-        Должность: "Подсобный рабочий (вредн)*",
-        ВидЗанятости: "Основное место работы",
+        country: "Lithuania",
+        litres: 501.9,
       },
       {
-        ДатаУвольнения: "16.01.1986",
-        Сотрудник: "Глухова Валентина Николаевна",
-        ДатаРождения: "16.01.1990",
-        Организация: "Новожуковский ООО",
-        Должность: "Сторож*",
-        ВидЗанятости: "Основное место работы",
+        country: "Czech Republic",
+        litres: 301.9,
       },
       {
-        ДатаУвольнения: "16.01.1990",
-        Сотрудник: "Тутиков Алексей Викторович",
-        ДатаРождения: "16.01.1990",
-        Организация: "Бешпагир ООО",
-        Должность: "Электрик*",
-        ВидЗанятости: "Внутреннее совместительство",
+        country: "Ireland",
+        litres: 201.1,
       },
-    ],
+      {
+        country: "Germany",
+        litres: 165.8,
+      },
+      {
+        country: "Australia",
+        litres: 139.9,
+      },      
+      {
+        country: "Australia",
+        litres: 139.9,
+      },
+    ]
   }),
-  methods: {
-    sendData() {
-      console.log("send");
-      axios({
-        method: "post",
-        withCredentials: true,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_ar002.php",
-        auth: {
-          username: "bp_service",
-          password: "VGmjWK",
-        },
-        data: this.array,
-      });
-    },
+  mounted() {
+    let chart = am4core.create("chartdiv", am4charts.PieChart);
+    chart.data = this.datatest
+
+    // Set inner radius
+    chart.innerRadius = am4core.percent(50);
+
+    // Add and configure Series
+    let pieSeries = chart.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "litres";
+    pieSeries.dataFields.category = "country";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
+
+    // end am4core.ready()
   },
 };
 </script>
-
-<style>
-</style>

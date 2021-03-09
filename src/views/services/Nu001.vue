@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <DialogAfterSendFrom
       :dialog="dialog"
       :warnMessage="dialogMessage"

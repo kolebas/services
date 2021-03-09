@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>

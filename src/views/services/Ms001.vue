@@ -1,5 +1,5 @@
 <template>
-<v-container>
+<v-container fluid>
     <div class="text-center">
         <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage"/>   
     </div>

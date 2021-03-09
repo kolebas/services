@@ -1,4 +1,5 @@
 <template>
+  <v-container fluid>
     <transition>
       <v-alert prominent type="error">
         <v-row align="center">
@@ -11,6 +12,7 @@
         </v-row>
       </v-alert>
     </transition>
+  </v-container>
 </template>
 
 <script>
@@ -19,8 +21,7 @@ export default {
     visible: { type: Boolean, default: false },
     text: { type: String },
   },
-  data: () => ({
-  }),
+  data: () => ({}),
   methods: {
     formCancl: function () {
       this.$router.go(-1);

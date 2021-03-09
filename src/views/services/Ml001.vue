@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" />
     <v-row>
       <v-card width="65%" raised class="mx-auto" color="grey lighten-4">

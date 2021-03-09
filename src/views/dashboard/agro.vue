@@ -1,6 +1,5 @@
 <template>
-  <div class="grey lighten-4">
-    <v-container>
+  <v-container fluid class="grey lighten-4">
       <v-dialog v-model="dialog" max-width="75%" class="mx-auto">
         <v-card v-for="task in taskInfo" :key="task.NAME">
           <v-card-title class="headline grey lighten-2">
@@ -304,8 +303,7 @@
           </template>
         </v-data-table>
       </v-card>
-    </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script>

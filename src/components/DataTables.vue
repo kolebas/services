@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-dialog v-model="dialogAdd" :max-width="dialogMaxWidth">
-      <v-card>
+      <v-card :max-height="dialogMaxWHeight">
         <v-card-title>
           <span class="headline">{{ dialogTitle }}</span>
         </v-card-title>
@@ -16,7 +16,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogUpd" :max-width="dialogMaxWidth">
-      <v-card>
+      <v-card :max-height="dialogMaxWHeight">
         <v-card-title>
           <span class="headline">{{ dialogTitle }}</span>
         </v-card-title>
@@ -144,6 +144,7 @@ export default {
     dialogTitle: { type: String, default: "Новый параметр" },
     dialogFieldsCols: { type: Number, default: 12 },
     dialogMaxWidth: { type: String, default: "50%" },
+    dialogMaxWHeight: { type: String, default: "50%" },
     dialogFields: { type: Array },
     headers: { type: Array },
     actions: { type: Array },
