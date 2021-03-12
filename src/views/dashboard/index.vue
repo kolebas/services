@@ -662,6 +662,7 @@ export default {
           }
           if (type == "getUsers") {
             this.tabs[0].cards[3].tableItems = response.data;
+            this.getTasksAdd1C();
           }
           setTimeout((this.loading = false), 1000);
         });
@@ -714,6 +715,23 @@ export default {
           }
         }
       });
+    },
+    getTasksAdd1C() {
+      const regex = /Задача[\W]№[\w]{0,6}/g;
+      let m;
+      for (let i = 0; i < this.tabs[0].cards[3].tableItems.length; i++) {
+        let str = this.tabs[0].cards[3].tableItems[i].TASK_CONNECT;
+        while ((m = regex.exec(str)) !== null) {
+          // This is necessary to avoid infinite loops with zero-width matches
+          if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+          }
+          // The result can be accessed through the `m`-variable.
+          m.forEach((match) => {
+            this.tabs[0].cards[3].tableItems[i].TASK_CONNECT = `${match}`;
+          });
+        }
+      }
     },
   },
   mounted() {
