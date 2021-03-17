@@ -107,10 +107,13 @@
             элемент
           </v-btn>
         </v-expand-x-transition>
-        <!-- <v-btn @click="dialog = true" class="ml-4">
-          <v-icon left grey>mdi-information-outline</v-icon>инструкция работы с
-          разделом
-        </v-btn> -->
+        <v-btn
+          v-if="type == 2 && getAdminOrderAccess"
+          @click="$router.push('/storeadmin')"
+          class="ml-4"
+        >
+          <v-icon left grey>mdi-information-outline</v-icon>Управление заказами
+        </v-btn>
         <v-expand-x-transition>
           <v-btn
             fab
@@ -127,25 +130,30 @@
       <v-divider />
     </v-col>
     <v-col v-for="section in sections" :key="section.name" cols="4">
-        <v-card
-          @click="
-            type = section.id;
-            selectItem = true;
-            getStoreItems(95, 856);
-            
-          "
-          class="mx-auto"
-        >
-          <v-card-title shaped>
-            <v-icon large left :color="section.color">
-              {{ section.img }}
-            </v-icon>
-            {{ section.name }}
-          </v-card-title>
-        </v-card>
+      <v-card
+        @click="
+          type = section.id;
+          selectItem = true;
+          getStoreItems(95, 856);
+        "
+        class="mx-auto"
+      >
+        <v-card-title shaped>
+          <v-icon large left :color="section.color">
+            {{ section.img }}
+          </v-icon>
+          {{ section.name }}
+        </v-card-title>
+      </v-card>
     </v-col>
     <template v-if="type === 2">
-      <Alert :text="accessText" :type="'info'" :colorBorder="true" :borderType="'bottom'" :btnBack="false" />
+      <Alert
+        :text="accessText"
+        :type="'info'"
+        :colorBorder="true"
+        :borderType="'bottom'"
+        :btnBack="false"
+      />
       <v-col v-for="item in storeItems" :key="item.items" cols="2">
         <v-card shaped elevation="3" class="mx-auto">
           <v-list-item @click="showDialogItem(item)">
@@ -171,14 +179,6 @@
               <div class="mr-2">
                 <b>{{ item.price }} Р/{{ item.tara }}</b>
               </div>
-              <template v-if="condition">
-                <v-btn fab x-small color="primary"
-                  ><v-icon>mdi-pencil</v-icon></v-btn
-                >
-                <v-btn fab x-small color="error"
-                  ><v-icon>mdi-delete</v-icon></v-btn
-                >
-              </template>
             </template>
           </v-card-actions>
         </v-card>
@@ -187,24 +187,30 @@
     <template v-if="type === 1">
       <v-col v-for="bi in bankItems" :key="bi.link" cols="3">
         <transition name="fade">
-        <v-card v-if="type === 1" shaped elevation="3" class="mx-auto" max-width="344">
-          <v-img :src="require('./img/' + bi.img)"></v-img>
-          <v-card-subtitle class="font-weight-black mb-n6">
-            {{ bi.text }}
-          </v-card-subtitle>
-          <v-card-actions>
-            <v-btn
-              class="my-2"
-              outlined
-              color="deep-purple accent-4"
-              :href="bi.link"
-              target="_blank"
-            >
-              Смотреть
-              <v-icon large right color="red">mdi-youtube</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+          <v-card
+            v-if="type === 1"
+            shaped
+            elevation="3"
+            class="mx-auto"
+            max-width="344"
+          >
+            <v-img :src="require('./img/' + bi.img)"></v-img>
+            <v-card-subtitle class="font-weight-black mb-n6">
+              {{ bi.text }}
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-btn
+                class="my-2"
+                outlined
+                color="deep-purple accent-4"
+                :href="bi.link"
+                target="_blank"
+              >
+                Смотреть
+                <v-icon large right color="red">mdi-youtube</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </transition>
       </v-col>
     </template>
@@ -212,7 +218,7 @@
       <v-col v-for="item in items" :key="item.items" cols="3">
         <v-card shaped elevation="3" class="mx-auto" max-width="344">
           <v-list-item @click="showDialogItem(item)">
-            <v-list-item-avatar tile size="80" >
+            <v-list-item-avatar tile size="80">
               <v-img
                 :src="
                   'https://portal.ahstep.ru/ahstep/services/img/marketing/inventory/' +
@@ -266,6 +272,7 @@ export default {
     show: true,
     name: "маркетинг",
     userId: "",
+    userGroup: [],
     address: "",
     fio: "",
     tel: "",
@@ -600,7 +607,8 @@ export default {
     dialog: false,
     btnLoader: false,
     OrderItems: [],
-    accessText: "Уважаемые коллеги, сообщаем, что заказы на молочную продукцию принимаются с понедельника 9:00 по среду 18:00",
+    accessText:
+      "Уважаемые коллеги, сообщаем, что заказы на молочную продукцию принимаются с понедельника 9:00 по среду 18:00",
   }),
   computed: {
     /*  itemPreview() {
@@ -634,19 +642,33 @@ export default {
       }
       return sum + " Р.";
     },
+    //Получение прав для администрирования магазина
+    getAdminOrderAccess() {
+      if (this.userGroup.includes("49")) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     //Получение дня недели
     getOrderDay() {
       let date = new Date();
-      if (date.getDay > 0 && date.getDay < 4){
-        return true
+      if (date.getDay() > 0 && date.getDay() < 4) {
+        return true;
+      } else {
+        return false;
       }
-      else {return false}
-    }
+    },
   },
   mounted() {
     axios
       .get("./ajax/ajax_usr.php", {})
-      .then((response) => (this.userId = response.data));
+      .then(
+        (response) => (
+          (this.userId = response.data[0].ID),
+          (this.userGroup = response.data[0].GROUP)
+        )
+      );
   },
   methods: {
     //Отправка в данных в бизнес процесс
@@ -756,8 +778,9 @@ export default {
   transform: translateX(10px);
   opacity: 0;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
   opacity: 0;

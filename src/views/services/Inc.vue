@@ -117,7 +117,7 @@ export default {
     switch_1c: "",
     switch_mon: "",
     cmnt: "",
-    cmnt_label: "Подробное описание помагает быстрее решить проблему",
+    cmnt_label: "Подробное описание помогает быстрее решить проблему",
     file: [],
     file_lable: "Выберите файл или файлы",
     dialog: false,
