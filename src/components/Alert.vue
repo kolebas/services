@@ -21,10 +21,10 @@ export default {
     visible: { type: Boolean, default: false },
     btnBack: { type: Boolean, default: true},
     type: { type: String, default: "error"},
-    borderType: { type: String, default: "error"},
+    borderType: { type: String },
     colorBorder: { type: Boolean, default: false},
     alertElevation: { type: String, default: "2"},
-    text: { type: String },
+    text: { type: String, default: "У вас нет доступа к данному разделу" },
   },
   data: () => ({}),
   methods: {

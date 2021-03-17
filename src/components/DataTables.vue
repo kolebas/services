@@ -24,18 +24,6 @@
         <v-card-text>
           <v-container>
             <Input :arrInput="getDialogFields" />
-            <!-- <v-row>
-              <v-col
-                v-for="field in getDialogFields"
-                :key="field.i"
-                :cols="dialogFieldsCols"
-              >
-                <v-text-field
-                  v-model="field.value"
-                  :label="field.name"
-                ></v-text-field>
-              </v-col>
-            </v-row> -->
           </v-container>
         </v-card-text>
         <v-divider />
@@ -49,10 +37,29 @@
       </v-card>
     </v-dialog>
     <v-card-title>
-      <v-img max-height="30" max-width="30" :src="img" class="mr-2" />{{
-        title
-      }}
+      <v-img
+        v-if="img"
+        max-height="30"
+        max-width="30"
+        :src="img"
+        class="mr-2"
+      />{{ title }}
       <v-divider class="mx-4" inset vertical></v-divider>
+      <v-tooltip v-for="item in addTableButtons" :key="item.name" bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              @click="exportTableToFile()"
+              :color="item.color"
+              class="mr-2"
+              fab
+              x-small
+              ><v-icon>{{ item.icon }}</v-icon></v-btn
+            >
+          </template>
+          <span>{{ item.tooltip }}</span>
+        </v-tooltip>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -62,6 +69,7 @@
         hide-details
       ></v-text-field>
       <v-btn
+        v-if="addButtonOnTitle"
         color="primary"
         @click="
           dialogAdd = true;
@@ -88,6 +96,9 @@
       </template>
       <template v-slot:[`item.NAME_UZ`]="{ item }">
         <v-chip class="mr-2">{{ item.NAME_UZ }}</v-chip>
+      </template>
+      <template v-slot:[`item.USER`]="{ item }">
+        <v-chip outlined color="#2FC6F6" text-color="rgba(0, 0, 0, 0.87)" class="mr-2">{{ item.USER }}</v-chip>
       </template>
       <template v-slot:[`item.ACTIONS`]="{ item }">
         <v-icon
@@ -128,6 +139,34 @@
           v-html="item.STATUS"
         ></v-chip>
       </template>
+      <template v-slot:[`item.ORDER_STATUS`]="props">
+        <v-edit-dialog
+          v-if="props.item.ORDER_STATUS"
+          :return-value.sync="props.item.ORDER_STATUS"
+          large
+          persistent
+          ><v-chip class="mr-2">{{ props.item.ORDER_STATUS }}</v-chip>
+          <template v-slot:input>
+            <v-select
+              v-model="props.item.ORDER_STATUS"
+              label="Статус"
+              :items="itemsOrderStatus"
+              single-line
+            ></v-select>
+          </template>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:[`item.ORDER`]="{ item }">
+        <v-chip
+          class="mr-1 my-1"
+          v-for="order in item.ORDER"
+          :key="order"
+          color="info"
+          text-color="black"
+          outlined
+          >{{ order }}</v-chip
+        >
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -146,6 +185,9 @@ export default {
     dialogMaxWidth: { type: String, default: "50%" },
     dialogMaxWHeight: { type: String, default: "50%" },
     dialogFields: { type: Array },
+    addButtonOnTitle: { type: Boolean, default: true },
+    addTableButtons:{type: Array},
+    itemsOrderStatus: {type: Array, default: () => (["Новый", "Отгружен"])},
     headers: { type: Array },
     actions: { type: Array },
     item: { type: Array },
@@ -197,6 +239,9 @@ export default {
         this.dialogFields[i].value = null;
       }
     },
+    exportTableToFile() {
+      bus.$emit("exportTableToFile", this.item);
+    }
   },
 };
 </script>

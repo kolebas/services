@@ -4,7 +4,7 @@
       <v-col v-if="item.name" :cols="item.cs - 7">
         <v-card-text
           v-if="item.visible != false"
-          class="subtitle-1 text-right pt-2"
+          :class="item.textPosition"
         >
           {{ item.name }}
         </v-card-text>
@@ -137,6 +137,7 @@ export default {
     arrInput: { type: Array },
     id: { type: String },
     title: { type: String },
+    textPosition: { type: String, default: "subtitle-1 text-right pt-2"},
     label: { type: String },
     suffix: { type: String },
     icon_in_rt: { type: String },
