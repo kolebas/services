@@ -1,308 +1,309 @@
 <template>
   <v-container fluid class="grey lighten-4">
-      <v-dialog v-model="dialog" max-width="75%" class="mx-auto">
-        <v-card v-for="task in taskInfo" :key="task.NAME">
-          <v-card-title class="headline grey lighten-2">
-            {{ task.NAME }} от {{ task.DATE }}
-          </v-card-title>
-
-          <v-card-text class="mx-auto">
-            <v-row class="mb-n8">
-              <v-col cols="2">
-                <v-subheader class="mt-2">Инициатор:</v-subheader>
-              </v-col>
-              <v-col cols="10">
-                <v-text-field :value="task.CREATED_BY" readonly></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row class="mb-n8">
-              <v-col cols="2">
-                <v-subheader dense class="mt-2"
-                  >Название организации:</v-subheader
-                >
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  :value="task.NAZVANIE_ORGANIZATSII"
-                  readonly
-                ></v-text-field>
-              </v-col>
-              <v-col cols="2">
-                <v-subheader dense class="mt-2">Контактное лицо:</v-subheader>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  :value="task.KONTAKTNOE_LITSO"
-                  readonly
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row class="mb-n8">
-              <v-col cols="2">
-                <v-subheader dense class="mt-2">Тема опыта:</v-subheader>
-              </v-col>
-              <v-col cols="10">
-                <v-text-field :value="task.TEMA_OPYTA" readonly></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row class="mb-n8">
-              <v-col cols="2">
-                <v-subheader dense class="mt-2">Цели опыта:</v-subheader>
-              </v-col>
-              <v-col cols="10">
-                <v-text-field :value="task.TSELI_OPYTA" readonly></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row class="mb-n8">
-              <v-col cols="2">
-                <v-subheader dense class="mt-2">Задачи опыта:</v-subheader>
-              </v-col>
-              <v-col cols="10">
-                <v-text-field
-                  :value="task.ZADACHI_OPYTA"
-                  readonly
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row class="mb-n8">
-              <v-col cols="2">
-                <v-subheader dense class="mt-2">Объект опыта:</v-subheader>
-              </v-col>
-              <v-col cols="10">
-                <v-text-field :value="task.OBEKT_OPYTA" readonly></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="2">
-                <v-subheader class="mt-2"
-                  >Экономическая эффективность:</v-subheader
-                >
-              </v-col>
-              <v-col cols="10">
-                <v-text-field
-                  :value="task.EKONOMICHESKAYA_EFFEKTIVNOST"
-                  readonly
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-container>
-              <v-row>
-                <v-btn
-                  color="blue-grey lighten-4"
-                  class="ml-2 my-1"
-                  small
-                  @click="(addInfo = !addInfo), (log = false)"
-                  ><v-icon color="indigo" left>mdi-format-list-bulleted</v-icon
-                  >Дополнительная информация</v-btn
-                >
-                <v-btn
-                  color="blue-grey lighten-4"
-                  class="ml-2 my-1"
-                  small
-                  @click="(log = !log), (addInfo = false)"
-                  ><v-icon color="info" left>mdi-history</v-icon>История
-                  заявки</v-btn
-                >
-                <v-btn
-                  v-for="item in task.FILE"
-                  :key="item"
-                  color="blue-grey lighten-4"
-                  class="ml-2 my-1"
-                  :href="item.path"
-                  small
-                  ><v-icon color="deep-orange" left>mdi-file-link-outline</v-icon
-                  >{{ item.name }}</v-btn
-                >
-                <v-expand-transition>
-                  <v-container v-if="addInfo" class="mb-n6">
-                    <v-row class="mb-n6">
-                      <v-col>
-                        <v-textarea
-                          label="Контактная информация"
-                          rows="1"
-                          auto-grow
-                          outlined
-                          filled
-                          :value="task.KONTAKTNAYA_INFORMATSIYA"
-                          readonly
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <v-textarea
-                          label="Реквизиты организации"
-                          rows="1"
-                          auto-grow
-                          outlined
-                          filled
-                          :value="task.REKVIZITY_ORGANIZATSII"
-                          readonly
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-expand-transition>
-                <v-expand-transition>
-                  <v-container class="mb-n12">
-                    <v-row v-if="log">
-                      <v-col>
-                        <v-textarea
-                          label="История заявки"
-                          auto-grow
-                          outlined
-                          filled
-                          :value="task.LOG"
-                          readonly
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-expand-transition>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false">
-              Понятно
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <h1>{{ $router.currentRoute.name }}</h1>
-      <v-divider class="mb-2" />
-      <v-row>
-        <v-col cols="6">
-          <v-row>
-            <v-col>
-              <v-card
-                v-for="card in mainCard"
-                :key="card.name"
-                class="mt-1"
-                elevation="1"
-                outlined
-              >
-                <v-row>
-                  <v-col cols="4">
-                    <v-list-item three-line>
-                      <v-list-item-content>
-                        <v-list-item-title class="headline mb-1">
-                          {{ card.name }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          {{ card.name }} опытов:
-                          <span class="title ml-1">{{ card.value }}</span>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-col>
-                  <v-col cols="8">
-                    <v-card tile height="282px" id="chartdiv"> </v-card>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="6">
-          <v-row>
-            <v-col cols="6" v-for="card in addCard" :key="card.name">
-              <v-card class="mt-1" elevation="1" outlined>
-                <v-row>
-                  <v-col cols="8">
-                    <v-list-item three-line>
-                      <v-list-item-content>
-                        <v-list-item-title class="headline mb-1">
-                          {{ card.name }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          {{ card.name }} опытов:
-                          <span class="title ml-1">{{ card.value }}</span>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-container class="px-0">
-                      <v-progress-circular
-                        :rotate="-90"
-                        :size="100"
-                        :width="15"
-                        :value="(card.value / items.length) * 100 + '%'"
-                        :color="card.color"
-                      >
-                        <v-card-title class="headline mb-1">
-                          {{
-                            ((card.value / items.length) * 100 + "").split(
-                              "."
-                            )[0]
-                          }}%</v-card-title
-                        >
-                      </v-progress-circular>
-                    </v-container>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-      <v-divider class="my-4" />
-      <v-card class="mx-auto" width="100%">
-        <v-card-title>
-          <v-toolbar-title>Агрономические опыты</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-tooltip v-for="item in tableButtons" :key="item.name" bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" :color="item.color" fab x-small
-                ><v-icon>{{ item.icon }}</v-icon></v-btn
-              >
-            </template>
-            <span>{{ item.tooltip }}</span>
-          </v-tooltip>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Поиск"
-            single-line
-            hide-details
-          ></v-text-field>
+    <v-dialog v-model="dialog" max-width="75%" class="mx-auto">
+      <v-card v-for="task in taskInfo" :key="task.NAME">
+        <v-card-title class="headline grey lighten-2">
+          {{ task.NAME }} от {{ task.DATE }}
         </v-card-title>
-        <v-data-table
-          :headers="
-            headers.filter((getHeader) => getHeader.visibleInTable == true)
-          "
-          :items="items"
-          :search="search"
-        >
-          <template v-slot:[`item.NAME`]="{ item }">
-            <v-card-text @click="openTask(item.ID)">{{
-              item.NAME
-            }}</v-card-text>
-          </template>
-          <template v-slot:[`item.STATUS`]="{ item }">
-            <v-chip :color="getStatus(item.STATUS)" dark>
-              {{ item.STATUS }}
-            </v-chip>
-          </template>
-          <template v-slot:[`item.RESPONSIBLE`]="{ item }">
-            <v-chip
-              :href="'../../company/personal/user/' + item.RESPONSIBLEID + '/'"
-              v-if="item.RESPONSIBLE != ' '"
-              color="grey"
+
+        <v-card-text class="mx-auto">
+          <v-row class="mb-n8">
+            <v-col cols="2">
+              <v-subheader class="mt-2">Инициатор:</v-subheader>
+            </v-col>
+            <v-col cols="10">
+              <v-text-field :value="task.CREATED_BY" readonly></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mb-n8">
+            <v-col cols="2">
+              <v-subheader dense class="mt-2"
+                >Название организации:</v-subheader
+              >
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                :value="task.NAZVANIE_ORGANIZATSII"
+                readonly
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-subheader dense class="mt-2">Контактное лицо:</v-subheader>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                :value="task.KONTAKTNOE_LITSO"
+                readonly
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mb-n8">
+            <v-col cols="2">
+              <v-subheader dense class="mt-2">Тема опыта:</v-subheader>
+            </v-col>
+            <v-col cols="10">
+              <v-text-field :value="task.TEMA_OPYTA" readonly></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mb-n8">
+            <v-col cols="2">
+              <v-subheader dense class="mt-2">Цели опыта:</v-subheader>
+            </v-col>
+            <v-col cols="10">
+              <v-text-field :value="task.TSELI_OPYTA" readonly></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mb-n8">
+            <v-col cols="2">
+              <v-subheader dense class="mt-2">Задачи опыта:</v-subheader>
+            </v-col>
+            <v-col cols="10">
+              <v-text-field :value="task.ZADACHI_OPYTA" readonly></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mb-n8">
+            <v-col cols="2">
+              <v-subheader dense class="mt-2">Объект опыта:</v-subheader>
+            </v-col>
+            <v-col cols="10">
+              <v-text-field :value="task.OBEKT_OPYTA" readonly></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="2">
+              <v-subheader class="mt-2"
+                >Экономическая эффективность:</v-subheader
+              >
+            </v-col>
+            <v-col cols="10">
+              <v-text-field
+                :value="task.EKONOMICHESKAYA_EFFEKTIVNOST"
+                readonly
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-container>
+            <v-row>
+              <v-btn
+                color="blue-grey lighten-4"
+                class="ml-2 my-1"
+                small
+                @click="(addInfo = !addInfo), (log = false)"
+                ><v-icon color="indigo" left>mdi-format-list-bulleted</v-icon
+                >Дополнительная информация</v-btn
+              >
+              <v-btn
+                color="blue-grey lighten-4"
+                class="ml-2 my-1"
+                small
+                @click="(log = !log), (addInfo = false)"
+                ><v-icon color="info" left>mdi-history</v-icon>История
+                заявки</v-btn
+              >
+              <v-btn
+                v-for="item in task.FILE"
+                :key="item"
+                color="blue-grey lighten-4"
+                class="ml-2 my-1"
+                :href="item.path"
+                small
+                ><v-icon color="deep-orange" left>mdi-file-link-outline</v-icon
+                >{{ item.name }}</v-btn
+              >
+              <v-expand-transition>
+                <v-container v-if="addInfo" class="mb-n6">
+                  <v-row class="mb-n6">
+                    <v-col>
+                      <v-textarea
+                        label="Контактная информация"
+                        rows="1"
+                        auto-grow
+                        outlined
+                        filled
+                        :value="task.KONTAKTNAYA_INFORMATSIYA"
+                        readonly
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-textarea
+                        label="Реквизиты организации"
+                        rows="1"
+                        auto-grow
+                        outlined
+                        filled
+                        :value="task.REKVIZITY_ORGANIZATSII"
+                        readonly
+                      />
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-expand-transition>
+              <v-expand-transition>
+                <v-container class="mb-n12">
+                  <v-row v-if="log">
+                    <v-col>
+                      <v-textarea
+                        label="История заявки"
+                        auto-grow
+                        outlined
+                        filled
+                        :value="task.LOG"
+                        readonly
+                      />
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-expand-transition>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialog = false"> Понятно </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <h1>{{ $router.currentRoute.name }}</h1>
+    <v-divider class="mb-2" />
+    <v-row>
+      <v-col cols="6">
+        <v-row>
+          <v-col>
+            <v-card
+              v-for="card in mainCard"
+              :key="card.name"
+              class="mt-1"
+              elevation="1"
               outlined
             >
-              <v-avatar left>
-                <img v-if="item.PHOTO" :src="item.PHOTO" />
-                <v-icon v-else>mdi-account-circle</v-icon> </v-avatar
-              ><span>{{ item.RESPONSIBLE }}</span>
-            </v-chip>
+              <v-row>
+                <v-col cols="4">
+                  <v-list-item three-line>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline mb-1">
+                        {{ card.name }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        {{ card.name }} опытов:
+                        <span class="title ml-1">{{ card.value }}</span>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-col>
+                <v-col cols="8">
+                  <v-card tile height="282px" id="chartdiv"> </v-card>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="6">
+        <v-row>
+          <v-col cols="6" v-for="card in addCard" :key="card.name">
+            <v-card class="mt-1" elevation="1" outlined>
+              <v-row>
+                <v-col cols="8">
+                  <v-list-item three-line>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline mb-1">
+                        {{ card.name }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        {{ card.name }} опытов:
+                        <span class="title ml-1">{{ card.value }}</span>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-col>
+                <v-col cols="4">
+                  <v-container class="px-0">
+                    <v-progress-circular
+                      :rotate="-90"
+                      :size="100"
+                      :width="15"
+                      :value="(card.value / items.length) * 100 + '%'"
+                      :color="card.color"
+                    >
+                      <v-card-title class="headline mb-1">
+                        {{
+                          ((card.value / items.length) * 100 + "").split(
+                            "."
+                          )[0]
+                        }}%</v-card-title
+                      >
+                    </v-progress-circular>
+                  </v-container>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-divider class="my-4" />
+    <v-card class="mx-auto" width="100%">
+      <v-card-title>
+        <v-toolbar-title>{{ titleDataTable }}</v-toolbar-title>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-tooltip v-for="item in tableButtons" :key="item.name" bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              @click="exportTableToFile()"
+              :color="item.color"
+              class="mr-2"
+              fab
+              x-small
+              ><v-icon>{{ item.icon }}</v-icon></v-btn
+            >
           </template>
-        </v-data-table>
-      </v-card>
+          <span>{{ item.tooltip }}</span>
+        </v-tooltip>
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Поиск"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        id="datatableagro"
+        :headers="
+          headers.filter((getHeader) => getHeader.visibleInTable == true)
+        "
+        :items="items"
+        :search="search"
+      >
+        <template v-slot:[`item.NAME`]="{ item }">
+          <v-card-text @click="openTask(item.ID)">{{ item.NAME }}</v-card-text>
+        </template>
+        <template v-slot:[`item.STATUS`]="{ item }">
+          <v-chip :color="getStatus(item.STATUS)" dark>
+            {{ item.STATUS }}
+          </v-chip>
+        </template>
+        <template v-slot:[`item.RESPONSIBLE`]="{ item }">
+          <v-chip
+            :href="'../../company/personal/user/' + item.RESPONSIBLEID + '/'"
+            v-if="item.RESPONSIBLE != ' '"
+            color="grey"
+            outlined
+          >
+            <v-avatar left>
+              <img v-if="item.PHOTO" :src="item.PHOTO" />
+              <v-icon v-else>mdi-account-circle</v-icon> </v-avatar
+            ><span>{{ item.RESPONSIBLE }}</span>
+          </v-chip>
+        </template>
+      </v-data-table>
+    </v-card>
   </v-container>
 </template>
 
@@ -315,6 +316,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 am4core.useTheme(am4themes_animated);
 export default {
   data: () => ({
+    titleDataTable: "Агрономические опыты",
     cards: [
       {
         name: "Общее количество",
@@ -370,6 +372,12 @@ export default {
         icon: "mdi-cog-transfer-outline",
         color: "info",
         tooltip: "Настройка полей",
+      },
+      {
+        text: "Эспорт в Excel",
+        icon: "mdi-file-export-outline",
+        color: "success",
+        tooltip: "Эспорт в Excel",
       },
     ],
     taskInfoNew: [
@@ -511,10 +519,8 @@ export default {
         label.horizontalCenter = "middle";
         label.verticalCenter = "middle";
         label.fontSize = 50;
-        // Set inner radius
         chart.innerRadius = am4core.percent(50);
 
-        // Add and configure Series
         let pieSeries = chart.series.push(new am4charts.PieSeries());
         pieSeries.dataFields.value = "taskLenght";
         pieSeries.dataFields.category = "taskStatus";
@@ -523,13 +529,36 @@ export default {
         pieSeries.slices.template.strokeWidth = 2;
         pieSeries.slices.template.strokeOpacity = 1;
 
-        // This creates initial animation
         pieSeries.hiddenState.properties.opacity = 1;
         pieSeries.hiddenState.properties.endAngle = -90;
         pieSeries.hiddenState.properties.startAngle = -90;
-
-        // end am4core.ready()
       }
+    },
+    exportTableToFile() {
+      let htmltable = document.getElementsByClassName("v-data-table__wrapper");
+      let html = htmltable[0].outerHTML;
+      let downloadLink = document.createElement("a");
+      let uri = "data:application/vnd.ms-excel;base64,",
+        template =
+          '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>' +
+          html +
+          "</body></html>",
+        base64 = function (s) {
+          return window.btoa(unescape(encodeURIComponent(s)));
+        },
+        format = function (s, c) {
+          return s.replace(/{(\w+)}/g, function (m, p) {
+            return c[p];
+          });
+        };
+
+      let ctx = { worksheet: "Worksheet", table: html };
+      downloadLink.href = uri + base64(format(template, ctx));
+      downloadLink.download = this.titleDataTable + ".xls";
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
     },
   },
   mounted() {},
