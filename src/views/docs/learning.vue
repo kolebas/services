@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row justify="center">
       <v-dialog v-model="dialog" persistent max-width="80%">
         <v-card>

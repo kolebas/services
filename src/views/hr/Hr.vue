@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-hover>
             <template v-slot="{ hover }">
                 <v-card
