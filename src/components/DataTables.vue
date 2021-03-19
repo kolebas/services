@@ -30,7 +30,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close"> Отмена </v-btn>
-          <v-btn color="blue darken-1" text @click="updItem()">
+          <v-btn color="blue darken-1" text @click="updItem(dialogFields)">
             Сохранить
           </v-btn>
         </v-card-actions>
@@ -143,14 +143,13 @@
         <v-edit-dialog
           v-if="props.item.ORDER_STATUS"
           :return-value.sync="props.item.ORDER_STATUS"
-          large
-          persistent
           ><v-chip class="mr-2">{{ props.item.ORDER_STATUS }}</v-chip>
           <template v-slot:input>
             <v-select
               v-model="props.item.ORDER_STATUS"
               label="Статус"
               :items="itemsOrderStatus"
+              @change="updItem(props.item)"
               single-line
             ></v-select>
           </template>
@@ -225,8 +224,8 @@ export default {
       }
       console.log(item);
     },
-    updItem() {
-      bus.$emit("updItem", this.dialogFields);
+    updItem(data) {
+      bus.$emit("updItem", data);
       this.close();
     },
     newItem() {
