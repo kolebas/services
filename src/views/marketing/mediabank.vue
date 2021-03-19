@@ -297,13 +297,13 @@ export default {
         color: "green",
         show: false,
       },
-      {
+      /* {
         id: 2,
         name: "Магазин молочной продукции",
         img: "mdi-store",
         color: "red",
         show: false,
-      },
+      }, */
     ],
     cats: [
       {

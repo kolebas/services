@@ -44,6 +44,11 @@ export default {
     userGroup: [],
     orderHeaders: [
       {
+        text: "ID",
+        value: "ID",
+        visibleInTable: false,
+      },
+      {
         text: "Номер заказа",
         value: "NUMBER",
         visibleInTable: true,
@@ -92,6 +97,9 @@ export default {
     bus.$on("exportTableToFile", (data) => {
       this.exportToFile(data);
     });
+    bus.$on("updItem", (data) => {
+      this.updateStoreOrders(data);
+    });
   },
   computed: {
     getAccess() {
@@ -108,10 +116,32 @@ export default {
         .get(
           "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
           {
+            /* auth: {
+              username: "zaikin.ni",
+              password: "Vbuhfwbz75"
+            }, */
             params: {
               type: "getStoreOrders",
               id: infoblockID,
               sectionID: sectionID,
+            },
+          }
+        )
+        .then((response) => (this.orderItems = response.data));
+    },
+    updateStoreOrders(orderData) {
+      axios
+        .post(
+          "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
+          {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            /* auth: {
+              username: "zaikin.ni",
+              password: "Vbuhfwbz75"
+            }, */
+            data: {
+              type: "updateStoreOrders",
+              order: orderData,
             },
           }
         )
@@ -129,7 +159,11 @@ export default {
     },
     exportToFile(inputArray) {
       let newarray = [];
-      for (let i = 0; inputArray.filter((item) => item.ORDER_STATUS == 'Новый').length > i; i++) {
+      for (
+        let i = 0;
+        inputArray.filter((item) => item.ORDER_STATUS == "Новый").length > i;
+        i++
+      ) {
         let order = inputArray[i].ORDER;
         for (let y = 0; order.length > y; y++) {
           let product = order[y];
@@ -150,7 +184,10 @@ export default {
         }
       }
       this.exportOrderItems = newarray;
-      setTimeout(() => this.downloadExportFile("exportOrderItemsTableId"), 1000);
+      setTimeout(
+        () => this.downloadExportFile("exportOrderItemsTableId"),
+        1000
+      );
     },
     downloadExportFile(tableId) {
       let htmltable = document.getElementById(tableId);
