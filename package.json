@@ -11,28 +11,28 @@
   },
   "main": ".eslintrc.js",
   "dependencies": {
-    "@amcharts/amcharts4": "^4.10.16",
+    "@amcharts/amcharts4": "^4.10.17",
     "babel-polyfill": "^6.26.0",
-    "core-js": "^3.8.3",
+    "core-js": "^3.9.1",
     "vue": "^2.6.12",
-    "vue-router": "^3.4.9",
-    "vuetify": "^2.4.2"
+    "vue-router": "^3.5.1",
+    "vuetify": "^2.4.7"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.10",
-    "@vue/cli-plugin-eslint": "^4.5.10",
-    "@vue/cli-plugin-router": "^4.5.10",
-    "@vue/cli-service": "^4.5.10",
+    "@vue/cli-plugin-babel": "^4.5.12",
+    "@vue/cli-plugin-eslint": "^4.5.12",
+    "@vue/cli-plugin-router": "^4.5.12",
+    "@vue/cli-service": "^4.5.12",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^6.2.2",
-    "sass": "^1.32.5",
+    "sass": "^1.32.8",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-axios": "0.0.4",
-    "vue-cli-plugin-vuetify": "^2.0.9",
+    "vue-cli-plugin-vuetify": "^2.3.0",
     "vue-template-compiler": "^2.6.12",
-    "vuetify-loader": "^1.6.0"
+    "vuetify-loader": "^1.7.2"
   },
   "bugs": {
     "url": "https://github.com/kolebas/services/issues"

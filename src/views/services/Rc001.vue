@@ -176,7 +176,6 @@ export default {
     checkArray() {
       var tempArr = this.input.filter((test) => test.name != "Комментарий:");
       let sts = tempArr.every(this.checkArrayValue);
-      console.log(sts);
       if (sts) {
         this.formSend();
       } else {
@@ -186,7 +185,6 @@ export default {
     formSend() {
       this.btnLoader = true;
       if (this.input) {
-        console.log(this.input);
         axios({
           method: "post",
           headers: { "Content-Type": "multipart/form-data" },
@@ -202,9 +200,8 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
+            this.dialogMessage = "Произошла ошибка: " + error;
             this.btnLoader = false;
           });
       }

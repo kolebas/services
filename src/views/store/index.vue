@@ -274,7 +274,7 @@ export default {
       if (date.getDay() > 0 && date.getDay() < 4) {
         return true;
       } else {
-        return true;
+        return false;
       }
     },
   },
@@ -348,7 +348,6 @@ export default {
     //Открытие карточки позиции
     showDialogItem(item) {
       (this.dialogPreview = true), (this.itemPreview = item);
-      console.log(item);
     },
     //Получение списка позиций
     getStoreItems(infoblockID, sectionID) {
@@ -374,7 +373,6 @@ export default {
       for (var i = this.OrderItems.length - 1; i >= 0; i--) {
         if (this.OrderItems[i].id === item.id) {
           this.OrderItems.splice(i, 1);
-          console.log(this.OrderItems);
         }
       }
     },
