@@ -5,7 +5,7 @@
                 <v-card
                     disabled
                     max-width="400"
-                    @click="$router.push('/Market')"
+                    @click="$router.push('/storeadmin')"
                     :elevation="hover ? 24 : 6"
                 >
                     <v-list-item two-line>
