@@ -2,12 +2,12 @@
     <div class="text-center">
         <v-dialog
             :value="dialog"
-            :width="widthDialog"
-            :persistent="persistentDialog"
+            :width="widthDialogParam"
+            :persistent="disablePersistentParam"
         >
             <v-card>
                 <v-card-title class="headline grey lighten-2" primary-title>
-                    {{ title }}
+                    {{ titleDialogParam }}
                 </v-card-title>
                 <v-card-text class="subtitle-1 text-center mt-4">
                     {{ warnMessage }}
@@ -44,12 +44,12 @@
                     class="subtitle-1 text-center mt-4"
                 >
                     {{ subMessage }}
-                </v-card-text>
-
-                <v-card-actions>
+                </v-card-text>                
+                <v-divider />
+                <v-card-actions>                    
                     <v-spacer></v-spacer>
                     <v-btn color="primary" :disabled="btnDisable" text @click="funcDialog()">
-                        {{ btnText }}
+                        {{ btnTextParam }}
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -62,54 +62,28 @@ import { bus } from "@/main.js";
 export default {
     components: {},
     props: {
-        disablePersistentParam: { type: Boolean },
+        disablePersistentParam: { type: Boolean, default: true },
         dialog: { type: Boolean },
         warnMessage: { type: String },
         subMessage: { type: String },
-        route: { type: String },
-        widthDialogParam: { type: String },
-        titleDialogParam: { type: String },
-        btnTextParam: { type: String },
+        route: { type: String, default: "-1" },
+        widthDialogParam: { type: String, default: "500px"},
+        titleDialogParam: { type: String, default: "Статус" },
+        btnTextParam: { type: String, default: "Понятно" },
         btnDisable: { type: Boolean, default: false },
         dataArray: { type: Array },
     },
     data: () => ({
-        title: "Статус",
-        btnText: "Понятно",
-        widthDialog: "500px",
-        persistentDialog: true,
     }),
     methods: {
-        funcDialog() {
-            this.btnDisable = true 
+        funcDialog() { 
             if (this.route == 1) {
                 this.dialog = false;
                 bus.$emit("chngSwitch", this.dialog);
             } else {
-                this.$router.go(-1);
+                this.$router.go(this.route);
             }
         },
-        getParam() {
-            //Отключаем невозможность закрыть диалоговое окно
-            if (this.disablePersistentParam) {
-                this.persistentDialog = false;
-            }
-            //Ширина
-            if (this.widthDialogParam) {
-                this.widthDialog = this.widthDialogParam;
-            }
-            //Название окна
-            if (this.titleDialogParam) {
-                this.title = this.titleDialogParam;
-            }
-            //Название кнопки
-            if (this.btnTextParam) {
-                this.btnText = this.btnTextParam;
-            }
-        },
-    },
-    mounted() {
-        this.getParam();
     },
 };
 </script>
