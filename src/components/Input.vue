@@ -1,10 +1,10 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row v-for="item in inputFields" class="mb-n6" :key="item.name">
       <v-col v-if="item.name" :cols="item.cs - 7">
         <v-card-text
           v-if="item.visible != false"
-          :class="item.textPosition"
+          :class="item.textPosition || textPosition"
         >
           {{ item.name }}
         </v-card-text>
@@ -13,6 +13,7 @@
         <v-text-field
           v-if="item.type == 'string' && item.visible != false"
           v-model="item.value"
+          :type="item.typeDomInput"
           :class="item.class"
           :label="item.label"
           :outlined="item.outlined"
@@ -20,39 +21,37 @@
           :solo="item.solo"
           required
           :error-messages="item.err"
-          :append-icon="item.aicon"
+          :append-icon="item.icon"
           :suffix="item.suffix"
           @input="item.err = ''"
           @change="input"
         ></v-text-field>
         <v-menu
           v-if="item.type == 'date' && item.visible != false"
+          v-model="dateDialog"
           :close-on-content-click="false"
           :nudge-right="40"
           transition="scale-transition"
           offset-y
           min-width="290px"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template v-slot:activator = {}>
             <v-text-field
+            type="date"
               v-model="item.value"
               :label="item.label"
               :outlined="item.outlined"
               :dense="item.dense"
               :solo="item.solo"
-              v-bind="attrs"
               :error-messages="item.err"
-              readonly
-              v-on="on"
               @input="item.err = ''"
               @change="input"
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="item.value"
-            @input="menu = false"
-            :range="item.range"
             locale="ru-RU"
+            @input="menu = false"
             @change="input"
           ></v-date-picker>
         </v-menu>
@@ -85,6 +84,19 @@
           @change="input"
         >
         </v-textarea>
+        <v-radio-group
+          :class="item.radioClass"
+          v-if="item.type == 'radio' && item.visible != false"
+          v-model="item.value"
+        >
+          <v-radio
+            v-for="item in item.radioGroup"
+            :key="item"
+            :label="item"
+            :value="item"
+            @change="input()"
+          ></v-radio>
+        </v-radio-group>
         <v-switch
           v-if="item.type == 'switch'"
           v-model="item.value"
@@ -137,7 +149,7 @@ export default {
     arrInput: { type: Array },
     id: { type: String },
     title: { type: String },
-    textPosition: { type: String, default: "subtitle-1 text-right pt-2"},
+    textPosition: { type: String, default: "subtitle-1 text-right pt-2" },
     label: { type: String },
     suffix: { type: String },
     icon_in_rt: { type: String },
@@ -146,6 +158,7 @@ export default {
     cols_input: { type: String },
   },
   data: () => ({
+    dateDialog: "",
     dates: [],
     value: {
       input_id: "",
@@ -159,14 +172,15 @@ export default {
     inputFields() {
       return this.arrInput.filter((input) => input.name !== "ID");
     },
-  }, 
+  },
   methods: {
     change() {
       this.item.err = "";
+      //console.log(this.arrInput);
     },
     input: function () {
       bus.$emit("resultArray", this.arrInput);
-      return
+      return;
     },
   },
 };
