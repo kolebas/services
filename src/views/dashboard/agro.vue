@@ -328,7 +328,8 @@ export default {
       { name: "В работе", value: 0, item: 0, color: "green" },
       { name: "На согласовании", value: 0, item: 0, color: "orange" },
       { name: "Просрочено", value: 0, item: 0, color: "red" },
-      { name: "Проведено", value: 0, item: 0, color: "grey" },
+      { name: "Проведено", value: 0, item: 0, color: "grey" },      
+      { name: "Назначение", value: 0, item: 0, color: "info" },
     ],
     headers: [
       {
@@ -438,6 +439,9 @@ export default {
       let rejectedTask = this.items.filter((getTask) =>
         getTask.STATUS.includes("Отклонен")
       );
+      let assignmentTask = this.items.filter((getTask) =>
+        getTask.STATUS.includes("Назначение")
+      );
       this.cards[1].value = workTask.length;
       this.mainChart.push(
         Object.assign(
@@ -469,7 +473,13 @@ export default {
           { color: am4core.color("#9E9E9E") }
         )
       );
-
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: assignmentTask.length },
+          { taskStatus: "Назначение" },
+          { color: am4core.color("#2196f3") }
+        )
+      );
       this.mainChart.push(
         Object.assign(
           { taskLenght: rejectedTask.length },
@@ -488,6 +498,7 @@ export default {
         return "orange";
       else if (status == "Просрочен" || status == "Отклонен") return "red";
       else if (status == "Проведён") return "grey";
+      else if (status == "Назначение") return "info";
       else return "green";
     },
     openTask(id) {
