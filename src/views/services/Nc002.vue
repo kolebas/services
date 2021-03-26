@@ -12,7 +12,7 @@
         <SelectOrg
           :cols_title="5"
           :cols_input="6"
-          title="ФИО:"
+          title="Организация:"
           :org_err="org_err"
         />
         <InputCard
@@ -130,7 +130,7 @@ export default {
     users: [
       {
         id: 1,
-        title: "Бизнес-владелец",
+        title: "Бизнес-владелец:",
         value: "",
         multiple: false,
         err: "",
