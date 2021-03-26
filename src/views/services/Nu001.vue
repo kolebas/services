@@ -37,11 +37,17 @@
           </v-col>
         </v-row>
         <v-expand-transition>
-          <v-card v-if="out_user" outlined max-width="90%" class="mx-auto" elevation="1">
-              <v-card-subtitle>
-                  Настройки временного доступа
-                  <v-divider />
-              </v-card-subtitle>              
+          <v-card
+            v-if="out_user"
+            outlined
+            max-width="90%"
+            class="mx-auto"
+            elevation="1"
+          >
+            <v-card-subtitle>
+              Настройки временного доступа
+              <v-divider />
+            </v-card-subtitle>
             <Input :arrInput="input" />
           </v-card>
         </v-expand-transition>
@@ -78,13 +84,13 @@
           <v-col cols="3">
             <v-text-field
               @input="tel_err = ''"
-              type="number"
+              type="tel"
               v-model="tel"
               outlined
               solo
               dense
               :error-messages="tel_err"
-              label="Например: +79008500254"
+              label="+79008500254"
               append-icon="mdi-cellphone"
             ></v-text-field>
           </v-col>
@@ -97,23 +103,21 @@
           </v-col>
           <v-col cols="3">
             <v-menu
-              ref="menu"
+              ref="menu1"
               v-model="date1"
               :close-on-content-click="false"
-              transition="scale-transition"
+              offset-x
               offset-y
-              max-width="290px"
-              min-width="290px"
+              transition="scale-transition"
             >
-              <template v-slot:activator="{ on }">
+              <template v-slot:activator="{}">
                 <v-text-field
                   outlined
                   solo
+                  type="date"
                   dense
                   v-model="date_start"
                   label="Дата"
-                  append-icon="mdi-calendar-outline"
-                  v-on="on"
                   :error-messages="date_start_err"
                 ></v-text-field>
               </template>
@@ -121,7 +125,7 @@
                 locale="ru"
                 v-model="date_start"
                 no-title
-                @input="(menu = false), (date_start_err = '')"
+                @input="(date1 = false), (date_start_err = '')"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -134,23 +138,21 @@
           </v-col>
           <v-col cols="3">
             <v-menu
-              ref="menu"
+              ref="menu2"
               v-model="date2"
               :close-on-content-click="false"
-              transition="scale-transition"
+              offset-x
               offset-y
-              max-width="290px"
-              min-width="290px"
+              transition="scale-transition"
             >
-              <template v-slot:activator="{ on }">
+              <template v-slot:activator="{}">
                 <v-text-field
                   outlined
                   solo
                   dense
                   v-model="date_burn"
+                  type="date"
                   label="Дата"
-                  append-icon="mdi-calendar-outline"
-                  v-on="on"
                   :error-messages="date_burn_err"
                 ></v-text-field>
               </template>
@@ -158,7 +160,7 @@
                 locale="ru"
                 v-model="date_burn"
                 no-title
-                @input="(menu = false), (date_burn_err = '')"
+                @input="(date2 = false), (date_burn_err = '')"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -242,6 +244,7 @@ export default {
         sm: "4",
         md: "4",
         type: "string",
+        typeDomInput: "email",
         outlined: true,
         dense: true,
         solo: true,
@@ -257,7 +260,7 @@ export default {
         type: "date",
         outlined: true,
         dense: true,
-        solo: true,        
+        solo: true,
         range: true,
         err: "",
       },
@@ -320,7 +323,7 @@ export default {
           "Сотруднику будет предоставлен удаленный доступ, при этом заявка будет отправлена на дополнительное согласование";
       }
     },
-    formSend() {      
+    formSend() {
       if (
         this.inputs[0].value &&
         this.inputs[1].value &&
@@ -407,3 +410,15 @@ export default {
   },
 };
 </script>
+<style>
+[type="date"] {
+  background: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24"><path fill="rgba(0, 0, 0, 0.54)" d="M19,4H18V2H16V4H8V2H6V4H5C3.89,4 3,4.9 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8M12,13H17V18H12V13Z"></path></svg>')  100% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+</style>
