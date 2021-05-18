@@ -82,7 +82,7 @@
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-container>
+          <v-container fluid>
             <v-row>
               <v-btn
                 color="blue-grey lighten-4"
@@ -111,7 +111,7 @@
                 >{{ item.name }}</v-btn
               >
               <v-expand-transition>
-                <v-container v-if="addInfo" class="mb-n6">
+                <v-container fluid v-if="addInfo" class="mb-n6">
                   <v-row class="mb-n6">
                     <v-col>
                       <v-textarea
@@ -141,8 +141,8 @@
                 </v-container>
               </v-expand-transition>
               <v-expand-transition>
-                <v-container class="mb-n12">
-                  <v-row v-if="log">
+                <v-container v-if="log" fluid class="mb-n12">
+                  <v-row>
                     <v-col>
                       <v-textarea
                         label="История заявки"
@@ -282,7 +282,14 @@
         :search="search"
       >
         <template v-slot:[`item.NAME`]="{ item }">
-          <v-card-text @click="openTask(item.ID)">{{ item.NAME }}</v-card-text>
+          <v-card-text @click="openTask(item.ID)">{{ item.NAME }}
+          <v-tooltip right>
+            <template v-slot:activator="{ }">
+            <v-icon @mouseenter="console.log('test')" color="info" small> mdi-information-outline</v-icon>
+            </template>
+            <span>test</span>
+          </v-tooltip>
+         </v-card-text>
         </template>
         <template v-slot:[`item.STATUS`]="{ item }">
           <v-chip :color="getStatus(item.STATUS)" dark>
@@ -300,6 +307,11 @@
               <img v-if="item.PHOTO" :src="item.PHOTO" />
               <v-icon v-else>mdi-account-circle</v-icon> </v-avatar
             ><span>{{ item.RESPONSIBLE }}</span>
+          </v-chip>
+        </template>
+        <template v-slot:[`item.TASK`]="{ item }">
+          <v-chip :href="'../../company/personal/user/' + item.RESPONSIBLEID + '/tasks/task/view/' + item.TASK + '/'" v-if="item.TASK">
+            {{ item.TASK }}
           </v-chip>
         </template>
       </v-data-table>
@@ -361,6 +373,11 @@ export default {
         text: "Отвественный",
         value: "RESPONSIBLE",
         visibleInTable: true,
+      },      
+      {
+        text: "Задача",
+        value: "TASK",
+        visibleInTable: true,
       },
     ],
     items: [],
@@ -403,6 +420,10 @@ export default {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
+        /* auth: {
+          username: "zaikin.ni",
+          password: "Vbuhfwbz75"
+        }, */
         params: {
           getItems: "getItems",
         },
@@ -473,6 +494,7 @@ export default {
           { color: am4core.color("#9E9E9E") }
         )
       );
+      this.cards[5].value = assignmentTask.length;
       this.mainChart.push(
         Object.assign(
           { taskLenght: assignmentTask.length },
@@ -508,6 +530,11 @@ export default {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
+          
+        /* auth: {
+          username: "zaikin.ni",
+          password: "Vbuhfwbz75"
+        }, */
           params: {
             getTask: id,
           },

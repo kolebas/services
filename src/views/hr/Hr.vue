@@ -1,31 +1,5 @@
 <template>
     <v-container fluid>
-        <v-hover>
-            <template v-slot="{ hover }">
-                <v-card
-                    disabled
-                    max-width="400"
-                    @click="$router.push('/storeadmin')"
-                    :elevation="hover ? 24 : 6"
-                >
-                    <v-list-item two-line>
-                        <v-list-item-content>
-                            <v-list-item-title class="headline mb-1"
-                                >Внутренний магазин</v-list-item-title
-                            >
-                            <v-list-item-subtitle
-                                >Панель управления
-                                магазином</v-list-item-subtitle
-                            >
-                        </v-list-item-content>
-
-                        <v-list-item-avatar size="60" color="grey">
-                            <img src="@/assets/img/hr/market.png" />
-                        </v-list-item-avatar>
-                    </v-list-item>
-                </v-card>
-            </template>
-        </v-hover>
         <br />
         <v-hover>
             <template v-slot="{ hover }">

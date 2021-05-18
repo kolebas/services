@@ -45,21 +45,21 @@
         class="mr-2"
       />{{ title }}
       <v-divider class="mx-4" inset vertical></v-divider>
-      <v-tooltip v-for="item in addTableButtons" :key="item.name" bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              v-bind="attrs"
-              v-on="on"
-              @click="exportTableToFile()"
-              :color="item.color"
-              class="mr-2"
-              fab
-              x-small
-              ><v-icon>{{ item.icon }}</v-icon></v-btn
-            >
-          </template>
-          <span>{{ item.tooltip }}</span>
-        </v-tooltip>
+      <v-tooltip v-for="(item, index) in addTableButtons" :key="index" bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            @click="exportTableToFile()"
+            :color="item.color"
+            class="mr-2"
+            fab
+            x-small
+            ><v-icon>{{ item.icon }}</v-icon></v-btn
+          >
+        </template>
+        <span>{{ item.tooltip }}</span>
+      </v-tooltip>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -98,7 +98,13 @@
         <v-chip class="mr-2">{{ item.NAME_UZ }}</v-chip>
       </template>
       <template v-slot:[`item.USER`]="{ item }">
-        <v-chip outlined color="#2FC6F6" text-color="rgba(0, 0, 0, 0.87)" class="mr-2">{{ item.USER }}</v-chip>
+        <v-chip
+          outlined
+          color="#2FC6F6"
+          text-color="rgba(0, 0, 0, 0.87)"
+          class="mr-2"
+          >{{ item.USER }}</v-chip
+        >
       </template>
       <template v-slot:[`item.ACTIONS`]="{ item }">
         <v-icon
@@ -140,9 +146,7 @@
         ></v-chip>
       </template>
       <template v-slot:[`item.ORDER_STATUS`]="props">
-        <v-edit-dialog
-          v-if="props.item.ORDER_STATUS"
-          :return-value.sync="props.item.ORDER_STATUS"
+        <v-edit-dialog :return-value.sync="props.item.ORDER_STATUS"
           ><v-chip class="mr-2">{{ props.item.ORDER_STATUS }}</v-chip>
           <template v-slot:input>
             <v-select
@@ -158,8 +162,8 @@
       <template v-slot:[`item.ORDER`]="{ item }">
         <v-chip
           class="mr-1 my-1"
-          v-for="order in item.ORDER"
-          :key="order"
+          v-for="(order, index) in item.ORDER"
+          :key="index"
           color="info"
           text-color="black"
           outlined
@@ -185,8 +189,8 @@ export default {
     dialogMaxWHeight: { type: String, default: "50%" },
     dialogFields: { type: Array },
     addButtonOnTitle: { type: Boolean, default: true },
-    addTableButtons:{type: Array},
-    itemsOrderStatus: {type: Array, default: () => (["Новый", "Отгружен"])},
+    addTableButtons: { type: Array },
+    itemsOrderStatus: { type: Array, default: () => ["Новый", "Отгружен"] },
     headers: { type: Array },
     actions: { type: Array },
     item: { type: Array },
@@ -240,7 +244,7 @@ export default {
     },
     exportTableToFile() {
       bus.$emit("exportTableToFile", this.item);
-    }
+    },
   },
 };
 </script>

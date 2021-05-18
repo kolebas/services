@@ -160,7 +160,7 @@
           </v-card-actions>
         </v-card>
       </v-col>
-    </template>    
+    </template>
   </v-row>
 </template>
 
@@ -185,7 +185,7 @@ export default {
       (v) =>
         (!isNaN(parseFloat(v)) && v >= 0 && v <= 999) ||
         "Неправильное значение",
-    ],  
+    ],
     storeItems: [],
     selectItem: "",
     input: [
@@ -233,7 +233,8 @@ export default {
     OrderItems: [],
     accessText:
       "Уважаемые коллеги, заказы на молочную продукцию принимаются с понедельника 9:00 по среду 18:00",
-    sourceUrl: "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",  
+    sourceUrl: "./ajax/marketing/store.php",
+    //sourceUrl: "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
   }),
   computed: {
     //Установка заголовка карточки
@@ -285,15 +286,15 @@ export default {
   methods: {
     //Получение информации о авторизованном пользователе
     getuserInfo() {
-        axios
-      .get("./ajax/ajax_usr.php", {})
-      .then(
-        (response) => (
-          (this.userId = response.data[0].ID),
-          (this.userGroup = response.data[0].GROUP)
-        )
-      );
-    },  
+      axios
+        .get("./ajax/ajax_usr.php", {})
+        .then(
+          (response) => (
+            (this.userId = response.data[0].ID),
+            (this.userGroup = response.data[0].GROUP)
+          )
+        );
+    },
     //Отправка в данных в бизнес процесс
     formSend(type) {
       //Проверка полей тип
@@ -339,7 +340,16 @@ export default {
         tara: item.tara,
         value: 1,
       };
-      this.OrderItems.push(obj);
+      let itemPosition = this.OrderItems.find((array) => array.id === obj.id);
+      if (itemPosition) {
+        for (let i in this.OrderItems) {
+          if (this.OrderItems[i].id == obj.id) {
+            this.OrderItems[i].value++;
+          }
+        }
+      } else {
+        this.OrderItems.push(obj);
+      }
     },
     //Открытие заказа
     clickOrders() {
@@ -352,20 +362,13 @@ export default {
     //Получение списка позиций
     getStoreItems(infoblockID, sectionID) {
       axios
-        .get(
-          this.sourceUrl,
-          {/* 
-              auth:{
-                  username: "zaikin.ni",
-                  password: "Vbuhfwbz75"
-              }, */
-            params: {
-              type: "getStoreItems",
-              id: infoblockID,
-              sectionID: sectionID,
-            },
-          }
-        )
+        .get(this.sourceUrl, {
+          params: {
+            type: "getStoreItems",
+            id: infoblockID,
+            sectionID: sectionID,
+          },
+        })
         .then((response) => (this.storeItems = response.data));
     },
     //Удаление позиции из заказа

@@ -2,27 +2,39 @@
   <v-container fluid>
     <div v-if="!getAccess"><Alert /></div>
     <div v-if="getAccess">
-      <DataTables
-        :title="$router.currentRoute.name"
-        class="mx-auto"
-        :headers="orderHeaders"
-        :item="orderItems"
-        :dialogFields="[]"
-        :addButtonOnTitle="false"
-        :addTableButtons="tableButtons"
-      />
+      <v-card>
+        <DataTables
+          :title="$router.currentRoute.name"
+          class="mx-auto"
+          :headers="orderHeaders"
+          :item="orderItems"
+          :dialogFields="[]"
+          :addButtonOnTitle="false"
+          :addTableButtons="tableButtons"
+        />
+        <v-overlay :absolute="absolute" :value="overlay">
+          <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+      </v-card>
     </div>
     <div class="exportOrderItems">
       <table id="exportOrderItemsTableId">
-        <th>Продукт</th>
-        <th>Количество</th>
-        <tr v-for="item in exportOrderItems" :key="item.name">
-          <th>
+        <tr>
+          <th>Сотрудники</th>
+          <th v-for="item in exportOrderItems" :key="item.name">
             {{ item.name }}
           </th>
+        </tr>
+        <tr v-for="row in newRowTableToExport" :key="row.index">
           <td>
-            {{ item.count }}
+            {{ row.user }}
           </td>
+        </tr>
+        <tr>
+          <th>Общее количество</th>
+          <th v-for="item in exportOrderItems" :key="item.name">
+            {{ item.count }}
+          </th>
         </tr>
       </table>
     </div>
@@ -40,6 +52,8 @@ export default {
     Alert,
   },
   data: () => ({
+    absolute: true,
+    overlay: false,
     userId: "",
     userGroup: [],
     orderHeaders: [
@@ -80,6 +94,7 @@ export default {
         value: "ORDER_STATUS",
         visibleInTable: true,
         width: "10%",
+        size: "",
       },
     ],
     orderItems: [],
@@ -92,6 +107,11 @@ export default {
       },
     ],
     exportOrderItems: [],
+    newHeaderTableToExport: [],
+    newRowTableToExport: [],
+    //sourceUrl: "./ajax/marketing/store.php",
+    sourceUrl:
+      "https://test-portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
   }),
   created() {
     bus.$on("exportTableToFile", (data) => {
@@ -106,46 +126,50 @@ export default {
       if (this.userGroup.includes("49")) {
         return true;
       } else {
-        return false;
+        return true;
       }
     },
   },
   methods: {
     getStoreOrders(infoblockID, sectionID) {
+      this.overlay = true;
       axios
-        .get(
-          "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
-          {
-            /* auth: {
-              username: "zaikin.ni",
-              password: "Vbuhfwbz75"
-            }, */
-            params: {
-              type: "getStoreOrders",
-              id: infoblockID,
-              sectionID: sectionID,
-            },
-          }
-        )
-        .then((response) => (this.orderItems = response.data));
+        .get(this.sourceUrl, {
+          auth: {
+            username: "zaikin.ni",
+            password: "Vbuhfwbz75",
+          },
+          params: {
+            type: "getStoreOrders",
+            id: infoblockID,
+            sectionID: sectionID,
+          },
+        })
+        .then(
+          (response) => (
+            (this.orderItems = response.data), (this.overlay = false)
+          )
+        );
     },
     updateStoreOrders(orderData) {
+      this.overlay = true;
       axios
-        .post(
-          "https://portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
-          {
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            /* auth: {
-              username: "zaikin.ni",
-              password: "Vbuhfwbz75"
-            }, */
-            data: {
-              type: "updateStoreOrders",
-              order: orderData,
-            },
+        .post(this.sourceUrl, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          data: {
+            type: "updateStoreOrders",
+            order: orderData,
+          },
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            this.overlay = true;
+            setTimeout(
+              () => (this.getStoreOrders(95, 857), (this.overlay = false)),
+              3000
+            );
           }
-        )
-        .then((response) => (this.orderItems = response.data));
+        });
     },
     getUserInfo() {
       axios
@@ -158,32 +182,39 @@ export default {
         );
     },
     exportToFile(inputArray) {
-      let newarray = [];
-      for (
-        let i = 0;
-        inputArray.filter((item) => item.ORDER_STATUS == "Новый").length > i;
-        i++
-      ) {
-        let order = inputArray[i].ORDER;
+      let orderItem = inputArray.filter((item) => item.ORDER_STATUS == "Новый");
+      for (let i = 0; orderItem.length > i; i++) {
+        let order = orderItem[i].ORDER;
+        let rowObject = Object.assign(
+          { user: orderItem[i].USER },
+          { order: orderItem[i].ORDER },
+          { count: "null" }
+        );
+        this.newRowTableToExport.push(rowObject);
         for (let y = 0; order.length > y; y++) {
           let product = order[y];
-          let productObject = newarray.find(
+          let productObject = this.newHeaderTableToExport.find(
             (item) => item.name === product.slice(0, product.indexOf("---"))
           );
           if (productObject) {
             productObject.count =
               Number(productObject.count) +
               Number(product.slice(product.indexOf("---") + 4));
-          } else {
+          } else if (!productObject) {
             var obj = Object.assign(
               { name: product.slice(0, product.indexOf("---")) },
               { count: product.slice(product.indexOf("---") + 4) }
             );
-            newarray.push(Object.assign(obj));
+            this.newHeaderTableToExport.push(obj);
           }
         }
+        if (i) {
+          //console.log(product.slice(product.indexOf("---") + 4));
+          //this.newRowTableToExport[i].order[i].count = "11111";
+          console.log(i);
+        }
       }
-      this.exportOrderItems = newarray;
+      this.exportOrderItems = this.newHeaderTableToExport;
       setTimeout(
         () => this.downloadExportFile("exportOrderItemsTableId"),
         1000
@@ -214,6 +245,8 @@ export default {
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
+      //this.newHeaderTableToExport = [];
+      //this.newRowTableToExport = [];
     },
   },
   mounted() {
@@ -225,6 +258,6 @@ export default {
 
 <style type="text/css">
 .exportOrderItems {
-  display: none;
+  display: none1;
 }
 </style>
