@@ -29,6 +29,7 @@
           <td>
             {{ row.user }}
           </td>
+          <td v-for="(item, index) in row.count" :key="index">{{ item }}</td>
         </tr>
         <tr>
           <th>Общее количество</th>
@@ -109,9 +110,8 @@ export default {
     exportOrderItems: [],
     newHeaderTableToExport: [],
     newRowTableToExport: [],
-    //sourceUrl: "./ajax/marketing/store.php",
-    sourceUrl:
-      "https://test-portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
+    sourceUrl: "./ajax/marketing/store.php",
+    //sourceUrl: "https://test-portal.ahstep.ru/ahstep/services/ajax/marketing/store.php",
   }),
   created() {
     bus.$on("exportTableToFile", (data) => {
@@ -126,7 +126,7 @@ export default {
       if (this.userGroup.includes("49")) {
         return true;
       } else {
-        return true;
+        return false;
       }
     },
   },
@@ -135,10 +135,6 @@ export default {
       this.overlay = true;
       axios
         .get(this.sourceUrl, {
-          auth: {
-            username: "zaikin.ni",
-            password: "Vbuhfwbz75",
-          },
           params: {
             type: "getStoreOrders",
             id: infoblockID,
@@ -183,16 +179,13 @@ export default {
     },
     exportToFile(inputArray) {
       let orderItem = inputArray.filter((item) => item.ORDER_STATUS == "Новый");
-      for (let i = 0; orderItem.length > i; i++) {
-        let order = orderItem[i].ORDER;
-        let rowObject = Object.assign(
-          { user: orderItem[i].USER },
-          { order: orderItem[i].ORDER },
-          { count: "null" }
-        );
-        this.newRowTableToExport.push(rowObject);
+      for (let i = 0; orderItem.length > i; i++) {        
+        var testArray = [];
+        var order = orderItem[i].ORDER;
+
         for (let y = 0; order.length > y; y++) {
           let product = order[y];
+          testArray.push(product.split('---')[1])
           let productObject = this.newHeaderTableToExport.find(
             (item) => item.name === product.slice(0, product.indexOf("---"))
           );
@@ -200,7 +193,7 @@ export default {
             productObject.count =
               Number(productObject.count) +
               Number(product.slice(product.indexOf("---") + 4));
-          } else if (!productObject) {
+          } else {
             var obj = Object.assign(
               { name: product.slice(0, product.indexOf("---")) },
               { count: product.slice(product.indexOf("---") + 4) }
@@ -208,12 +201,14 @@ export default {
             this.newHeaderTableToExport.push(obj);
           }
         }
-        if (i) {
-          //console.log(product.slice(product.indexOf("---") + 4));
-          //this.newRowTableToExport[i].order[i].count = "11111";
-          console.log(i);
-        }
+        let rowObject = Object.assign(
+          { user: orderItem[i].USER },
+          { order: orderItem[i].ORDER },
+          { count: testArray}
+        );
+        this.newRowTableToExport.push(rowObject);
       }
+      console.log(this.newRowTableToExport)
       this.exportOrderItems = this.newHeaderTableToExport;
       setTimeout(
         () => this.downloadExportFile("exportOrderItemsTableId"),

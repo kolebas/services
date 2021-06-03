@@ -25,7 +25,6 @@
                 ><v-icon left>{{ btn.icon }}</v-icon
                 >{{ btn.title }}</v-btn
               >
-              <v-btn @click="getGlpiData()"></v-btn
             ></v-container>
             <v-container
               fluid
@@ -49,49 +48,6 @@
               />
             </v-container>
           </v-tab-item>
-          <!-- <v-tab-item>
-            <v-row>
-              <v-col cols="3" v-for="report in reports" :key="report.id">
-                <v-card outlined>
-                  <v-card-text>
-                    <v-row align="center">
-                      <v-card-text>{{ report.text }}</v-card-text>
-                      <v-col class="display-3" cols="12">{{
-                        report.value
-                      }}</v-col>
-                    </v-row>
-                  </v-card-text>
-                  <v-divider></v-divider>
-                  <v-card-text @click="showPreview(report.id)"
-                    >Подробнее</v-card-text
-                  >
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-tab-item> <v-tab-item>
-            <DataTables
-              :headers="headers_items"
-              :item="item"
-              title="Заявки"
-              :loading="loading"
-            />
-          </v-tab-item>
-          <v-tab-item>
-            <DataTables
-              :headers="headers_inc"
-              :item="inc_item"
-              title="Инциденты"
-              :loading="loading"
-            />
-          </v-tab-item>
-          <v-tab-item>
-            <DataTables
-              :headers="headers_comp"
-              :item="glpi_data.data"
-              title="Компьютеры"
-              :loading="loading"
-            />
-          </v-tab-item> -->
         </v-tabs>
       </v-col>
     </v-row>
@@ -495,136 +451,7 @@ export default {
     },
     formCancl: function () {
       this.$router.go(-1);
-    },
-    /*  progSts() {
-      let y = 0;
-      for (let i = 0; i < this.quest.length; i++) {
-        if (this.quest[i].value) {
-          y = y + 10;
-        }
-      }
-      this.progValue = y;
-    },
-    time() {
-      setInterval(() => {
-        this.getGlpiData();
-      }, 30000);
-    },
-    getData(source, param, result_ar) {
-      this.loading = true;
-      if (result_ar != "comp") {
-        axios
-          .get(source, {
-            headers: {
-              "Content-Type": "application/json; charset=utf-8",
-            },
-            params: {
-              result: param,
-            },
-          })
-          .then((response) => {
-            let today = new Date();
-            let dd = String(today.getDate()).padStart(2, "0");
-            let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-            let yyyy = today.getFullYear();
-            this.today = dd + "." + mm + "." + yyyy;
-            this.new_count = response.data.length - this.item.length;
-            if (param == "req") {
-              this.item = response.data;
-              this.newReq = response.data.filter((getDate) =>
-                getDate.DATE.includes(this.today)
-              );
-              this.reports[0].value =
-                this.item.length + " + " + this.newReq.length;
-              this.reports[1].value = this.newReq.length;
-            }
-            if (param == "inc") {
-              this.inc_item = response.data;
-              this.getNewInc = response.data.filter((getDate) =>
-                getDate.DATE.includes(this.today)
-              );
-              this.getIncNotApproved = response.data.filter(
-                (getResponsible) =>
-                  getResponsible.RESPONSIBLE.includes("ИТ Поддержка") &&
-                  !getResponsible.STATUS.includes("5")
-              );
-              this.reports[2].value = this.getNewInc.length;
-              this.reports[3].value = this.getIncNotApproved.length;
-            }
-
-            this.loading = false;
-            this.value = this.item.length;
-            this.indeterminate = false;
-            if (this.new_count != 0 && this.new_count != response.data.length) {
-              this.b_value = true;
-            }
-          });
-      } else {
-        axios
-          .get("https://support.ahstep.ru/apirest.php/initSession", {
-            headers: {
-              "Content-Type": "application/json;",
-            },
-            params: {
-              app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
-              user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg",
-            },
-          })
-          .then((response) => {
-            var s_token = response.data.session_token;
-            axios
-              .get(source, {
-                headers: {
-                  "Content-Type": "application/json;",
-                  "Session-Token": s_token,
-                },
-                params: {
-                  app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
-                  range: "0-2000",
-                  forcedisplay: [3, 4, 70, 113],
-                },
-              })
-              .then((response) => {
-                this.glpi_data = response.data;
-                this.loading = false;
-              });
-          });
-      }
-    },
-    getGlpiData() {
-      axios
-        .get("https://support.ahstep.ru/apirest.php/initSession", {
-          headers: {
-            "Content-Type": "application/json;",
-          },
-          params: {
-            app_token: "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu",
-            user_token: "vnF70gCwnlSpMnWwXqWafIzT0bWlPI2Lm7QJVXpg",
-          },
-        })
-        .then((response) => {
-          var s_token = response.data.session_token;
-          //Параметры для поиска комьютера
-          const params1 = new URLSearchParams();
-          params1.append(
-            "app_token",
-            "TL0qYrS1zTK48QYMJD7N6yAvmO1WRx2BbsqB9iMu"
-          );
-          params1.append("criteria[0][field]", "70");
-          params1.append("criteria[0][searchtype]", "contains");
-          params1.append("criteria[0][value]", "zaikin.ni");
-          axios
-            .get("https://support.ahstep.ru/apirest.php/search/Computer", {
-              headers: {
-                "Session-Token": s_token,
-              },
-              params: params1,
-            })
-            .then((response) => {
-              this.glpi_data = response.data;
-            });
-        });
-    }, */
+    },   
     getData1C(type, sectionId) {
       this.loading = true;
       axios

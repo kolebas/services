@@ -6,7 +6,7 @@
             :persistent="disablePersistentParam"
         >
             <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>
+                <v-card-title :class="classTitle" primary-title color="red">
                     {{ titleDialogParam }}
                 </v-card-title>
                 <v-card-text class="subtitle-1 text-center mt-4">
@@ -64,10 +64,11 @@ export default {
     props: {
         disablePersistentParam: { type: Boolean, default: true },
         dialog: { type: Boolean },
+        classTitle: { type: String, default: "headline grey lighten-2" },
         warnMessage: { type: String },
         subMessage: { type: String },
         route: { type: String, default: "-1" },
-        widthDialogParam: { type: String, default: "500px"},
+        widthDialogParam: { type: String, default: "500px" },
         titleDialogParam: { type: String, default: "Статус" },
         btnTextParam: { type: String, default: "Понятно" },
         btnDisable: { type: Boolean, default: false },
