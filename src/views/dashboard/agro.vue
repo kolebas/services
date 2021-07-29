@@ -194,7 +194,7 @@
                   </v-list-item>
                 </v-col>
                 <v-col cols="8">
-                  <v-card tile height="282px" id="chartdiv"> </v-card>
+                  <v-card tile height="432px" id="chartdiv"> </v-card>
                 </v-col>
               </v-row>
             </v-card>
@@ -225,12 +225,12 @@
                       :rotate="-90"
                       :size="100"
                       :width="15"
-                      :value="(card.value / items.length) * 100 + '%'"
+                      :value="Math.round((card.value / items.length) * 100) + '%'"
                       :color="card.color"
                     >
                       <v-card-title class="headline mb-1">
                         {{
-                          ((card.value / items.length) * 100 + "").split(
+                          (Math.round((card.value / items.length)) * 100 + "").split(
                             "."
                           )[0]
                         }}%</v-card-title
@@ -342,6 +342,7 @@ export default {
       { name: "Просрочено", value: 0, item: 0, color: "red" },
       { name: "Проведено", value: 0, item: 0, color: "grey" },      
       { name: "Назначение", value: 0, item: 0, color: "info" },
+      { name: "Отклонено", value: 0, item: 0, color: "red" },
     ],
     headers: [
       {
@@ -502,6 +503,14 @@ export default {
           { color: am4core.color("#2196f3") }
         )
       );
+      this.cards[6].value = rejectedTask.length;
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: rejectedTask.length },
+          { taskStatus: "Назначение" },
+          { color: am4core.color("#2196f3") }
+        )
+      );
       this.mainChart.push(
         Object.assign(
           { taskLenght: rejectedTask.length },
@@ -518,7 +527,7 @@ export default {
         status == "Согласование"
       )
         return "orange";
-      else if (status == "Просрочен" || status == "Отклонен") return "red";
+      else if (status == "Просрочен" || status == "Отклонен" || status == "Отклонено") return "red";
       else if (status == "Проведён") return "grey";
       else if (status == "Назначение") return "info";
       else return "green";

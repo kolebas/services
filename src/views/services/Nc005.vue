@@ -65,6 +65,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        visible: true,
         icon: "mdi-folder",
         err: "",
       },

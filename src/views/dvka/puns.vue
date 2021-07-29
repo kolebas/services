@@ -402,10 +402,10 @@ export default {
           params: {
             type: "get",
           },
-          auth: {
+          /*auth: {
             username: "zaikin.ni",
             password: "Vbuhfwbz75",
-          },
+          },*/
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },

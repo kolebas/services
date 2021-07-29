@@ -165,6 +165,16 @@
             </v-menu>
           </v-col>
         </v-row>
+        <v-row class="mb-n4">
+                <v-col cols="4">
+                    <v-card-text class="subtitle-1 text-right pt-2">
+                        Дополнительные сведения:
+                    </v-card-text> 
+                </v-col>
+                <v-col cols="6">
+                    <v-textarea v-model="cmnt" outlined solo label="Для указания дополнительной информации используйте это поле"></v-textarea>
+                </v-col>                   
+            </v-row>
         <hr />
         <v-card-actions class="py-4">
           <div class="mx-auto">
@@ -284,6 +294,7 @@ export default {
     date_burn_err: "",
     btnLoader: false,
     obj: {},
+    cmnt: "",
     route: "",
   }),
   created() {
@@ -342,6 +353,7 @@ export default {
         this.obj.tel = this.tel;
         this.obj.start = this.date_start;
         this.obj.burn = this.date_burn;
+        this.obj.cmnt = this.cmnt;
         this.btnLoader = true;
         axios({
           method: "post",

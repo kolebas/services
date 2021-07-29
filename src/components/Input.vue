@@ -19,6 +19,7 @@
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
+          :disabled="item.disabled"
           required
           :error-messages="item.err"
           :append-icon="item.icon"
@@ -57,7 +58,7 @@
         </v-menu>
 
         <v-select
-          v-if="item.type == 'select'"
+          v-if="item.type == 'select' && item.visible != false"
           v-model="item.value"
           :items="item.select_arr"
           :label="item.name"

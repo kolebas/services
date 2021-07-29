@@ -1,5 +1,6 @@
 <template>
     <v-autocomplete
+              v-if="items.visible != false"
               :items="items.items"
               v-model="items.value"
               :outlined="items.outlined"
@@ -21,7 +22,7 @@
                   close
                   @click:close="items.value = ''"
                 >
-                  <v-icon :color="items.color || data.item.COLOR" left>{{items.icon}} || {{ data.item.ICON }}</v-icon>
+                  <v-icon v-if="items.icon || data.item.ICON" :color="items.color || data.item.COLOR" left>{{items.icon}} || {{ data.item.ICON }}</v-icon>
                   {{ data.item.NAME }}
                 </v-chip>
               </template>
@@ -33,7 +34,7 @@ import { bus } from '../main.js';
 export default {
     props: {
         items: {type: Object},
-        label: {type: String}
+        label: {type: String},
     },
     data:() => ({
     }),

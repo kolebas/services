@@ -76,6 +76,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        visible: true,
       },
       {
         name: "Комментарий:",

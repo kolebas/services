@@ -105,7 +105,7 @@ const routes = [{
   },
   {
     path: '/agro',
-    name: 'Dashboard',
+    name: 'Агрономические опыты',
     component: () => import( /* webpackChunkName: "services" */ '../views/dashboard/agro.vue')
   },
   {
@@ -162,6 +162,11 @@ const routes = [{
     path: '/storeadmin',
     name: 'Управление заказами',
     component: () => import( /* webpackChunkName: "services" */ '../views/store/storeAdminOrders.vue')
+  },
+  {
+    path: '/Nsi001',
+    name: 'Заявка на создание элемента справочника номенклатуры',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi001.vue')
   },
   {
     path: '/test',
