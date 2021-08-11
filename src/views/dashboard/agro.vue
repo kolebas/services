@@ -1,5 +1,5 @@
-<template>
-  <v-container fluid class="grey lighten-4">
+<template color="rgb(255, 0, 0, 0.2)">
+  <v-container fluid>
     <v-dialog v-model="dialog" max-width="75%" class="mx-auto">
       <v-card v-for="task in taskInfo" :key="task.NAME">
         <v-card-title class="headline grey lighten-2">
@@ -166,7 +166,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <h1>{{ $router.currentRoute.name }}</h1>
+    <h1 class="classh1 mt-n4">{{ $router.currentRoute.name }}</h1>
     <v-divider class="mb-2" />
     <v-row>
       <v-col cols="6">
@@ -180,7 +180,7 @@
               outlined
             >
               <v-row>
-                <v-col cols="4">
+                <v-col cols="12">
                   <v-list-item three-line>
                     <v-list-item-content>
                       <v-list-item-title class="headline mb-1">
@@ -193,7 +193,7 @@
                     </v-list-item-content>
                   </v-list-item>
                 </v-col>
-                <v-col cols="8">
+                <v-col cols="12">
                   <v-card tile height="432px" id="chartdiv"> </v-card>
                 </v-col>
               </v-row>
@@ -225,14 +225,14 @@
                       :rotate="-90"
                       :size="100"
                       :width="15"
-                      :value="Math.round((card.value / items.length) * 100) + '%'"
+                      :value="
+                        Math.round((card.value / items.length) * 100) + '%'
+                      "
                       :color="card.color"
                     >
                       <v-card-title class="headline mb-1">
                         {{
-                          (Math.round((card.value / items.length)) * 100 + "").split(
-                            "."
-                          )[0]
+                          Math.round((card.value / items.length) * 100)
                         }}%</v-card-title
                       >
                     </v-progress-circular>
@@ -244,8 +244,7 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-divider class="my-4" />
-    <v-card class="mx-auto" width="100%">
+    <v-card class="mx-auto mt-4" width="100%">
       <v-card-title>
         <v-toolbar-title>{{ titleDataTable }}</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -282,14 +281,17 @@
         :search="search"
       >
         <template v-slot:[`item.NAME`]="{ item }">
-          <v-card-text @click="openTask(item.ID)">{{ item.NAME }}
-          <v-tooltip right>
-            <template v-slot:activator="{ }">
-            <v-icon @mouseenter="console.log('test')" color="info" small> mdi-information-outline</v-icon>
-            </template>
-            <span>test</span>
-          </v-tooltip>
-         </v-card-text>
+          <v-card-text @click="openTask(item.ID)"
+            >{{ item.NAME }}
+            <v-tooltip right>
+              <template v-slot:activator="{}">
+                <v-icon color="info" small>
+                  mdi-information-outline</v-icon
+                >
+              </template>
+              <span>test</span>
+            </v-tooltip>
+          </v-card-text>
         </template>
         <template v-slot:[`item.STATUS`]="{ item }">
           <v-chip :color="getStatus(item.STATUS)" dark>
@@ -310,7 +312,16 @@
           </v-chip>
         </template>
         <template v-slot:[`item.TASK`]="{ item }">
-          <v-chip :href="'../../company/personal/user/' + item.RESPONSIBLEID + '/tasks/task/view/' + item.TASK + '/'" v-if="item.TASK">
+          <v-chip
+            :href="
+              '../../company/personal/user/' +
+              item.RESPONSIBLEID +
+              '/tasks/task/view/' +
+              item.TASK +
+              '/'
+            "
+            v-if="item.TASK"
+          >
             {{ item.TASK }}
           </v-chip>
         </template>
@@ -328,7 +339,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 am4core.useTheme(am4themes_animated);
 export default {
   data: () => ({
-    titleDataTable: "Агрономические опыты",
+    titleDataTable: "Перечень опытов",
     cards: [
       {
         name: "Общее количество",
@@ -340,7 +351,7 @@ export default {
       { name: "В работе", value: 0, item: 0, color: "green" },
       { name: "На согласовании", value: 0, item: 0, color: "orange" },
       { name: "Просрочено", value: 0, item: 0, color: "red" },
-      { name: "Проведено", value: 0, item: 0, color: "grey" },      
+      { name: "Проведено", value: 0, item: 0, color: "grey" },
       { name: "Назначение", value: 0, item: 0, color: "info" },
       { name: "Отклонено", value: 0, item: 0, color: "red" },
     ],
@@ -374,7 +385,7 @@ export default {
         text: "Отвественный",
         value: "RESPONSIBLE",
         visibleInTable: true,
-      },      
+      },
       {
         text: "Задача",
         value: "TASK",
@@ -421,10 +432,6 @@ export default {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
-        /* auth: {
-          username: "zaikin.ni",
-          password: "Vbuhfwbz75"
-        }, */
         params: {
           getItems: "getItems",
         },
@@ -456,13 +463,16 @@ export default {
         getTask.STATUS.includes("Просроче")
       );
       let doneTask = this.items.filter((getTask) =>
-        getTask.STATUS.includes("Проведён")
+        getTask.STATUS.includes("Провед")
       );
       let rejectedTask = this.items.filter((getTask) =>
         getTask.STATUS.includes("Отклонен")
       );
       let assignmentTask = this.items.filter((getTask) =>
         getTask.STATUS.includes("Назначение")
+      );
+      let cancelTask = this.items.filter((getTask) =>
+        getTask.STATUS.includes("Не проведено")
       );
       this.cards[1].value = workTask.length;
       this.mainChart.push(
@@ -507,15 +517,16 @@ export default {
       this.mainChart.push(
         Object.assign(
           { taskLenght: rejectedTask.length },
-          { taskStatus: "Назначение" },
-          { color: am4core.color("#2196f3") }
-        )
-      );
-      this.mainChart.push(
-        Object.assign(
-          { taskLenght: rejectedTask.length },
           { taskStatus: "Отклонено" },
           { color: am4core.color("#F44336") }
+        )
+      );
+      //this.cards[7].value = cancelTask.length;
+      this.mainChart.push(
+        Object.assign(
+          { taskLenght: cancelTask.length },
+          { taskStatus: "Не проведено" },
+          { color: am4core.color("#F57C00") }
         )
       );
 
@@ -527,9 +538,15 @@ export default {
         status == "Согласование"
       )
         return "orange";
-      else if (status == "Просрочен" || status == "Отклонен" || status == "Отклонено") return "red";
-      else if (status == "Проведён") return "grey";
+      else if (
+        status == "Просрочен" ||
+        status == "Отклонен" ||
+        status == "Отклонено"
+      )
+        return "red";
+      else if (status == "Проведено") return "grey";
       else if (status == "Назначение") return "info";
+      else if (status == "Не проведено") return "№F57C00";
       else return "green";
     },
     openTask(id) {
@@ -539,11 +556,6 @@ export default {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-          
-        /* auth: {
-          username: "zaikin.ni",
-          password: "Vbuhfwbz75"
-        }, */
           params: {
             getTask: id,
           },
@@ -612,5 +624,20 @@ export default {
 };
 </script>
 
+
 <style>
+.bx-layout-inner-inner-top-row {
+  display: none;
+}
+/*
+#workarea-content {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.classh1{
+  color: #fff;
+}
+.theme--light.v-application {
+    background: none!important;;
+    color: rgba(0,0,0,.87);
+}*/
 </style>
