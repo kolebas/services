@@ -626,10 +626,9 @@ export default {
 
 
 <style>
-.bx-layout-inner-inner-top-row {
+/*.bx-layout-inner-inner-top-row {
   display: none;
 }
-/*
 #workarea-content {
   background-color: rgba(0, 0, 0, 0.2);
 }
