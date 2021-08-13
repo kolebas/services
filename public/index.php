@@ -8,9 +8,3 @@ $APPLICATION->SetTitle("Заявки");
 <?
 require_once 'app.php';
 ?>
-
-<style type="text/css">
-	.workarea-content-paddings {
-    padding: 15px 0px 0px;
-}	
-</style>
