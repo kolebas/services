@@ -1,87 +1,90 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <DialogAfterSendForm
-        :dialog="dialog"
-        :warnMessage="dialogMessage"
-        :subMessage="subDialogMessage"
-      />
-      <v-card max-width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle :title="title" :sub_message="subtitle"></RqCardTitle>
-        <hr />
-        <SelectOrg
-          :cols_title="5"
-          :cols_input="6"
-          title="Организация:"
-          :org_err="org_err"
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
+        <DialogAfterSendForm
+          :dialog="dialog"
+          :warnMessage="dialogMessage"
+          :subMessage="subDialogMessage"
         />
-        <InputCard
-          v-for="item in inputs"
-          :key="item.id"
-          :id="item.id"
-          :title="item.title"
-          :input_err="item.err"
-          :label="item.label"
-          :suffix="item.suffix"
-          :cols_title="item.cols_title"
-          :cols_input="item.cols_input"
-        ></InputCard>
-        <v-row class="mb-n6">
-          <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2">{{
-              fldNameText
-            }}</v-card-text>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-model="fldName"
-              readonly
-              outlined
-              solo
-              dense
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <SelectUsr
-          :cols_title="5"
-          v-for="item in users"
-          :multiple="item.multiple"
-          :key="item.title"
-          :id="item.id"
-          :cols_input="6"
-          :title="item.title"
-          :userId_err="item.err"
-        />
-        <v-row class="mb-n6">
-          <v-col cols="5">
-            <v-card-text class="subtitle-1 text-right pt-2"
-              >Описание каталога:</v-card-text
-            >
-          </v-col>
-          <v-col cols="6">
-            <v-textarea
-              v-model="cmnt"
-              outlined
-              solo
-              label="Для указания дополнительной информации используйте это поле"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <hr />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              color="green lighten-2 white--text"
-              @click="formSend()"
-              >Отправить</v-btn
-            >
-            <v-btn class="mx-1" @click="formCancl()">Отмена</v-btn>
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+        <v-card max-width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle :title="title" :sub_message="subtitle"></RqCardTitle>
+          <hr />
+          <SelectOrg
+            :cols_title="5"
+            :cols_input="6"
+            title="Организация:"
+            :org_err="org_err"
+          />
+          <InputCard
+            v-for="item in inputs"
+            :key="item.id"
+            :id="item.id"
+            :title="item.title"
+            :input_err="item.err"
+            :label="item.label"
+            :suffix="item.suffix"
+            :cols_title="item.cols_title"
+            :cols_input="item.cols_input"
+          ></InputCard>
+          <v-row class="mb-n6">
+            <v-col cols="5">
+              <v-card-text class="subtitle-1 text-right pt-2">{{
+                fldNameText
+              }}</v-card-text>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model="fldName"
+                readonly
+                outlined
+                solo
+                dense
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <SelectUsr
+            :cols_title="5"
+            v-for="item in users"
+            :multiple="item.multiple"
+            :key="item.title"
+            :id="item.id"
+            :cols_input="6"
+            :title="item.title"
+            :userId_err="item.err"
+          />
+          <v-row class="mb-n6">
+            <v-col cols="5">
+              <v-card-text class="subtitle-1 text-right pt-2"
+                >Описание каталога:</v-card-text
+              >
+            </v-col>
+            <v-col cols="6">
+              <v-textarea
+                v-model="cmnt"
+                outlined
+                solo
+                label="Для указания дополнительной информации используйте это поле"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <hr />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                color="green lighten-2 white--text"
+                @click="formSend()"
+                >Отправить</v-btn
+              >
+              <v-btn class="mx-1" @click="formCancl()">Отмена</v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -93,6 +96,7 @@ import RqCardTitle from "@/components/RqCardTitle";
 import SelectUsr from "@/components/SelectUsr";
 import SelectOrg from "@/components/SelectOrg";
 import InputCard from "@/components/InputCard";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     DialogAfterSendForm,
@@ -100,6 +104,7 @@ export default {
     SelectUsr,
     SelectOrg,
     InputCard,
+    TitleService,
   },
   data: () => ({
     title: "Заявка на создание сетевого каталога",

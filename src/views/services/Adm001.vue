@@ -1,6 +1,8 @@
 <template>
   <v-container fluid>
     <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" />
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
     <v-row>
       <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle
@@ -29,6 +31,7 @@
         </v-card-actions>
       </v-card>
     </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -38,11 +41,13 @@ import RqCardTitle from "@/components/RqCardTitle.vue";
 import DialogAfterSendFrom from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     RqCardTitle,
     DialogAfterSendFrom,
     Input,
+    TitleService,
   },
   data: () => ({
     dialog: false,

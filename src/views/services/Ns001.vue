@@ -3,6 +3,8 @@
     <div class="text-center">
       <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
     </div>
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
     <v-row>
       <v-col cols="12">
         <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
@@ -43,6 +45,7 @@
         </v-card>
       </v-col>
     </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -52,11 +55,13 @@ import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import RqCardTitle from "@/components/RqCardTitle";
 import SelectUsr from "@/components/SelectUsr";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     DialogAfterSendForm,
     RqCardTitle,
     SelectUsr,
+    TitleService,
   },
   data: () => ({
     title: "Удаленный доступ (VPN)",

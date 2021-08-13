@@ -1,6 +1,8 @@
 <template>
   <v-container fluid>
     <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" />
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
     <v-row>
       <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle
@@ -101,7 +103,7 @@
           class="elevation-1"
           hide-default-footer
         >
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
@@ -124,6 +126,7 @@
         </v-card-actions>
       </v-card>
     </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -133,11 +136,13 @@ import RqCardTitle from "@/components/RqCardTitle.vue";
 import DialogAfterSendFrom from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     RqCardTitle,
     DialogAfterSendFrom,
     Input,
+    TitleService
   },
   data: () => ({
     sub_message:
@@ -287,7 +292,6 @@ export default {
     dialogParam: false,
     dialogDelete: false,
     editedIndex: -1,
-    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_optest.php",
     source: "./ajax/ajax_op001.php",
   }),
   created() {

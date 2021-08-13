@@ -128,4 +128,18 @@ body {
   margin-bottom: 10px !important;
   border-radius: 10px !important;
 }
+.bx-layout-inner-inner-top-row {
+  display: none;
+}
+#workarea-content {
+  background-color: rgba(0, 0, 0, 0);
+}
+/*
+.classh1{
+  color: #fff;
+}*/
+.theme--light.v-application {
+  background: none !important;
+  color: rgba(0, 0, 0, 0.87);
+}
 </style>

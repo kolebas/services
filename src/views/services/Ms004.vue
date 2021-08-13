@@ -2,6 +2,8 @@
   <v-container fluid>
     <v-row>
       <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
+      <TitleService />
+    <v-card min-height="800px" class="py-12">
       <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle
           :title="$router.currentRoute.name"
@@ -37,11 +39,13 @@ import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import RqCardTitle from "@/components/RqCardTitle.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     DialogAfterSendForm,
     RqCardTitle,
     Input,
+    TitleService,
   },
   data: () => ({
     sub_message: "ms004",

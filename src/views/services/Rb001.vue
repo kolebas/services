@@ -33,6 +33,8 @@
             </v-card-actions>
         </v-card>
         </v-dialog>
+        <TitleService />
+    <v-card min-height="800px" class="py-12">
     <v-row>
       <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
@@ -96,6 +98,7 @@
         </v-card-actions>
       </v-card>
     </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -105,11 +108,13 @@ import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import RqCardTitle from "@/components/RqCardTitle";
 import SelectUsr from "@/components/SelectUsr";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     DialogAfterSendForm,
     RqCardTitle,
     SelectUsr,
+    TitleService
   },
   data: () => ({
     title: "Заявка на приобретение техники/программного обеспечения",

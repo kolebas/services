@@ -1,45 +1,52 @@
 <template>
   <v-container fluid>
     <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
-    <v-row>
-      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle
-          :title="$router.currentRoute.name"
-          :sub_message="sub_message"
-        ></RqCardTitle>
-        <hr />
-        <SelectUsr
-          :cols_title="5"
-          :cols_input="6"
-          title="ФИО сотрудника:"
-          :id="6"
-          :userId_err="input[6].err"
-        />
-        <v-card outlined class="my-6 mx-6" color="grey lighten-2">
-          <v-card-title class="mx-auto">
-            Куда предоставляется доступ
-          </v-card-title>
+    <TitleService icon="./assets/img/1s.png" />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
+        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle
+            :title="$router.currentRoute.name"
+            :sub_message="sub_message"
+          ></RqCardTitle>
           <hr />
-          <SelectOrg :cols_title="5" :cols_input="6" :org_err="input[7].err" />
-          <Input :arrInput="input" />
+          <SelectUsr
+            :cols_title="5"
+            :cols_input="6"
+            title="ФИО сотрудника:"
+            :id="6"
+            :userId_err="input[6].err"
+          />
+          <v-card outlined class="my-6 mx-6" color="grey lighten-2">
+            <v-card-title class="mx-auto">
+              Куда предоставляется доступ
+            </v-card-title>
+            <hr />
+            <SelectOrg
+              :cols_title="5"
+              :cols_input="6"
+              :org_err="input[7].err"
+            />
+            <Input :arrInput="input" />
+          </v-card>
+          <hr />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                :disabled="btnStatus"
+                color="green lighten-2 white--text"
+                @click="checkData()"
+              >
+                Отправить
+              </v-btn>
+              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+            </div>
+          </v-card-actions>
         </v-card>
-        <hr />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              :disabled="btnStatus"
-              color="green lighten-2 white--text"
-              @click="checkData()"
-            >
-              Отправить
-            </v-btn>
-            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -51,6 +58,7 @@ import RqCardTitle from "@/components/RqCardTitle.vue";
 import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     SelectUsr,
@@ -58,6 +66,7 @@ export default {
     RqCardTitle,
     DialogAfterSendForm,
     Input,
+    TitleService,
   },
   data: () => ({
     sub_message:

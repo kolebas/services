@@ -1,6 +1,8 @@
 <template>
   <v-container fluid>
     <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
     <v-row>
       <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
         <RqCardTitle
@@ -35,11 +37,13 @@ import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import RqCardTitle from "@/components/RqCardTitle.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     DialogAfterSendForm,
     RqCardTitle,
     Input,
+    TitleService
   },
   data: () => ({
     sub_message: "Данная услуга позволяет увеличить размер сетевого каталога. Также вы сможете отслеживать статус заявки в разделе",

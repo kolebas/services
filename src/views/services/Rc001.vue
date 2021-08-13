@@ -1,36 +1,39 @@
 <template>
   <v-container fluid>
     <DialogAfterSendFrom :dialog="dialog" :warnMessage="dialogMessage" />
-    <v-row>
-      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle
-          :title="$router.currentRoute.name"
-          :sub_message="sub_message"
-        ></RqCardTitle>
-        <hr />
-        <Input :arrInput="input1" />
-        <v-expand-transition>
-          <template v-if="input1[0].value">
-            <Input :arrInput="input" />
-          </template>
-        </v-expand-transition>
-        <hr />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              :disabled="btnStatus"
-              color="green lighten-2 white--text"
-              @click="checkArray()"
-            >
-              Отправить
-            </v-btn>
-            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
+        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle
+            :title="$router.currentRoute.name"
+            :sub_message="sub_message"
+          ></RqCardTitle>
+          <hr />
+          <Input :arrInput="input1" />
+          <v-expand-transition>
+            <template v-if="input1[0].value">
+              <Input :arrInput="input" />
+            </template>
+          </v-expand-transition>
+          <hr />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                :disabled="btnStatus"
+                color="green lighten-2 white--text"
+                @click="checkArray()"
+              >
+                Отправить
+              </v-btn>
+              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -40,11 +43,13 @@ import RqCardTitle from "@/components/RqCardTitle.vue";
 import DialogAfterSendFrom from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     RqCardTitle,
     DialogAfterSendFrom,
     Input,
+    TitleService
   },
   data: () => ({
     sub_message:
@@ -120,7 +125,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
-      }
+      },
     ],
     input1: [
       {
@@ -149,10 +154,10 @@ export default {
     change_switch1(newValue) {
       if (newValue == true) {
         this.input1[0].label = "Подтверждаю";
-        this.btnStatus = false
+        this.btnStatus = false;
       } else {
         this.input1[0].label = "";
-        this.btnStatus = true
+        this.btnStatus = true;
       }
     },
   },

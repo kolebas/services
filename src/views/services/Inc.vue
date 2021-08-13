@@ -1,82 +1,85 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
-      <v-card width="55%" raised class="mx-auto" color="grey lighten-4">
-        <v-card-text class="pa-0">
-          <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-          <p class="subtitle-1 font-weight-medium mx-8">{{ sub_title }}</p>
-        </v-card-text>
-        <v-divider />
-        <br>
-        <v-row>
-          <v-col cols="11" class="mx-auto">
-            <label>Краткое описание:</label>
-            <v-text-field
-              v-model="title_inc"
-              @input="title_inc_err = ''"
-              outlined
-              solo
-              dense
-              :error-messages="title_inc_err"
-              :label="title_inc_label"
-            ></v-text-field>
-            <v-switch
-              v-model="switch_1c"
-              @change="switch_mon = false"
-              label="Проблема связана с 1С"
-              inset
-              class="mt-n2"
-            ></v-switch>
-            <v-switch
-              v-model="switch_mon"
-              @change="switch_1c = false"
-              label="Проблема связана с мониторингом"
-              inset
-              class="mt-n2"
-            ></v-switch>
-            <v-expand-transition>
-              <div v-if="switch_1c">
-                <label>Выбор направления 1С:</label>
-                <v-select
-                  :items="type_1c"
-                  v-model="type_1c_slct"
-                  outlined
-                  solo
-                  dense
-                  :error-messages="type_1c_err"
-                  :label="type_1c_label"
-                  @change="type_1c_err = ''"
-                ></v-select>
-              </div>
-            </v-expand-transition>
-            <label>Подробное описание:</label>
-            <v-textarea
-              v-model="cmnt"
-              outlined
-              solo
-              rows="7"
-              :label="cmnt_label"
-            ></v-textarea>
-            <InputFileCard />
-          </v-col>
-        </v-row>        
-        <v-divider />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              color="blue lighten-1 white--text"
-              @click="formSend()"
-            >
-              Отправить
-            </v-btn>
-            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
+        <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
+        <v-card width="55%" raised class="mx-auto" color="grey lighten-4">
+          <v-card-text class="pa-0">
+            <p class="text-center pt-4 headline text--primary">{{ title }}</p>
+            <p class="subtitle-1 font-weight-medium mx-8">{{ sub_title }}</p>
+          </v-card-text>
+          <v-divider />
+          <br />
+          <v-row>
+            <v-col cols="11" class="mx-auto">
+              <label>Краткое описание:</label>
+              <v-text-field
+                v-model="title_inc"
+                @input="title_inc_err = ''"
+                outlined
+                solo
+                dense
+                :error-messages="title_inc_err"
+                :label="title_inc_label"
+              ></v-text-field>
+              <v-switch
+                v-model="switch_1c"
+                @change="switch_mon = false"
+                label="Проблема связана с 1С"
+                inset
+                class="mt-n2"
+              ></v-switch>
+              <v-switch
+                v-model="switch_mon"
+                @change="switch_1c = false"
+                label="Проблема связана с мониторингом"
+                inset
+                class="mt-n2"
+              ></v-switch>
+              <v-expand-transition>
+                <div v-if="switch_1c">
+                  <label>Выбор направления 1С:</label>
+                  <v-select
+                    :items="type_1c"
+                    v-model="type_1c_slct"
+                    outlined
+                    solo
+                    dense
+                    :error-messages="type_1c_err"
+                    :label="type_1c_label"
+                    @change="type_1c_err = ''"
+                  ></v-select>
+                </div>
+              </v-expand-transition>
+              <label>Подробное описание:</label>
+              <v-textarea
+                v-model="cmnt"
+                outlined
+                solo
+                rows="7"
+                :label="cmnt_label"
+              ></v-textarea>
+              <InputFileCard />
+            </v-col>
+          </v-row>
+          <v-divider />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                color="blue lighten-1 white--text"
+                @click="formSend()"
+              >
+                Отправить
+              </v-btn>
+              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -85,11 +88,13 @@ import { bus } from "@/main.js";
 import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import InputFileCard from "@/components/InputFileCard.vue";
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 
 export default {
   components: {
     InputFileCard,
     DialogAfterSendForm,
+    TitleService,
   },
   data: () => ({
     title: "Новое обращение",

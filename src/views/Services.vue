@@ -1,77 +1,91 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
-        <v-card-text class="pa-0">
-          <p class="text-center pt-4 headline text--primary">
-            {{ title }}
-          </p>
-          <p class="subtitle-1 font-weight-medium mx-8">
-            {{ sub_message }}
-            <v-btn @click="clkmyreq()" color="green lighten-2 white--text" small
-              ><v-icon left dark>mdi-format-list-bulleted</v-icon> Мои
-              заявки</v-btn
-            >
-          </p>
-        </v-card-text>
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
+        <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
+          <v-card-text class="pa-0">
+            <p class="text-center pt-4 headline text--primary">
+              {{ title }}
+            </p>
+            <p class="subtitle-1 font-weight-medium mx-8">
+              {{ sub_message }}
+              <v-btn
+                @click="clkmyreq()"
+                color="green lighten-2 white--text"
+                small
+                ><v-icon left dark>mdi-format-list-bulleted</v-icon> Мои
+                заявки</v-btn
+              >
+            </p>
+          </v-card-text>
 
-        <v-expansion-panels :inset="inset" :focusable="focusable" :tile="tile">
-          <v-expansion-panel v-for="(cat, i) in cats" :key="i">
-            <v-expansion-panel-header v-if="cat.status != 'dev'" class="py-0">
-              <v-col cols="1" class="px-0">
-                <img :src="require('../assets/img/' + cat.img)" />
-              </v-col>
-              <v-col cols="10" class="px-0">
-                <p class="subtitle-1 font-weight-medium mb-0">
-                  {{ cat.name }}
-                </p>
-              </v-col>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-list>
-                <v-list-item-group v-for="(item, i) in cat.items" :key="i">
-                  <template>
-                    <v-list-item
-                      @click="itemclk(item.lnk, item.route)"
-                      v-if="
-                        (condition && item.status == 'dev') ||
-                        item.status != 'dev'
-                      "
-                    >
-                      <v-list-item-icon>
-                        <img :src="require('../assets/img/' + item.img)" />
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-text="item.name" />
-                      </v-list-item-content>
-                      <v-list-item-action>
-                        <v-tooltip bottom>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn icon v-bind="attrs" v-on="on">
-                              <v-icon color="grey"
-                                >mdi-information-outline</v-icon
-                              >
-                            </v-btn>
-                          </template>
-                          <span>{{ item.info }}</span>
-                        </v-tooltip>
-                      </v-list-item-action>
-                    </v-list-item>
-                  </template>
-                  <v-divider />
-                </v-list-item-group>
-              </v-list>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-card>
-    </v-row>
+          <v-expansion-panels
+            :inset="inset"
+            :focusable="focusable"
+            :tile="tile"
+          >
+            <v-expansion-panel v-for="(cat, i) in cats" :key="i">
+              <v-expansion-panel-header v-if="cat.status != 'dev'" class="py-0">
+                <v-col cols="1" class="px-0">
+                  <img :src="require('../assets/img/' + cat.img)" />
+                </v-col>
+                <v-col cols="10" class="px-0">
+                  <p class="subtitle-1 font-weight-medium mb-0">
+                    {{ cat.name }}
+                  </p>
+                </v-col>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-list>
+                  <v-list-item-group v-for="(item, i) in cat.items" :key="i">
+                    <template>
+                      <v-list-item
+                        @click="itemclk(item.lnk, item.route)"
+                        v-if="
+                          (condition && item.status == 'dev') ||
+                          item.status != 'dev'
+                        "
+                      >
+                        <v-list-item-icon>
+                          <img :src="require('../assets/img/' + item.img)" />
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.name" />
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn icon v-bind="attrs" v-on="on">
+                                <v-icon color="grey"
+                                  >mdi-information-outline</v-icon
+                                >
+                              </v-btn>
+                            </template>
+                            <span>{{ item.info }}</span>
+                          </v-tooltip>
+                        </v-list-item-action>
+                      </v-list-item>
+                    </template>
+                    <v-divider />
+                  </v-list-item-group>
+                </v-list>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
+import TitleService from "@/components/TitleService.vue";
 export default {
+  components:{
+    TitleService,
+  },
   data: () => ({
     usrid: "",
     usrGroup: "",
@@ -98,15 +112,13 @@ export default {
           {
             name: "Новый пользователь",
             img: "user_add.png",
-            info:
-              "Создание нового пользователь в информационных системах общества.",
+            info: "Создание нового пользователь в информационных системах общества.",
             route: "/nu001",
           },
           {
             name: "Удаленный доступ (VPN)",
             img: "vpn.png",
-            info:
-              "Предоставление удаленного доступа с мобильного, лмчного или корпоративного устройства к информационным системам общества",
+            info: "Предоставление удаленного доступа с мобильного, лмчного или корпоративного устройства к информационным системам общества",
             route: "/ns001",
           },
           {
@@ -118,8 +130,7 @@ export default {
           {
             name: "Установка программного обеспечения",
             img: "soft.png",
-            info:
-              "Установка програмнного обеспечения на корпоративный компьютер",
+            info: "Установка програмнного обеспечения на корпоративный компьютер",
             route: "/sf001",
           },
           {
@@ -132,8 +143,7 @@ export default {
             name: "Заявка на предоставление дополнительных доступов",
             img: "admin.png",
             route: "/adm001",
-            info:
-              "Предоставление высокопривеллегированнх прав к информационным системах",
+            info: "Предоставление высокопривеллегированнх прав к информационным системах",
             status: "dev",
           },
           {
@@ -150,8 +160,7 @@ export default {
           {
             name: "Предоставление доступа к 1С",
             img: "1s.png",
-            info:
-              "Предоставление прав просмотра или редактрования в базах данных 1С",
+            info: "Предоставление прав просмотра или редактрования в базах данных 1С",
             route: "/1c001",
           },
           {
@@ -162,13 +171,6 @@ export default {
           },
         ],
       },
-      /* {
-        name: "Заявки на закупку",
-        img: "soft.png",
-        items: [
-          
-        ],
-      }, */
       {
         name: "Заявки на каталог (папку)",
         img: "folders.png",
@@ -227,8 +229,7 @@ export default {
             route: "/ms003",
           },
           {
-            name:
-              "Добавление основного средства в папку «Техника для выработки»",
+            name: "Добавление основного средства в папку «Техника для выработки»",
             img: "ms004.png",
             route: "/ms004",
           },
@@ -250,7 +251,7 @@ export default {
         name: "Другие категории заявок",
         status: "active",
         img: "request.png",
-        items: [          
+        items: [
           {
             name: "Запись онлайн мероприятий (вебинар, обучение)",
             img: "rc001.png",

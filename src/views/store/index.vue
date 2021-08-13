@@ -124,42 +124,44 @@
       <v-divider />
     </v-col>
     <template>
-      <Alert
-        :text="accessText"
-        :type="'info'"
-        :colorBorder="true"
-        :borderType="'bottom'"
-        :btnBack="false"
-      />
-      <v-col v-for="item in storeItems" :key="item.items" cols="2">
-        <v-card shaped elevation="3" class="mx-auto">
-          <v-list-item @click="showDialogItem(item)">
-            <v-list-item-avatar tile rounded size="80">
-              <v-img :src="'https://portal.ahstep.ru' + item.img"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-title>{{ item.text }}</v-list-item-title>
-          </v-list-item>
-          <v-divider />
-          <v-card-actions>
-            <template>
-              <v-btn
-                class="my-2"
-                outlined
-                color="indigo"
-                :disabled="!getOrderDay"
-                @click="addOrder(item)"
-              >
-                {{ setTitleButtonAddItem }}
-                <v-icon right color="green">mdi-plus-circle-outline</v-icon>
-              </v-btn>
-              <v-spacer></v-spacer>
-              <div class="mr-2">
-                <b>{{ item.price }} Р/{{ item.tara }}</b>
-              </div>
-            </template>
-          </v-card-actions>
-        </v-card>
-      </v-col>
+      <v-card min-width="100%" class="py-12">
+        <Alert
+          :text="accessText"
+          :type="'info'"
+          :colorBorder="true"
+          :borderType="'bottom'"
+          :btnBack="false"
+        />
+        <v-row class="mx-auto">
+          <v-col v-for="item in storeItems" :key="item.items" cols="2">
+            <v-card shaped elevation="3" class="mx-auto">
+              <v-list-item @click="showDialogItem(item)">
+                <v-list-item-avatar tile rounded size="80">
+                  <v-img :src="'https://portal.ahstep.ru' + item.img"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-title>{{ item.text }}</v-list-item-title>
+              </v-list-item>
+              <v-divider />
+              <v-card-actions>
+                <v-btn
+                  class="my-2"
+                  outlined
+                  color="indigo"
+                  :disabled="!getOrderDay"
+                  @click="addOrder(item)"
+                >
+                  {{ setTitleButtonAddItem }}
+                  <v-icon right color="green">mdi-plus-circle-outline</v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <div class="mr-2">
+                  <b>{{ item.price }} Р/{{ item.tara }}</b>
+                </div>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-card>
     </template>
   </v-row>
 </template>
