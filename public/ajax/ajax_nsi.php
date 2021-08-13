@@ -4,7 +4,6 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
 
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
-print_r($data);
 
 $Nomenklatura = $data[0]['value'];
 $PreviewName = $data[1]['value'];
@@ -26,7 +25,7 @@ $cnt = CIBlockElement::GetList(
     array('ID', 'NAME')
 ); 
  $cnt = $cnt + '1';
- echo $cnt;
+echo $cnt;
  
 CModule::IncludeModule('bizproc');
 $documentId = CBPVirtualDocument::CreateDocument(

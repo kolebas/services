@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="title">
     <v-card-title class="white--text mt-n12">
       <v-img v-if="icon" :src="icon" />
       <h1>{{ title }}</h1>
