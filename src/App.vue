@@ -1,15 +1,17 @@
 <template>
   <v-app>
     <v-main>
-      <v-container v-if="usrId == '1'" class="mt-n2">
-        <v-tabs>
-          <v-tab
-            v-for="tab in getTabs"
-            :key="tab.text"
-            @click="itemclk(tab.lnk, tab.route)"
-            >{{ tab.text }}</v-tab
-          >
-        </v-tabs>
+      <v-container v-if="getRouteService == '/'" class="mt-n2">
+        <v-card>
+          <v-tabs>
+            <v-tab
+              v-for="tab in getTabs"
+              :key="tab.text"
+              @click="itemclk(tab.lnk, tab.route)"
+              >{{ tab.text }}</v-tab
+            >
+          </v-tabs>
+        </v-card>
         <v-divider />
       </v-container>
       <v-alert
@@ -96,6 +98,9 @@ export default {
           getTab.permissionGroup.includes("this.usrGroup")
       );
     },
+    getRouteService (){
+      return this.$route.path;
+    },
   },
   methods: {
     itemclk: function (lnk, route) {
@@ -118,8 +123,8 @@ body {
 }
 */
 .workarea-content-paddings {
-    padding: 0px 0px 0px;
-}	
+  padding: 0px 0px 0px;
+}
 #uiToolbarContainer {
   display: none;
 }
