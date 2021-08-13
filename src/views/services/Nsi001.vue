@@ -1,18 +1,21 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle
-          :title="$router.currentRoute.name"
-          :sub_message="sub_message"
-        ></RqCardTitle>
-        <hr />
-        <Input :arrInput="input" />
-        <v-card-text> * Поля обязательные для заполнения </v-card-text>
-        <hr />
-        <Buttons :input="input" ajax="./ajax/ajax_nsi.php"/>
-      </v-card>
-    </v-row>
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
+        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle
+            :title="$router.currentRoute.name"
+            :sub_message="sub_message"
+          ></RqCardTitle>
+          <hr />
+          <Input :arrInput="input" />
+          <v-card-text> * Поля обязательные для заполнения </v-card-text>
+          <hr />
+          <Buttons :input="input" ajax="./ajax/ajax_nsi.php" />
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -20,11 +23,13 @@
 import RqCardTitle from "@/components/RqCardTitle";
 import Input from "@/components/Input.vue";
 import Buttons from "@/components/Buttons.vue";
+import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     RqCardTitle,
     Input,
     Buttons,
+    TitleService,
   },
   data: () => ({
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
