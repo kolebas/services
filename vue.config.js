@@ -4,5 +4,6 @@ module.exports = {
 	"babel"
   ],
 	filenameHashing: true,
-	publicPath: '/ahstep/services/'
+	publicPath: '/ahstep/services/',
+  indexPath: 'app.php'
 }
