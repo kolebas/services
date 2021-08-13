@@ -10,7 +10,7 @@
         <Input :arrInput="input" />
         <v-card-text> * Поля обязательные для заполнения </v-card-text>
         <hr />
-        <Buttons :input="input"/>
+        <Buttons :input="input" ajax="./ajax/ajax_nsi.php"/>
       </v-card>
     </v-row>
   </v-container>
