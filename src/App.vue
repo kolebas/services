@@ -117,6 +117,9 @@ body {
     display: none;
 }
 */
+.workarea-content-paddings {
+    padding: 0px 0px 0px;
+}	
 #uiToolbarContainer {
   display: none;
 }
