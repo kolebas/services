@@ -25,7 +25,7 @@
                 ><v-icon left>{{ btn.icon }}</v-icon
                 >{{ btn.title }}</v-btn
               >
-            ></v-container>
+            </v-container>
             <v-container
               fluid
               v-for="table in tabs[0].cards.filter(
@@ -176,8 +176,7 @@ export default {
             ],
             actions: ["chg", "rem"],
             tableItems: [],
-            img:
-              "https://portal.ahstep.ru/upload/resize_cache/iblock/20a/36_30_1/db.png",
+            img: "https://portal.ahstep.ru/upload/resize_cache/iblock/20a/36_30_1/db.png",
             icon: "mdi-database-cog-outline",
           },
           {
@@ -451,7 +450,7 @@ export default {
     },
     formCancl: function () {
       this.$router.go(-1);
-    },   
+    },
     getData1C(type, sectionId) {
       this.loading = true;
       axios
