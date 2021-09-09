@@ -1,50 +1,93 @@
 <?
-
 require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_before.php');
 
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
+$IBLOCK_ID = 28;
 
-$Nomenklatura = $data[0]['value'];
-$PreviewName = $data[1]['value'];
-$Parametrs = $data[2]['value'];
-$AditionalParametrs = $data[3]['value'];
-$Artikul = $data[4]['value'];
-$Ed = $data[5]['value'];
-$Nds = $data[6]['value'];
-$FinalName = $data[7]['value'];
-$Cmnt = $data[8]['value'];
-$Cnt = $data[9]['value'];
-$File = $data[10]['value'];
+$Nomenklatura = $data[array_search(0, array_column($data, 'id'))]['value'];
+$Statya = $data[array_search(1, array_column($data, 'id'))]['value'];
+$PreviewName = $data[array_search(2, array_column($data, 'id'))]['value'];
+$Parametrs = $data[array_search(3, array_column($data, 'id'))]['value'];
+$AditionalParametrs = $data[array_search(4, array_column($data, 'id'))]['value'];
+$Artikul = $data[array_search(5, array_column($data, 'id'))]['value'];
+$Ed = $data[array_search(6, array_column($data, 'id'))]['value'];
+$Nds = $data[array_search(7, array_column($data, 'id'))]['value'];;
+$FinalName = $data[array_search(8, array_column($data, 'id'))]['value'];
+$Cmnt = $data[array_search(9, array_column($data, 'id'))]['value'];
+$Marka = $data[array_search(10, array_column($data, 'id'))]['value'];
+$File = $data[array_search(11, array_column($data, 'id'))]['value'];
 
 $cnt = CIBlockElement::GetList(
     array(),
-    array('IBLOCK_ID' => 28),
+    array('IBLOCK_ID' => $IBLOCK_ID),
     array(),
     false,
     array('ID', 'NAME')
 ); 
- $cnt = $cnt + '1';
-echo $cnt;
+$cnt = $cnt + '1';
+
+//print_r($data);
+
+#Поиск значения в массиве
+function getFieldValue($id){
+    global $data;
+	$val = $data[array_search($id, array_column($data[0], 'id'))]['value'];
+	echo $val;
+	if($val){
+		return $val;
+	}
+}
  
-CModule::IncludeModule('bizproc');
-$documentId = CBPVirtualDocument::CreateDocument(
-    0,
-    array(
-        "IBLOCK_ID" => 28,
-        "NAME" => $cnt,
-        "CREATED_BY" => "user_".$GLOBALS["USER"]->GetID(),
-    )
-   );
+#Возвращает список вариантов значений свойств типа "список" по фильтру arFilter отсортированные в порядке arOrder
+function getEnumFieldId($iblock, $field, $code){
+    global $IBLOCK_ID;
+	$enum_ar = CIBlockPropertyEnum::GetList(Array("DEF"=>"DESC", "SORT"=>"ASC"), Array("IBLOCK_ID"=>$IBLOCK_ID, "CODE"=>$code));
+	while($enum_fields = $enum_ar->GetNext())		
+	{		
+		if($enum_fields["VALUE"] == $field){
+			return $enum_fields["ID"];
+		}
+	}
+}
 
-   $arErrorsTmp = array();
+#Добавление элемента инфоблока
+$el = new CIBlockElement;
 
-   $wfId = CBPDocument::StartWorkflow(
-   11,
-    array("lists", "BizprocDocument", $documentId),
-    array_merge(array("userid"=>"user_".$userId,"Nomenklatura"=>$Nomenklatura,"PreviewName"=>$PreviewName,"Parametrs"=>$Parametrs,"AditionalParametrs"=>$AditionalParametrs,"Artikul"=>$Artikul,"Ed"=>$Ed, "Nds"=>$Nds,"Ed"=>$Ed,"FinalName"=>$FinalName,"Cmnt"=>$Cmnt,"File"=>$File,"cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
-    CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
-    CBPDocumentEventType::Manual)),
-    $arErrorsTmp
-   );
+$PROP = array();
+$PROP[137] = Array("VALUE" => getEnumFieldId($Nomenklatura, 'VID_NOMENKLATURY'));
+$PROP[138] = getFieldValue(2);
+$PROP[139] = getFieldValue(3);
+$PROP[140] = getFieldValue(4);
+$PROP[141] = getFieldValue(5);
+$PROP[142] = $Ed;
+$PROP[143] = Array("VALUE" => getEnumFieldId($Nds, 'STAVKA_NDS'));
+$PROP[145] = getFieldValue(9);
+$PROP[147] = getFieldValue(8);
+$PROP[148] = getFieldValue(10);
+$PROP[399] = Array("VALUE" => getEnumFieldId($Statya, 'STATYA_BYUDZHETA_ZAKUPOK'));
+
+$arLoadDocumentArray = Array(
+  "MODIFIED_BY"    => $USER->GetID(), // элемент изменен текущим пользователем
+  "IBLOCK_SECTION_ID" => false,          // элемент лежит в корне раздела
+  "IBLOCK_ID"      => $IBLOCK_ID,
+  "PROPERTY_VALUES"=> $PROP,
+  "NAME"           => "Элемент",
+  "ACTIVE"         => "Y",            // активен
+  );
+
+if($DOCUMENT_ID = $el->Add($arLoadDocumentArray)){
+	echo $cnt;
+	$wfId = CBPDocument::StartWorkflow(
+	   11,
+		array("lists", "BizprocDocument", $DOCUMENT_ID),
+		array_merge(array("userid"=>"user_".$USER->GetID()), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
+		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
+		CBPDocumentEventType::Manual)),
+		$arErrorsTmp
+	   );
+}
+else{
+  echo "Error: ".$el->LAST_ERROR;
+}
 ?>
