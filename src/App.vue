@@ -58,6 +58,10 @@ export default {
         lnk: "../../it-uslugi/helpdesk/my_ticket.php",
       },
       {
+        text: "Мои инциденты",
+        lnk: "../../it-uslugi/helpdesk/",
+      },      
+      {
         text: "Заявки НСИ",
         lnk: "../../it-uslugi/vse-zayavki.php",
       },
