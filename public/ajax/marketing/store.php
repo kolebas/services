@@ -1,25 +1,3 @@
-<?php
-    // Allow from any origin
-    if (isset($_SERVER['HTTP_ORIGIN'])) {
-        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Max-Age: 86400');    // cache for 1 day
-    }
-
-    // Access-Control headers are received during OPTIONS requests
-    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-            header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
-        exit(0);
-    }
-
-    //echo "You have CORS!";
-?>
 <?
 require_once($_SERVER["DOCUMENT_ROOT"] . '/bitrix/modules/main/include/prolog_before.php');
 $postData = file_get_contents('php://input');
@@ -61,7 +39,7 @@ if ($_GET[type] == "getStoreOrders") {
         "IBLOCK_SECTION_ID" => array($sectionID, $_GET[sectionId]),
     );
     //Получим массив всех элементов информационного блока
-    $res = CIBlockElement::GetList(array('NAME' => 'ASC'), $arFilter);
+    $res = CIBlockElement::GetList(array('DATE_CREATE' => 'DESC'), $arFilter);
     $get_result = array();
     while ($el = $res->GetNext()):
         $value = array();
@@ -171,7 +149,7 @@ if ($data['data']['type'] == 'updateStoreOrders') {
 
   function sendEmail ($subject, $user)
   {
-    $to      = 'Poroshina.EV@ahstep.ru';
+    $to      = 'Serova.OS@ahstep.ru';
     $headers  = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
      
