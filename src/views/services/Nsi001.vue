@@ -12,7 +12,11 @@
           <Input :arrInput="input" />
           <v-card-text> * Поля обязательные для заполнения </v-card-text>
           <hr />
-          <Buttons :input="input" ajax="./ajax/ajax_nsi.php" />
+          <Buttons
+            :input="input"
+            :sendButtonDisable="sendButtonDisable"
+            ajax="./ajax/ajax_nsi.php"
+          />
         </v-card>
       </v-row>
     </v-card>
@@ -33,6 +37,7 @@ export default {
   },
   data: () => ({
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
+    sendButtonDisable: true,
     input: [
       {
         id: 0,
@@ -43,12 +48,12 @@ export default {
         md: "6",
         type: "autocomplete",
         items: [
-          { NAME: "Аккумуляторы", ID: [2, 3, 4, 5, 6, 7, 8, 9] },
+          { NAME: "Аккумуляторы", ID: [2, 3, 5, 6, 7, 8, 9] },
           { NAME: "Ветпрепараты и вет.материалы", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Внутренняя услуга", ID: [6, 7, 8, 9] },
+          { NAME: "Внутренняя услуга", ID: [2, 6, 7, 8, 9] },
           { NAME: "Для закупок", ID: [1, 2, 6, 7, 8, 9] },
           { NAME: "Животные", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Запасные части", ID: [2, 3, 4, 5, 6, 7, 10, 8, 9] },
+          { NAME: "Запасные части", ID: [2, 3, 5, 6, 7, 10, 8, 9] },
           { NAME: "Инвентарь", ID: [2, 4, 6, 7, 8, 9] },
           {
             NAME: "Канцтовары и хоз.принадлежности",
@@ -77,14 +82,15 @@ export default {
           { NAME: "Продукты питания", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Мясо и мясопродукты", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Услуга", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Фильтры", ID: [2, 3, 4, 5, 6, 7, 8, 9] },
-          { NAME: "Шины", ID: [2, 3, 4, 5, 6, 7, 8, 9] },
+          { NAME: "Фильтры", ID: [2, 3, 5, 6, 7, 8, 9] },
+          { NAME: "Шины", ID: [2, 3, 5, 6, 7, 8, 9] },
           { NAME: "Электроматериалы", ID: [1, 2, 4, 5, 6, 7, 8, 9] },
         ],
         outlined: true,
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
     ],
     items: [
@@ -168,6 +174,7 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
       {
         id: 2,
@@ -181,10 +188,14 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        rule: [
+          (value) => !!value || "Поле обязательно для заполнения",          
+        ],
+        required: true,
       },
       {
         id: 3,
-        name: "Характеристика:*",
+        name: "Характеристика:",
         label: "Пример: Винт регулир. коромысла ЯМЗ-236, -238, -240.",
         value: "",
         cs: "12",
@@ -198,8 +209,8 @@ export default {
       },
       {
         id: 4,
-        name: "Доп.характеристика:*",
-        label: "Пример: SAS Russia Training Center",
+        name: "Доп.характеристика:",
+        label: "Пример: Наружнее применение",
         value: "",
         cs: "12",
         sm: "6",
@@ -212,7 +223,7 @@ export default {
       {
         id: 5,
         name: "Артикул:*",
-        label: "Пример: SAS Virtual Learning Conference",
+        label: "Пример: CYFS12Y2",
         value: "",
         cs: "12",
         sm: "6",
@@ -222,11 +233,12 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
       {
         id: 6,
         name: "Единица измерения:*",
-        label: "Пример: SAS Russia Training Center",
+        label: "Пример: шт./м./дн.",
         value: "",
         cs: "12",
         sm: "6",
@@ -235,6 +247,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        required: true,
       },
       {
         id: 7,
@@ -250,11 +263,11 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
       {
         id: 8,
         name: "Наименование номенклатуры:*",
-        label: "Пример: SAS Russia Training Center",
         value: "",
         cs: "12",
         sm: "6",
@@ -264,6 +277,7 @@ export default {
         dense: true,
         solo: true,
         disabled: true,
+        required: true,
       },
       {
         id: 9,
@@ -277,11 +291,12 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        required: false,
       },
       {
         id: 10,
-        name: "Марка техники:*",
-        label: "Пример: SAS Russia Training Center",
+        name: "Бренд техники:*",
+        label: "Пример: Камаз",
         value: "",
         cs: "12",
         sm: "6",
@@ -290,26 +305,24 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        required: true,
       },
     ],
   }),
   computed: {
     fullName() {
       let previeName = this.items.filter(
-        (item) => item.name == "Предварительное наименование:*"
+        (item) => item.id == 2
       );
       let charasters = this.items.filter(
-        (item) => item.name == "Характеристика:*"
+        (item) => item.id == 3
       );
       let charastersAditional = this.items.filter(
-        (item) => item.name == "Доп.характеристика:*"
+        (item) => item.id == 4
       );
-      return (
-        previeName[0].value +
-        " " +
-        charasters[0].value +
-        " " +
-        charastersAditional[0].value
+      let str = previeName[0].value + " " + charasters[0].value + " " + charastersAditional[0].value;
+      return (        
+        str.charAt(0).toUpperCase() + str.slice(1)
       );
     },
     vidNomenklatury() {
@@ -332,6 +345,20 @@ export default {
       this.clearItemsValue();
       this.setVisibleInput(val);
     },
+    input: {
+      handler: function () {
+        for (let i = 0; i < this.input.length; i++) {
+          //console.log(this.input)
+          if (this.input[i].value === "" && this.input[i].required === true) {
+            this.sendButtonDisable = true;
+            break;
+          }
+          this.sendButtonDisable = false;
+          //console.log("a thing changed " + val[i].value + oldVal[i].value);
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     setVisibleInput(nomenklatura) {
@@ -343,6 +370,8 @@ export default {
         for (let i = 0; i < arrayInput[0].ID.length; i++) {
           let idInput = arrayInput[0].ID[i];
           let input = this.items.filter((item) => item.id == idInput);
+          //let rule = [(value) => !!value || "Поле обязательно для заполнения"];
+          //input[0].rule = rule;
           this.input.push(input[0]);
         }
       } else {
