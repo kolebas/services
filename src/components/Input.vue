@@ -20,10 +20,10 @@
           :dense="item.dense"
           :solo="item.solo"
           :disabled="item.disabled"
-          required
           :error-messages="item.err"
           :append-icon="item.icon"
           :suffix="item.suffix"
+          :rules="item.rule"
           @input="item.err = ''"
           @change="input"
         ></v-text-field>
@@ -36,9 +36,9 @@
           offset-y
           min-width="290px"
         >
-          <template v-slot:activator = {}>
+          <template v-slot:activator="{}">
             <v-text-field
-            type="date"
+              type="date"
               v-model="item.value"
               :label="item.label"
               :outlined="item.outlined"
@@ -165,6 +165,10 @@ export default {
       input_id: "",
       value: "",
     },
+    rulesTest: [
+      (value) => !!value || "Поле обязательно для заполнения",
+      (value) => (value || "").length <= 20 || "Max 20 characters",
+    ],
   }),
   computed: {
     dateRangeText() {
