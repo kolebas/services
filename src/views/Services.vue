@@ -101,7 +101,7 @@ export default {
           {
             name: "Редактирование справочника номенклатуры",
             img: "lists.png",
-            lnk: "../../it-uslugi/uslugi/nsi-001.php",
+            route: "/nsi001",
           },
         ],
       },
