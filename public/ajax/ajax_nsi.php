@@ -5,6 +5,7 @@ $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 $IBLOCK_ID = 28;
 
+
 $Nomenklatura = $data[array_search(0, array_column($data, 'id'))]['value'];
 $Statya = $data[array_search(1, array_column($data, 'id'))]['value'];
 $PreviewName = $data[array_search(2, array_column($data, 'id'))]['value'];
@@ -18,6 +19,7 @@ $Cmnt = $data[array_search(9, array_column($data, 'id'))]['value'];
 $Marka = $data[array_search(10, array_column($data, 'id'))]['value'];
 $File = $data[array_search(11, array_column($data, 'id'))]['value'];
 
+
 $cnt = CIBlockElement::GetList(
     array(),
     array('IBLOCK_ID' => $IBLOCK_ID),
@@ -27,20 +29,17 @@ $cnt = CIBlockElement::GetList(
 ); 
 $cnt = $cnt + '1';
 
-//print_r($data);
-
 #Поиск значения в массиве
 function getFieldValue($id){
     global $data;
-	$val = $data[array_search($id, array_column($data[0], 'id'))]['value'];
-	echo $val;
+	$val = array_search($id, array_column($data, 'id'));
 	if($val){
-		return $val;
+		return $data[$val]['value'];;		
 	}
 }
  
 #Возвращает список вариантов значений свойств типа "список" по фильтру arFilter отсортированные в порядке arOrder
-function getEnumFieldId($iblock, $field, $code){
+function getEnumFieldId($field, $code){
     global $IBLOCK_ID;
 	$enum_ar = CIBlockPropertyEnum::GetList(Array("DEF"=>"DESC", "SORT"=>"ASC"), Array("IBLOCK_ID"=>$IBLOCK_ID, "CODE"=>$code));
 	while($enum_fields = $enum_ar->GetNext())		
@@ -60,7 +59,7 @@ $PROP[138] = getFieldValue(2);
 $PROP[139] = getFieldValue(3);
 $PROP[140] = getFieldValue(4);
 $PROP[141] = getFieldValue(5);
-$PROP[142] = $Ed;
+$PROP[142] = getFieldValue(6);
 $PROP[143] = Array("VALUE" => getEnumFieldId($Nds, 'STAVKA_NDS'));
 $PROP[145] = getFieldValue(9);
 $PROP[147] = getFieldValue(8);
@@ -72,7 +71,7 @@ $arLoadDocumentArray = Array(
   "IBLOCK_SECTION_ID" => false,          // элемент лежит в корне раздела
   "IBLOCK_ID"      => $IBLOCK_ID,
   "PROPERTY_VALUES"=> $PROP,
-  "NAME"           => "Элемент",
+  "NAME"           => "Редактирование справочника номеклатуры (NS-001) №".$cnt,
   "ACTIVE"         => "Y",            // активен
   );
 
