@@ -494,7 +494,8 @@ export default {
       this.mainChart.push(
         Object.assign(
           { taskLenght: badTask.length },
-          { taskStatus: "Просрочено" }
+          { taskStatus: "Просрочено" },
+          { color: am4core.color("#F44336") }
         )
       );
       this.cards[4].value = doneTask.length;
@@ -539,7 +540,7 @@ export default {
       )
         return "orange";
       else if (
-        status == "Просрочен" ||
+        status == "Просрочено" ||
         status == "Отклонен" ||
         status == "Отклонено"
       )
