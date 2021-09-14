@@ -254,7 +254,7 @@ export default {
       {
         id: 7,
         name: "Ставка НДС:*",
-        label: "Пример: SAS Virtual Learning Conference",
+        label: "Пример: 20%",
         value: "",
         cs: "12",
         sm: "6",

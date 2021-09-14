@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <v-container v-if="getRouteService == '/'" class="mt-n2">
+      <v-container fluid v-if="getRouteService == '/'" class="mt-n2">
         <v-card>
           <v-tabs>
             <v-tab
