@@ -42,26 +42,28 @@ export default {
       this.$router.go(-1);
     },
     formSend() {
-      this.btnLoader = true;
-      axios({
-        method: "post",
-        withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
-        url: this.ajax,
-        data: this.input,
-      })
-        .then((response) => {
-          if (response.status == 200) {
-            this.dialog = true;
-            this.dialogMessage =
-              "Успешно. Номер вашей заявки: " + response.data;
-            this.btnLoader = false;
-          }
+      if (!this.sendButtonDisable) {
+        this.btnLoader = true;
+        axios({
+          method: "post",
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+          url: this.ajax,
+          data: this.input,
         })
-        .catch((error) => {
-          this.dialog = true;
-          this.dialogMessage = "Произошла ошибка " + error;
-        });
+          .then((response) => {
+            if (response.status == 200) {
+              this.dialog = true;
+              this.dialogMessage =
+                "Успешно. Номер вашей заявки: " + response.data;
+              this.btnLoader = false;
+            }
+          })
+          .catch((error) => {
+            this.dialog = true;
+            this.dialogMessage = "Произошла ошибка " + error;
+          });
+      }
     },
   },
 };
