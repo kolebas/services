@@ -7,68 +7,13 @@
         <v-card max-width="55%" raised class="mx-auto" color="grey lighten-4">
           <RqCardTitle :title="title" :sub_message="sub_message"></RqCardTitle>
           <hr />
-          <SelectUsr
-            :cols_title="4"
-            :cols_input="6"
-            title="ФИО:"
-            :userId_err="userId_err"
-          />
-          <v-row class="mb-n6">
-            <v-col cols="4">
-              <v-card-text class="subtitle-1 text-right pt-2">
-                Тип услуги:
-              </v-card-text>
-            </v-col>
-            <v-col cols="6">
-              <v-select
-                @change="showCmpModal()"
-                v-model="type"
-                :items="items_type"
-                label="Выберите необходимую опцию"
-                solo
-                outlined
-                dense
-                :error-messages="type_err"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-expand-transition>
-            <v-row
-              class="mb-n6"
-              v-if="type == 'Перевод личного номера на корпоративный контракт'"
-            >
-              <v-col cols="4">
-                <v-card-text class="subtitle-1 text-right pt-2">
-                  Номер телефона:
-                </v-card-text>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  type="number"
-                  v-model="telNumber"
-                  outlined
-                  solo
-                  dense
-                  :error-messages="telNumberErr"
-                  label="Введите номер который необходимо перевести"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-expand-transition>
+          <Input :arrInput="input" />
           <hr />
-          <v-card-actions class="py-4">
-            <div class="mx-auto">
-              <v-btn
-                class="mx-1"
-                :loading="btnLoader"
-                color="green lighten-2 white--text"
-                @click="formSend()"
-              >
-                Отправить
-              </v-btn>
-              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-            </div>
-          </v-card-actions>
+          <Buttons
+            :input="input"
+            :sendButtonDisable="sendButtonDisable"
+            :ajax="url"
+          />
         </v-card>
       </v-row>
     </v-card>
@@ -76,96 +21,51 @@
 </template>
 
 <script>
-import { bus } from "@/main.js";
 import DialogAfterSendForm from "@/components/DialogAfterSendForm";
 import RqCardTitle from "@/components/RqCardTitle";
-import SelectUsr from "@/components/SelectUsr";
-import axios from "axios";
+import Input from "@/components/Input.vue";
+import Buttons from "@/components/Buttons.vue";
 import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
     DialogAfterSendForm,
     RqCardTitle,
-    SelectUsr,
+    Input,
+    Buttons,
     TitleService,
   },
   data: () => ({
     title: "Предоставление служебной сотовой связи",
     sub_message:
-      "Согласно действующей политике, данная заявка может заводиться только руководителями подразделений. Статус созданной заявки вы можете отслеживать в разделе ",
+      "Согласно действующей политике, данная заявка может сотрудником только для себя. При этом ваши данные будут переданы оператору сотовой связи для подтвержения личности вам необходимо будет подтвердить через портал госулуги Статус созданной заявки вы можете отслеживать в разделе ",
     dialogMessage: "",
-    items_type: [
-      "Предоставить новый номер",
-      "Перевод личного номера на корпоративный контракт",
+    input: [
+      {
+        id: 0,
+        name: "Тип услуги:*",
+        value: "",
+        label: "Выбери необходимый тип услуги",
+        select_arr: [
+          "Предоставаление нового номера",
+          "Перевод личного номера на корпоративный контракт",
+        ],
+        cs: "11",
+        sm: "6",
+        md: "6",
+        type: "select",
+        outlined: true,
+        dense: true,
+        solo: true,
+        required: false,
+      },
     ],
     dialog: false,
-    users: [],
-    userId: "",
-    type: "",
-    telNumber: "",
-    telNumberErr: "",
-    userId_err: "",
-    type_err: "",
     btnLoader: false,
+    sendButtonDisable: true,
+    termsCheckBox: false,
+    url: "./ajax/ajax_ph001.php",
   }),
-  created() {
-    bus.$on("SelectUsr", (data) => {
-      this.userId = data;
-    });
-  },
   methods: {
-    //Отправка формы
-    formSend: function () {
-      //Проверка полей тип
-      if (
-        (this.userId &&
-          this.type &&
-          this.type != "Перевод личного номера на корпоративный контракт") ||
-        (this.userId && this.type && this.telNumber)
-      ) {
-        this.btnLoader = true;
-        axios({
-          method: "post",
-          withCredentials: true,
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          url: "./ajax/ajax_ph001.php",
-          data: {
-            userId: this.userId,
-            type: this.type,
-            telnumber: this.telNumber,
-          },
-        })
-          .then((response) => {
-            if (response.status == 200) {
-              this.dialog = true;
-              this.dialogMessage =
-                "Успешно. Номер вашего обращение: " + response.data;
-              console.log(response.data);
-              this.btnLoader = false;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
-          });
-      }
-      if (!this.userId) {
-        this.userId_err = "Необходимо выбрать сотрудника";
-      }
-      if (!this.type) {
-        this.type_err = "Необходимо выбрать тип устройства";
-      }
-      if (this.type == "Перевод личного номера на корпоративный контракт") {
-        if (!this.telNumber) {
-          this.telNumberErr = "Необходимо указать телефонный номер";
-        }
-      }
-    },
-    //Действие кнопки "назад"
-    formCancl: function () {
-      this.$router.go(-1);
-    },
     //Действие кнопки "Мои заявки"
     btnToMyreq() {
       document.location.href = "/it-uslugi/helpdesk/my_ticket.php";
@@ -173,6 +73,55 @@ export default {
     //Взаимодействие с диалогом
     funcDialog() {
       this.$router.go(-1);
+    },
+  },
+  computed: {
+    typeService() {
+      let getTypeServiceValue = this.input.filter((item) => item.id == 0);
+      return getTypeServiceValue[0].value;
+    },
+  },
+  watch: {
+    input: {
+      handler: function () {
+        for (let i = 0; i < this.input.length; i++) {
+          if (this.input[i].value === "") {
+            this.sendButtonDisable = true;
+            break;
+          }
+          this.sendButtonDisable = false;
+          console.log(this.input);
+        }
+      },
+      deep: true,
+    },
+    typeService(val) {
+      if (val === "Перевод личного номера на корпоративный контракт") {
+        let addTypeService = {
+          id: this.input.length + 1,
+          name: "Номер телефона:*",
+          label: "Пример: +79998887766",
+          value: "",
+          cs: "11",
+          sm: "6",
+          md: "6",
+          type: "string",
+          outlined: true,
+          dense: true,
+          solo: true,
+          rule: [
+            (value) => value.length > 0 || "Поле обязательно для заполнения",
+            (value) => Number.isInteger(Number(value)) || "Недопустимый символ",
+            (value) => value > 0 || "Недопустимое значение",
+            (value) => value.length < 13 || "Слишком длинный номер",
+          ],
+          err: "",
+          required: true,
+        };
+        this.input.push(addTypeService);
+      } else {
+        this.input.splice(1, 1);
+      }
     },
   },
 };

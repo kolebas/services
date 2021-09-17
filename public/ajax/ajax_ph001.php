@@ -3,9 +3,8 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
 
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
-$userId = $data["userId"];
-$type = $data["type"];
-$telnumber = $data["telnumber"];
+$type = $data[0]['value'];
+$telnumber = $data[1]['value'];
 
 
 	$cnt = CIBlockElement::GetList(
@@ -33,7 +32,7 @@ $telnumber = $data["telnumber"];
 	   $wfId = CBPDocument::StartWorkflow(
 	   115,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("userid"=>"user_".$userId, "type"=>$type, "telnumber"=>$telnumber, "cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
+		array_merge(array("userid"=>"user_".$GLOBALS["USER"]->GetID(), "type"=>$type, "telnumber"=>$telnumber, "cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
