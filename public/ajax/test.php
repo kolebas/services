@@ -6,7 +6,7 @@ global $USER;
 
 <?
 
-$db_props = CIBlockElement::GetProperty(88,132671, array());
+/*$db_props = CIBlockElement::GetProperty(88,132671, array());
 		$PROPS = array();
 		while($ar_props = $db_props->Fetch()):
 		if($ar_props[VALUE] != NULL){						
@@ -15,7 +15,7 @@ $db_props = CIBlockElement::GetProperty(88,132671, array());
 		endwhile;
 		$get_result[] = array('ZADACHA' => $PROPS[ZADACHA][TEXT]);
 		echo $get_result[0][ZADACHA];		
-
+*/
 ?>
 
 
@@ -48,6 +48,31 @@ $db_props = CIBlockElement::GetProperty(88,132671, array());
 	</table>
     <?
 }*/
+?>
+
+<?
+#Вывод групп из OU Active Directory	
+/*	$ldap_srv = 'ldap://ahstep-kd.ahstep.ru/';
+	$ldap_dn = 'CN=bx_user,OU=ServiceAccounts,OU=Groups,DC=ahstep,DC=ru';
+	$ldap_password = 'Vbuhfwbz31';
+	$ldap_con = ldap_connect($ldap_srv) or die($this->SetVariable('Status_auto', 'Could not connect to LDAP server.'));
+	$dn = 'DC=ahstep,DC=ru';
+	$rdsGroup = array();
+
+	ldap_set_option($ldap_con, LDAP_OPT_PROTOCOL_VERSION, 3);
+	ldap_set_option($ldap_con, LDAP_OPT_REFERRALS, 0);	
+	ldap_bind($ldap_con, $ldap_dn, $ldap_password);
+	$search_dn = 'OU=RDS,OU=Groups,DC=ahstep,DC=ru';
+	$filter = '(cn=*)';
+	$sr_usr = ldap_search($ldap_con,$search_dn,$filter) or die ("Error in search query: ".ldap_error($ldapconn));
+	$data = ldap_get_entries($ldap_con, $sr_usr);
+	
+	for($i=0; $i < $data['count']; $i++){
+		$group = $data[$i];
+		$rdsGroup[] = array('NAME' => $group['cn'][0], 'DN' => $group['dn']);
+	}
+	print_r($rdsGroup);
+*/	
 ?>
 
 <script>
@@ -161,12 +186,12 @@ AddADGroup ("NFS-".$fldNname."-RO", $description);
 //Получение комментариев для задачи
 /*if (CModule::IncludeModule("tasks"))
 	{
-		$taskId = 18113;
+		$taskId = 23167;
 		$userId = $USER->getId();
 		$task = CTaskItem::getInstance($taskId, $userId);
-		//print_r($task->getData());
+		print_r($task->getData());
 		$forumId =  $task['FORUM_TOPIC_ID'];
-		//echo $userId;
+		echo $userId;
 
 		$db_res = CForumMessage::GetList(array("ID"=>"ASC"), array("TOPIC_ID"=>$forumId));
 			while ($ar_res = $db_res->Fetch())
