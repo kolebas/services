@@ -94,6 +94,9 @@
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">More info about {{ item.NAME_UZ }}</td>
       </template>
+      <template v-slot:[`item.NAME`]="{ item }">
+        <b>{{ item.NAME }}</b>
+      </template>
       <template v-slot:[`item.NAME_UZ`]="{ item }">
         <v-chip class="mr-2">{{ item.NAME_UZ }}</v-chip>
       </template>
