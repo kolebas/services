@@ -60,10 +60,14 @@ export default {
       {
         text: "Мои инциденты",
         lnk: "../../it-uslugi/helpdesk/",
-      },      
+      },
       {
         text: "Заявки НСИ",
         lnk: "../../it-uslugi/vse-zayavki.php",
+      },
+      {
+        text: "Панель управления 1С",
+        route: "/dashboard",
       },
       {
         text: "AdminPanel",
@@ -98,11 +102,10 @@ export default {
     getTabs() {
       return this.tabs.filter(
         (getTab) =>
-          getTab.permissionGroup == null ||
-          getTab.permissionGroup.includes("this.usrGroup")
+          getTab.permissionGroup == null 
       );
     },
-    getRouteService (){
+    getRouteService() {
       return this.$route.path;
     },
   },
