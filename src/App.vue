@@ -69,7 +69,7 @@ export default {
         text: "Панель управления 1С",
         route: "/dashboard",
       },
-      {
+      /*{
         text: "AdminPanel",
         lnk: "../../it-uslugi/adminpanel.php",
         permissionGroup: ["1", "18", "19", "20", "21", "26"],
@@ -81,9 +81,9 @@ export default {
       },
       {
         text: "RFC",
-        lnk: "../../it-uslugi/bp.php",
+        lnk: "../../it-uslugi/uslugi/soglasovanie-izmeneniy.php",
         permissionGroup: ["1", "36"],
-      },
+      },*/
     ],
   }),
   mounted() {

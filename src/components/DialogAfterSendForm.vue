@@ -41,9 +41,8 @@
                 <v-card-text
                     v-if="subMessage"
                     color="info"
-                    class="subtitle-1 text-center mt-4"
-                >
-                    {{ subMessage }}
+                    class="subtitle-1 text-center mt-4"                    
+                ><p v-html="subMessage"></p>
                 </v-card-text>                
                 <v-divider />
                 <v-card-actions>                    
