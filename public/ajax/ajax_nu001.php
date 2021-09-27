@@ -17,6 +17,7 @@ if (isset($data[arr][fio])){
 	$start = $data[arr][start];
 	$burn = $data[arr][burn];
 	$cmnt = $data[arr][cmnt];
+	$workspace = $data[arr][workspace];
 	
 	$cnt = CIBlockElement::GetList(
 		array(),
@@ -43,7 +44,7 @@ if (isset($data[arr][fio])){
 	$wfId = CBPDocument::StartWorkflow(
 		144,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("fio"=>$fio, "wp"=>$wp, "out_u_mail"=>$out_u_mail, "out_u_date"=>$out_u_date,"org"=>$org, "dep"=>$dep, "mng"=>"user_".$mng, "tel"=>$tel, "start"=>$start, "burn"=>$burn, "cnt"=>$cnt, "cmnt"=>$cmnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
+		array_merge(array("fio"=>$fio, "wp"=>$wp, "out_u_mail"=>$out_u_mail, "out_u_date"=>$out_u_date,"org"=>$org, "dep"=>$dep, "mng"=>"user_".$mng, "tel"=>$tel, "start"=>$start, "burn"=>$burn, "cnt"=>$cnt, "cmnt"=>$cmnt, "workspace"=>$workspace), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp

@@ -59,7 +59,7 @@ if (isset($_POST["org"])){
 		$arErrorsTmp
 	   );
 } else {
-	$org = array();
+	$orgExport = array();
 	$id = 67;
 	$arFilter = Array(
 		'IBLOCK_ID'=>$id
@@ -75,9 +75,9 @@ if (isset($_POST["org"])){
 		}
 		endwhile;
 		{
-			$org[] = array('ID' => $el['ID'], 'NAME' => $el['NAME'], 'RDT' => $el['SOKRASHCHENIE']);
+			$orgExport[] = array('ID' => $el['ID'], 'NAME' => $el['NAME'], 'RDT' => $el['SOKRASHCHENIE']);
 		}
 		endwhile;
-	echo json_encode($org);
+	echo json_encode($orgExport);
 }	
 ?>

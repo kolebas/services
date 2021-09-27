@@ -57,15 +57,15 @@ if (isset($_POST["cmnt"])){
 		$arErrorsTmp
 	   );
 } else {
-	$db= array();
+	$dbExport= array();
 	$arFilter = Array(
 		'IBLOCK_ID'=>'70'
 	);
 	$res = CIBlockElement::GetList(Array('NAME'=>'ASC'), $arFilter);
 	while($ar_fields = $res->GetNext())
 		{
-			$db[] = array('ID' => $ar_fields['ID'], 'NAME' => $ar_fields['NAME']);
+			$dbExport[] = array('ID' => $ar_fields['ID'], 'NAME' => $ar_fields['NAME']);
 		}
-	echo json_encode($db);
+	echo json_encode($dbExport);
 }	
 ?>
