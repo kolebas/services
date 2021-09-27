@@ -22,7 +22,7 @@
             :cols_title="item.cols_title"
             :cols_input="item.cols_input"
           ></InputCard>
-          <v-row class="mb-n6 mt-n8">
+          <v-row class="my-n4">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
                 Внешний сотрудник:
@@ -182,6 +182,52 @@
               ></v-textarea>
             </v-col>
           </v-row>
+          <v-row class="mb-n2 mt-n10">
+            <v-col cols="4">
+              <v-card-text class="subtitle-1 text-right my-auto">
+                Рабочее место:
+              </v-card-text>
+            </v-col>
+            <v-col cols="8">
+              <v-switch
+                v-model="buyWorkspace"
+                inset
+                class="mt-3"
+                label="Закупка оборудования для рабочего места"
+              ></v-switch>
+            </v-col>
+          </v-row>
+          <v-row class="mb-4">
+            <v-expand-transition>
+              <v-card
+                v-if="buyWorkspace"
+                outlined
+                width="90%"
+                class="mx-auto"
+                elevation="1"
+              >
+                <v-card-subtitle>
+                  Рабочее место
+                  <v-divider />
+                  <v-row class="mt-2">
+                    <v-col cols="4">
+                      <v-card-text class="subtitle-1 text-right pt-2">
+                        Описание рабочего места:
+                      </v-card-text>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-textarea
+                        v-model="workspace"
+                        outlined
+                        solo
+                        label="Опишите что нужно приобрести или установить, также укажите дату когда нужно чтобы место было установлено"
+                      ></v-textarea>
+                    </v-col>
+                  </v-row>
+                </v-card-subtitle>
+              </v-card>
+            </v-expand-transition>
+          </v-row>
           <hr />
           <v-card-actions class="py-4">
             <div class="mx-auto">
@@ -303,8 +349,10 @@ export default {
     date_burn: "",
     date_burn_err: "",
     btnLoader: false,
+    buyWorkspace: false,
     obj: {},
     cmnt: "",
+    workspace: "",
     route: "",
   }),
   created() {
@@ -364,6 +412,7 @@ export default {
         this.obj.start = this.date_start;
         this.obj.burn = this.date_burn;
         this.obj.cmnt = this.cmnt;
+        this.obj.workspace = this.workspace;
         this.btnLoader = true;
         axios({
           method: "post",
