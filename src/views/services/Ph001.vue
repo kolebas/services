@@ -118,17 +118,11 @@ export default {
     },
     checkInput(value) {
       this.sendButtonDisable = true;
-      if (value.length < 10) {
-        return "Поле обязательно для заполнения";
+      if (value.length != 12 ||  value == 0 || value[0] != '+' || value[1] != '7') {
+        return "Неверный формат";
       }
       if (!Number.isInteger(Number(value))) {
         return "Недопустимый символ";
-      }
-      if (value.length > 13) {
-        return "Слишком длинный номер";
-      } 
-      if (value == 0) {
-        return "Недопустимое значение";
       }else {
         this.sendButtonDisable = false;
         return true;        
@@ -180,11 +174,6 @@ export default {
           solo: true,
           rule: [
             this.checkInput,
-            /*
-            (value) => value.length > 0 || "Поле обязательно для заполнения",
-            (value) => Number.isInteger(Number(value)) || "Недопустимый символ",
-            (value) => value > 0 || "Недопустимое значение",
-            (value) => value.length < 13 || "Слишком длинный номер",*/
           ],
           err: "",
           required: true,
