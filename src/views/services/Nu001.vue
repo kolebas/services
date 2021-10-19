@@ -47,7 +47,7 @@
               elevation="1"
             >
               <v-card-subtitle>
-                Настройки временного доступа
+                <b>Настройки временного доступа</b>
                 <v-divider />
               </v-card-subtitle>
               <Input :arrInput="input" />
@@ -91,6 +91,7 @@
                 outlined
                 solo
                 dense
+                :rules="[this.inputRule]"
                 :error-messages="tel_err"
                 label="+79008500254"
                 append-icon="mdi-cellphone"
@@ -191,8 +192,7 @@
             <v-col cols="8">
               <v-switch
                 v-model="buyWorkspace"
-                inset
-                class="mt-3"
+                inset                
                 label="Закупка оборудования для рабочего места"
               ></v-switch>
             </v-col>
@@ -207,7 +207,7 @@
                 elevation="1"
               >
                 <v-card-subtitle>
-                  Рабочее место
+                  <b>Рабочее место</b>
                   <v-divider />
                   <v-row class="mt-2">
                     <v-col cols="4">
@@ -234,6 +234,7 @@
               <v-btn
                 class="mx-1"
                 :loading="btnLoader"
+                :disabled="sendButtonDisable"
                 color="green lighten-2 white--text"
                 @click="formSend()"
               >
@@ -354,6 +355,7 @@ export default {
     cmnt: "",
     workspace: "",
     route: "",
+    sendButtonDisable: false
   }),
   created() {
     bus.$on("selectOrg", (data) => {
@@ -390,6 +392,18 @@ export default {
         this.dialog = true;
         this.dialogMessage =
           "Сотруднику будет предоставлен удаленный доступ, при этом заявка будет отправлена на дополнительное согласование";
+      }
+    },
+    inputRule(value) {
+      this.sendButtonDisable = true;
+      if (value.length != 12 ||  value == 0 || value[0] != '+' || value[1] != '7') {
+        return "Неверный формат";
+      }
+      if (!Number.isInteger(Number(value))) {
+        return "Недопустимый символ";
+      }else {
+        this.sendButtonDisable = false;
+        return true;        
       }
     },
     formSend() {
