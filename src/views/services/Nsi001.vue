@@ -26,6 +26,7 @@
 <script>
 import RqCardTitle from "@/components/RqCardTitle";
 import Input from "@/components/Input.vue";
+import axios from "axios";
 import Buttons from "@/components/Buttons.vue";
 import TitleService from "@/components/TitleService.vue";
 export default {
@@ -53,7 +54,7 @@ export default {
           { NAME: "Внутренняя услуга", ID: [2, 6, 7, 8, 9] },
           { NAME: "Для закупок", ID: [1, 2, 6, 7, 8, 9] },
           { NAME: "Животные", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Запасные части", ID: [2, 3, 5, 6, 7, 10, 8, 9, 11] },
+          { NAME: "Запасные части", ID: [2, 3, 5, 6, 7, 10, 12, 8, 9, 11] },
           { NAME: "Инвентарь", ID: [2, 4, 6, 7, 8, 9] },
           {
             NAME: "Канцтовары и хоз.принадлежности",
@@ -189,9 +190,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
-        rule: [
-          (value) => !!value || "Поле обязательно для заполнения",          
-        ],
+        rule: [(value) => !!value || "Поле обязательно для заполнения"],
         required: true,
       },
       {
@@ -242,10 +241,11 @@ export default {
         name: "Единица измерения:*",
         label: "Пример: шт./м./дн.",
         value: "",
+        items: [],
         cs: "12",
         sm: "6",
         md: "6",
-        type: "string",
+        type: "autocomplete",
         outlined: true,
         dense: true,
         solo: true,
@@ -299,17 +299,33 @@ export default {
       {
         id: 10,
         name: "Бренд техники:*",
-        label: "Пример: Камаз",
+        label: "Пример: ACROS",
         value: "",
+        items: "",
         cs: "12",
         sm: "6",
         md: "6",
-        type: "string",
+        type: "autocomplete",
         outlined: true,
         dense: true,
         solo: true,
         required: true,
-      },      
+      },
+      {
+        id: 12,
+        name: "Вид техники:*",
+        label: "Пример: Автобус",
+        value: "",
+        items: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "autocomplete",
+        outlined: true,
+        dense: true,
+        solo: true,
+        required: true,
+      },
       {
         id: 11,
         name: "Скан приходного документа:",
@@ -326,19 +342,16 @@ export default {
   }),
   computed: {
     fullName() {
-      let previeName = this.items.filter(
-        (item) => item.id == 2
-      );
-      let charasters = this.items.filter(
-        (item) => item.id == 3
-      );
-      let charastersAditional = this.items.filter(
-        (item) => item.id == 4
-      );
-      let str = previeName[0].value + " " + charasters[0].value + " " + charastersAditional[0].value;
-      return (        
-        str.charAt(0).toUpperCase() + str.slice(1)
-      );
+      let previeName = this.items.filter((item) => item.id == 2);
+      let charasters = this.items.filter((item) => item.id == 3);
+      let charastersAditional = this.items.filter((item) => item.id == 4);
+      let str =
+        previeName[0].value +
+        " " +
+        charasters[0].value +
+        " " +
+        charastersAditional[0].value;
+      return str.charAt(0).toUpperCase() + str.slice(1);
     },
     vidNomenklatury() {
       let vidNomenklaturyValue = this.input.filter(
@@ -363,13 +376,11 @@ export default {
     input: {
       handler: function () {
         for (let i = 0; i < this.input.length; i++) {
-          //console.log(this.input)
           if (this.input[i].value === "" && this.input[i].required === true) {
             this.sendButtonDisable = true;
             break;
           }
           this.sendButtonDisable = false;
-          //console.log("a thing changed " + val[i].value + oldVal[i].value);
         }
       },
       deep: true,
@@ -385,20 +396,42 @@ export default {
         for (let i = 0; i < arrayInput[0].ID.length; i++) {
           let idInput = arrayInput[0].ID[i];
           let input = this.items.filter((item) => item.id == idInput);
-          //let rule = [(value) => !!value || "Поле обязательно для заполнения"];
-          //input[0].rule = rule;
           this.input.push(input[0]);
         }
+        if(nomenklatura == "Запасные части"){
+          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand",10);
+          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes",12);
+        }
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes",6);
       } else {
         for (let i = 0; i < this.items.length; i++) {
           this.input.splice(1);
         }
-      }
+      }      
     },
     clearItemsValue() {
       for (let i = 0; i < this.items.length; i++) {
         this.items[i].value = "";
       }
+    },
+    get1CUnits(url, id) {
+      let getUnitTypesArr = this.input.filter(
+        (item) => item.id == id
+      );
+      axios({
+        method: "get",
+        withCredentials: true,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        url: url,
+        auth: {
+          username: "TestHTTP",
+          password: "123",
+        },
+      }).then((response) => {
+        if (response.status == 200) {
+          getUnitTypesArr[0].items = response.data;
+        }
+      });
     },
   },
 };

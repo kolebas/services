@@ -8,15 +8,7 @@ $IBLOCK_ID = 28;
 
 $Nomenklatura = $data[array_search(0, array_column($data, 'id'))]['value'];
 $Statya = $data[array_search(1, array_column($data, 'id'))]['value'];
-$PreviewName = $data[array_search(2, array_column($data, 'id'))]['value'];
-$Parametrs = $data[array_search(3, array_column($data, 'id'))]['value'];
-$AditionalParametrs = $data[array_search(4, array_column($data, 'id'))]['value'];
-$Artikul = $data[array_search(5, array_column($data, 'id'))]['value'];
-$Ed = $data[array_search(6, array_column($data, 'id'))]['value'];
-$Nds = $data[array_search(7, array_column($data, 'id'))]['value'];;
-$FinalName = $data[array_search(8, array_column($data, 'id'))]['value'];
-$Cmnt = $data[array_search(9, array_column($data, 'id'))]['value'];
-$Marka = $data[array_search(10, array_column($data, 'id'))]['value'];
+$Nds = $data[array_search(7, array_column($data, 'id'))]['value'];
 $File = $data[array_search(11, array_column($data, 'id'))]['value'];
 
 
@@ -64,6 +56,7 @@ $PROP[143] = Array("VALUE" => getEnumFieldId($Nds, 'STAVKA_NDS'));
 $PROP[145] = getFieldValue(9);
 $PROP[147] = getFieldValue(8);
 $PROP[148] = getFieldValue(10);
+$PROP[813] = getFieldValue(12);
 $PROP[399] = Array("VALUE" => getEnumFieldId($Statya, 'STATYA_BYUDZHETA_ZAKUPOK'));
 
 $arLoadDocumentArray = Array(
