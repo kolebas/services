@@ -89,6 +89,11 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nc005.vue')
   },
   {
+    path: '/nc006',
+    name: 'Заявка на удаление сетевого каталога',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Nc006.vue')
+  },
+  {
     path: '/inc',
     name: 'Инцидент',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Inc.vue')
