@@ -49,12 +49,12 @@ export default {
         md: "6",
         type: "autocomplete",
         items: [
-          { NAME: "Аккумуляторы", ID: [2, 3, 5, 6, 7, 8, 9, 11] },
+          { NAME: "Аккумуляторы", ID: [2, 5, 6, 7, 8, 9, 11] },
           { NAME: "Ветпрепараты и вет.материалы", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Внутренняя услуга", ID: [2, 6, 7, 8, 9] },
           { NAME: "Для закупок", ID: [1, 2, 6, 7, 8, 9] },
           { NAME: "Животные", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Запасные части", ID: [2, 3, 5, 6, 7, 10, 12, 8, 9, 11] },
+          { NAME: "Запасные части", ID: [2, 5, 6, 7, 10, 12, 8, 9, 11] },
           { NAME: "Инвентарь", ID: [2, 4, 6, 7, 8, 9] },
           {
             NAME: "Канцтовары и хоз.принадлежности",
@@ -83,8 +83,8 @@ export default {
           { NAME: "Продукты питания", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Мясо и мясопродукты", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Услуга", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Фильтры", ID: [2, 3, 5, 6, 7, 8, 9, 11] },
-          { NAME: "Шины", ID: [2, 3, 5, 6, 7, 8, 9, 11] },
+          { NAME: "Фильтры", ID: [2, 5, 6, 7, 8, 9, 11] },
+          { NAME: "Шины", ID: [2, 5, 6, 7, 8, 9, 11] },
           { NAME: "Электроматериалы", ID: [1, 2, 4, 5, 6, 7, 8, 9] },
         ],
         outlined: true,
@@ -222,7 +222,7 @@ export default {
       },
       {
         id: 5,
-        name: "Артикул:*",
+        name: "Артикул:",
         label: "Пример: CYFS12Y2",
         hint: "Артикул вносится в соответствии с артикулом в приходном документе.",
         value: "",
@@ -234,7 +234,7 @@ export default {
         dense: true,
         solo: true,
         err: "",
-        required: true,
+        required: false,
       },
       {
         id: 6,
@@ -398,16 +398,22 @@ export default {
           let input = this.items.filter((item) => item.id == idInput);
           this.input.push(input[0]);
         }
-        if(nomenklatura == "Запасные части"){
-          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand",10);
-          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes",12);
+        if (nomenklatura == "Запасные части") {
+          let item = this.input.filter((itemValue) => itemValue.id == 5);
+          item[0].name = "Артикул:*";
+          item[0].required = true;
+          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand", 10);
+          this.get1CUnits(
+            "https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes",
+            12
+          );
         }
-        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes",6);
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes", 6);
       } else {
         for (let i = 0; i < this.items.length; i++) {
           this.input.splice(1);
         }
-      }      
+      }
     },
     clearItemsValue() {
       for (let i = 0; i < this.items.length; i++) {
@@ -415,9 +421,7 @@ export default {
       }
     },
     get1CUnits(url, id) {
-      let getUnitTypesArr = this.input.filter(
-        (item) => item.id == id
-      );
+      let getUnitTypesArr = this.input.filter((item) => item.id == id);
       axios({
         method: "get",
         withCredentials: true,

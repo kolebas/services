@@ -59,10 +59,12 @@ for ($i=0; $i < count($data); $i++) {
 				$el = new CIBlockElement;
 
 				$PROP = array();
+				$PROP[879] = $employee;
+				$PROP[880] = $workPosition;
 
 				$arLoadDocumentArray = Array(
-				  "MODIFIED_BY"    => $USER->GetID(), // элемент изменен текущим пользователем
-				  "IBLOCK_SECTION_ID" => false,          // элемент лежит в корне раздела
+				  "MODIFIED_BY"    => $USER->GetID(),
+				  "IBLOCK_SECTION_ID" => false,
 				  "IBLOCK_ID"      => 118,
 				  "PROPERTY_VALUES"=> $PROP,
 				  "NAME"           => "(CU-002)",

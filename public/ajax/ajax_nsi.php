@@ -56,7 +56,7 @@ $PROP[143] = Array("VALUE" => getEnumFieldId($Nds, 'STAVKA_NDS'));
 $PROP[145] = getFieldValue(9);
 $PROP[147] = getFieldValue(8);
 $PROP[148] = getFieldValue(10);
-$PROP[813] = getFieldValue(12);
+$PROP[883] = getFieldValue(12);
 $PROP[399] = Array("VALUE" => getEnumFieldId($Statya, 'STATYA_BYUDZHETA_ZAKUPOK'));
 
 $arLoadDocumentArray = Array(
