@@ -43,12 +43,12 @@ for ($i=0; $i < count($data); $i++) {
             )
         );
 		$arUser = $userData->Fetch();
-			if($arUser){
+			if($arUser && $arUser['WORK_POSITION'] != $workPosition){
 				$cnt = CIBlockElement::GetList(
 					array(),
 					array(
 						'IBLOCK_ID' => 118,
-						'NAME' => '%(CU-002)%'
+						'NAME' => '%CU-002%'
 					),
 					array(),
 					false,
@@ -59,7 +59,7 @@ for ($i=0; $i < count($data); $i++) {
 				$el = new CIBlockElement;
 
 				$PROP = array();
-				$PROP[879] = $employee;
+				$PROP[879] = $arUser['ID'];
 				$PROP[880] = $workPosition;
 
 				$arLoadDocumentArray = Array(
@@ -67,12 +67,12 @@ for ($i=0; $i < count($data); $i++) {
 				  "IBLOCK_SECTION_ID" => false,
 				  "IBLOCK_ID"      => 118,
 				  "PROPERTY_VALUES"=> $PROP,
-				  "NAME"           => "(CU-002)",
+				  "NAME"           => "CU-002 №".$cnt,
 				  "ACTIVE"         => "Y",            // активен
 				  );
 
 				if($DOCUMENT_ID = $el->Add($arLoadDocumentArray)){
-					echo $cnt;
+					echo $cnt + 1;
 					$wfId = CBPDocument::StartWorkflow(
 					   431,
 						array("lists", "BizprocDocument", $DOCUMENT_ID),
