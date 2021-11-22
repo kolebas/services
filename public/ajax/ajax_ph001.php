@@ -4,7 +4,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 $type = $data[0]['value'];
-if(count($data)>2){
+if(count($data)>3){
 	$telnumber = $data[1]['value'];
 	$cmnt = $data[2]['value'];
 }
