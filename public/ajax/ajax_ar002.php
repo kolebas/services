@@ -27,7 +27,7 @@ $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 
 for ($i=0; $i < count($data); $i++) {
-	$date = $data[$i]["ДатаУвольнения"];
+	$date = $data[$i]["Дата"];
 	$dateBirth = $data[$i]["ДатаРождения"];
 	$employee = $data[$i]["Сотрудник"];
 	$department = $data[$i]["Организация"];
