@@ -1,56 +1,58 @@
 <template>
   <v-container fluid>
-    <Alert v-if="!access" :text="accessText" />
-    <v-row v-if="access">
-      <v-col cols="12">
-        <v-tabs>
-          <v-tab
-            v-for="tab in getTabs"
-            :key="tab.text"
-            @click="showData(tab.source, tab.param, tab.result_ar)"
-            >{{ tab.text }}
-          </v-tab>
-          <v-tab-item>
-            <v-divider />
-            <v-container fluid>
-              <v-btn
-                class="mr-2"
-                @click="
-                  showTable(btn),
-                    getData1C(btn.type, btn.sectionId),
-                    getDialogFields(btn.tableHeaders)
-                "
-                v-for="btn in tabs[0].cards"
-                :key="btn.i"
-                ><v-icon left>{{ btn.icon }}</v-icon
-                >{{ btn.title }}</v-btn
+    <v-card min-height="800px" class="py-2">
+      <Alert v-if="!access" :text="accessText" />
+      <v-row v-if="access">
+        <v-col cols="12">
+          <v-tabs>
+            <v-tab
+              v-for="tab in getTabs"
+              :key="tab.text"
+              @click="showData(tab.source, tab.param, tab.result_ar)"
+              >{{ tab.text }}
+            </v-tab>
+            <v-tab-item>
+              <v-divider />
+              <v-container fluid>
+                <v-btn
+                  class="mr-2"
+                  @click="
+                    showTable(btn),
+                      getData1C(btn.type, btn.sectionId),
+                      getDialogFields(btn.tableHeaders)
+                  "
+                  v-for="btn in tabs[0].cards"
+                  :key="btn.i"
+                  ><v-icon left>{{ btn.icon }}</v-icon
+                  >{{ btn.title }}</v-btn
+                >
+              </v-container>
+              <v-container
+                fluid
+                v-for="table in tabs[0].cards.filter(
+                  (getTable) => getTable.visible == true
+                )"
+                :key="table.i"
               >
-            ></v-container>
-            <v-container
-              fluid
-              v-for="table in tabs[0].cards.filter(
-                (getTable) => getTable.visible == true
-              )"
-              :key="table.i"
-            >
-              <DataTables
-                class="mx-auto"
-                :headers="getTableHeaders(table.tableHeaders)"
-                :item="table.tableItems"
-                :title="table.title"
-                :img="table.img"
-                :actions="table.actions"
-                :loading="loading"
-                :dialogTitle="'Добавление ' + table.title.toLowerCase()"
-                :dialogFields="fieldArray"
-                :dialogFieldsCols="3"
-                :dialogMaxWidth="table.dialogMaxWidth"
-              />
-            </v-container>
-          </v-tab-item>
-        </v-tabs>
-      </v-col>
-    </v-row>
+                <DataTables
+                  class="mx-auto"
+                  :headers="getTableHeaders(table.tableHeaders)"
+                  :item="table.tableItems"
+                  :title="table.title"
+                  :img="table.img"
+                  :actions="table.actions"
+                  :loading="loading"
+                  :dialogTitle="'Добавление ' + table.title.toLowerCase()"
+                  :dialogFields="fieldArray"
+                  :dialogFieldsCols="3"
+                  :dialogMaxWidth="table.dialogMaxWidth"
+                />
+              </v-container>
+            </v-tab-item>
+          </v-tabs>
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -72,7 +74,7 @@ export default {
     tabs: [
       {
         text: "Панель управления 1C",
-        source: "https://portal.ahstep.ru/ahstep/services/ajax/1c001.php",
+        source: "./ajax/1c001.php",
         param: "req",
         aclGroup: true,
         cards: [
@@ -176,8 +178,7 @@ export default {
             ],
             actions: ["chg", "rem"],
             tableItems: [],
-            img:
-              "https://portal.ahstep.ru/upload/resize_cache/iblock/20a/36_30_1/db.png",
+            img: "https://portal.ahstep.ru/upload/resize_cache/iblock/20a/36_30_1/db.png",
             icon: "mdi-database-cog-outline",
           },
           {
@@ -451,11 +452,11 @@ export default {
     },
     formCancl: function () {
       this.$router.go(-1);
-    },   
+    },
     getData1C(type, sectionId) {
       this.loading = true;
       axios
-        .get("https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php", {
+        .get("./ajax/ajax_1c001.php", {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
@@ -498,7 +499,7 @@ export default {
       axios({
         method: "post",
         headers: { "Content-Type": "multipart/form-data" },
-        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c001.php",
+        url: "./ajax/ajax_1c001.php",
         data: {
           type: type,
           item: item,

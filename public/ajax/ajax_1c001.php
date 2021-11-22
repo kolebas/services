@@ -132,7 +132,9 @@ if ($_GET[type] == "getUsers") {
 
             endwhile;
             if ($PROPS['ZADACHI'] != null){
-            	$get_result[] = array("ID" => $el['ID'], "USER" => $PROPS['FIO_SOTRUDNIKA'], "DATE_CONNECT" => $PROPS['NAME'], "TASK_CONNECT" => $PROPS['ZADACHI']['TEXT'], "DATE_DISCONNECT" => $PROPS['NAME'], "TASK_DISCONNECT" => $PROPS['NAME']);
+                $rsUser = CUser::GetByID($PROPS['FIO_SOTRUDNIKA']);
+                $arUser = $rsUser->Fetch();
+            	$get_result[] = array("ID" => $el['ID'], "USER" => $arUser['LAST_NAME'] . " " . $arUser['NAME'], "DATE_CONNECT" => $el['CREATED_DATE'], "TASK_CONNECT" => $PROPS['ZADACHI']['TEXT'], "DATE_DISCONNECT" => $PROPS['NAME'], "TASK_DISCONNECT" => $PROPS['NAME']);
             }
         
     endwhile;

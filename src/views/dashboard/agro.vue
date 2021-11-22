@@ -283,14 +283,14 @@
         <template v-slot:[`item.NAME`]="{ item }">
           <v-card-text @click="openTask(item.ID)"
             >{{ item.NAME }}
-            <v-tooltip right>
+            <!--<v-tooltip right>
               <template v-slot:activator="{}">
                 <v-icon color="info" small>
                   mdi-information-outline</v-icon
                 >
               </template>
               <span>test</span>
-            </v-tooltip>
+            </v-tooltip>-->
           </v-card-text>
         </template>
         <template v-slot:[`item.STATUS`]="{ item }">
@@ -494,7 +494,8 @@ export default {
       this.mainChart.push(
         Object.assign(
           { taskLenght: badTask.length },
-          { taskStatus: "Просрочено" }
+          { taskStatus: "Просрочено" },
+          { color: am4core.color("#F44336") }
         )
       );
       this.cards[4].value = doneTask.length;
@@ -539,7 +540,7 @@ export default {
       )
         return "orange";
       else if (
-        status == "Просрочен" ||
+        status == "Просрочено" ||
         status == "Отклонен" ||
         status == "Отклонено"
       )

@@ -22,7 +22,7 @@
             :cols_title="item.cols_title"
             :cols_input="item.cols_input"
           ></InputCard>
-          <v-row class="mb-n6 mt-n8">
+          <v-row class="my-n4">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
                 Внешний сотрудник:
@@ -47,7 +47,7 @@
               elevation="1"
             >
               <v-card-subtitle>
-                Настройки временного доступа
+                <b>Настройки временного доступа</b>
                 <v-divider />
               </v-card-subtitle>
               <Input :arrInput="input" />
@@ -91,6 +91,7 @@
                 outlined
                 solo
                 dense
+                :rules="[this.inputRule]"
                 :error-messages="tel_err"
                 label="+79008500254"
                 append-icon="mdi-cellphone"
@@ -182,12 +183,58 @@
               ></v-textarea>
             </v-col>
           </v-row>
+          <v-row class="mb-n2 mt-n10">
+            <v-col cols="4">
+              <v-card-text class="subtitle-1 text-right my-auto">
+                Рабочее место:
+              </v-card-text>
+            </v-col>
+            <v-col cols="8">
+              <v-switch
+                v-model="buyWorkspace"
+                inset                
+                label="Закупка оборудования для рабочего места"
+              ></v-switch>
+            </v-col>
+          </v-row>
+          <v-row class="mb-4">
+            <v-expand-transition>
+              <v-card
+                v-if="buyWorkspace"
+                outlined
+                width="90%"
+                class="mx-auto"
+                elevation="1"
+              >
+                <v-card-subtitle>
+                  <b>Рабочее место</b>
+                  <v-divider />
+                  <v-row class="mt-2">
+                    <v-col cols="4">
+                      <v-card-text class="subtitle-1 text-right pt-2">
+                        Описание рабочего места:
+                      </v-card-text>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-textarea
+                        v-model="workspace"
+                        outlined
+                        solo
+                        label="Опишите что нужно приобрести или установить, также укажите дату когда нужно чтобы место было установлено"
+                      ></v-textarea>
+                    </v-col>
+                  </v-row>
+                </v-card-subtitle>
+              </v-card>
+            </v-expand-transition>
+          </v-row>
           <hr />
           <v-card-actions class="py-4">
             <div class="mx-auto">
               <v-btn
                 class="mx-1"
                 :loading="btnLoader"
+                :disabled="sendButtonDisable"
                 color="green lighten-2 white--text"
                 @click="formSend()"
               >
@@ -303,9 +350,12 @@ export default {
     date_burn: "",
     date_burn_err: "",
     btnLoader: false,
+    buyWorkspace: false,
     obj: {},
     cmnt: "",
+    workspace: "",
     route: "",
+    sendButtonDisable: false
   }),
   created() {
     bus.$on("selectOrg", (data) => {
@@ -344,6 +394,18 @@ export default {
           "Сотруднику будет предоставлен удаленный доступ, при этом заявка будет отправлена на дополнительное согласование";
       }
     },
+    inputRule(value) {
+      this.sendButtonDisable = true;
+      if (value.length != 12 ||  value == 0 || value[0] != '+' || value[1] != '7') {
+        return "Неверный формат";
+      }
+      if (!Number.isInteger(Number(value))) {
+        return "Недопустимый символ";
+      }else {
+        this.sendButtonDisable = false;
+        return true;        
+      }
+    },
     formSend() {
       if (
         this.inputs[0].value &&
@@ -364,6 +426,7 @@ export default {
         this.obj.start = this.date_start;
         this.obj.burn = this.date_burn;
         this.obj.cmnt = this.cmnt;
+        this.obj.workspace = this.workspace;
         this.btnLoader = true;
         axios({
           method: "post",

@@ -1,27 +1,6 @@
-<?php
-
-    // Allow from any origin
-    if (isset($_SERVER['HTTP_ORIGIN'])) {
-        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Max-Age: 86400');    // cache for 1 day
-    }
-
-    // Access-Control headers are received during OPTIONS requests
-    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-            header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
-        exit(0);
-    }
-
-    #echo "You have CORS!";
-?>
 <?
+#Отображение ранее созданных заявок в Dashboard
+
 require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_before.php');
     
     if(isset($_GET["getItems"])){
@@ -47,12 +26,29 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
             $responsibleID = $rs["ID"];		
 			$responsible = $rs["LAST_NAME"] ." ". $rs["NAME"];
             $photo = $rs["PERSONAL_PHOTO"];
-
+            //Получим информацию о задаче
+            if($PROPS['ZADACHA'] != ""){
+                if (CModule::IncludeModule("tasks")){
+                    $taskStatus = NULL;
+                    $taskId = $PROPS['ZADACHA'];
+                    $userId = $USER->getId();
+                    $task = CTaskItem::getInstance($taskId, $userId);
+                    if($task['STATUS'] == '-1'){
+                        $taskStatus = 'Просрочено';
+                    }
+                    else{
+                        $taskStatus = $PROPS['STATUS'];
+                    }                   
+                }    
+            }            
+            else{
+                $taskStatus = $PROPS['STATUS'];
+            } 
         }
 
         endwhile;
         //По элементу информационного блока выведем значение свойства
-        $get_result[] = array('CREATED_BY' => $el['CREATED_USER_NAME'], 'ID' => $el['ID'], 'DATE' => $el['DATE_CREATE'], 'NAME' => $el['NAME'], 'STATUS' => $PROPS['STATUS'], 'RESPONSIBLEID' => $responsibleID, 'NAZVANIE_ORGANIZATSII' => $PROPS['NAZVANIE_ORGANIZATSII'], 'TASK' => $PROPS['ZADACHA'], 'RESPONSIBLE' => $responsible, 'PHOTO' => CFile::GetPath($photo));
+        $get_result[] = array('CREATED_BY' => $el['CREATED_USER_NAME'], 'ID' => $el['ID'], 'DATE' => $el['DATE_CREATE'], 'NAME' => $el['NAME'], 'STATUS' => $taskStatus, 'RESPONSIBLEID' => $responsibleID, 'NAZVANIE_ORGANIZATSII' => $PROPS['NAZVANIE_ORGANIZATSII'], 'TASK' => $PROPS['ZADACHA'], 'RESPONSIBLE' => $responsible, 'PHOTO' => CFile::GetPath($photo));
         endwhile;
         echo json_encode($get_result);      
     }
@@ -84,8 +80,6 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
                 }
             }
             endwhile;
-        
-        
             
         //По элементу информационного блока выведем значение свойства
         $get_result[] = array('CREATED_BY' => $el['CREATED_USER_NAME'], 'DATE' => $el['DATE_CREATE'], 'NAME' => $el['NAME'], 'STATUS' => $PROPS['STATUS'], 'OTVESTVENNYY' => $PROPS['OTVESTVENNYY'], 'NAZVANIE_ORGANIZATSII' => $PROPS['NAZVANIE_ORGANIZATSII'], 'KONTAKTNOE_LITSO' => $PROPS['KONTAKTNOE_LITSO'], 'TEMA_OPYTA' => $PROPS['TEMA_OPYTA'], 'TSELI_OPYTA' => $PROPS['TSELI_OPYTA'], 'ZADACHI_OPYTA' => $PROPS['ZADACHI_OPYTA'], 'OBEKT_OPYTA' => $PROPS['OBEKT_OPYTA'], 'EKONOMICHESKAYA_EFFEKTIVNOST' => $PROPS['EKONOMICHESKAYA_EFFEKTIVNOST'], 'REKVIZITY_ORGANIZATSII' => $PROPS['REKVIZITY_ORGANIZATSII'], 'FILE' => $file_attach, 'KONTAKTNAYA_INFORMATSIYA' => $PROPS['KONTAKTNAYA_INFORMATSIYA'], 'ZADACHA' => $PROPS['ZADACHA'], 'LOG' => $PROPS['ISTORIYA_ZAYAVKI']);

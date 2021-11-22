@@ -1,15 +1,17 @@
 <template>
   <v-app>
     <v-main>
-      <v-container v-if="usrId == '1'" class="mt-n2">
-        <v-tabs>
-          <v-tab
-            v-for="tab in getTabs"
-            :key="tab.text"
-            @click="itemclk(tab.lnk, tab.route)"
-            >{{ tab.text }}</v-tab
-          >
-        </v-tabs>
+      <v-container fluid v-if="getRouteService == '/'" class="mt-n2">
+        <v-card>
+          <v-tabs>
+            <v-tab
+              v-for="tab in getTabs"
+              :key="tab.text"
+              @click="itemclk(tab.lnk, tab.route)"
+              >{{ tab.text }}</v-tab
+            >
+          </v-tabs>
+        </v-card>
         <v-divider />
       </v-container>
       <v-alert
@@ -56,10 +58,18 @@ export default {
         lnk: "../../it-uslugi/helpdesk/my_ticket.php",
       },
       {
+        text: "Мои инциденты",
+        lnk: "../../it-uslugi/helpdesk/",
+      },
+      {
         text: "Заявки НСИ",
         lnk: "../../it-uslugi/vse-zayavki.php",
       },
       {
+        text: "Панель управления 1С",
+        route: "/dashboard",
+      },
+      /*{
         text: "AdminPanel",
         lnk: "../../it-uslugi/adminpanel.php",
         permissionGroup: ["1", "18", "19", "20", "21", "26"],
@@ -71,9 +81,9 @@ export default {
       },
       {
         text: "RFC",
-        lnk: "../../it-uslugi/bp.php",
+        lnk: "../../it-uslugi/uslugi/soglasovanie-izmeneniy.php",
         permissionGroup: ["1", "36"],
-      },
+      },*/
     ],
   }),
   mounted() {
@@ -92,9 +102,11 @@ export default {
     getTabs() {
       return this.tabs.filter(
         (getTab) =>
-          getTab.permissionGroup == null ||
-          getTab.permissionGroup.includes("this.usrGroup")
+          getTab.permissionGroup == null 
       );
+    },
+    getRouteService() {
+      return this.$route.path;
     },
   },
   methods: {
@@ -118,8 +130,8 @@ body {
 }
 */
 .workarea-content-paddings {
-    padding: 0px 0px 0px;
-}	
+  padding: 0px 0px 0px;
+}
 #uiToolbarContainer {
   display: none;
 }

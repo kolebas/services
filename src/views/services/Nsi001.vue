@@ -12,7 +12,11 @@
           <Input :arrInput="input" />
           <v-card-text> * Поля обязательные для заполнения </v-card-text>
           <hr />
-          <Buttons :input="input" ajax="./ajax/ajax_nsi.php" />
+          <Buttons
+            :input="input"
+            :sendButtonDisable="sendButtonDisable"
+            ajax="./ajax/ajax_nsi.php"
+          />
         </v-card>
       </v-row>
     </v-card>
@@ -22,6 +26,7 @@
 <script>
 import RqCardTitle from "@/components/RqCardTitle";
 import Input from "@/components/Input.vue";
+import axios from "axios";
 import Buttons from "@/components/Buttons.vue";
 import TitleService from "@/components/TitleService.vue";
 export default {
@@ -33,6 +38,7 @@ export default {
   },
   data: () => ({
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
+    sendButtonDisable: true,
     input: [
       {
         id: 0,
@@ -43,12 +49,12 @@ export default {
         md: "6",
         type: "autocomplete",
         items: [
-          { NAME: "Аккумуляторы", ID: [2, 3, 4, 5, 6, 7, 8, 9] },
+          { NAME: "Аккумуляторы", ID: [2, 5, 6, 7, 8, 9, 11] },
           { NAME: "Ветпрепараты и вет.материалы", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Внутренняя услуга", ID: [6, 7, 8, 9] },
+          { NAME: "Внутренняя услуга", ID: [2, 6, 7, 8, 9] },
           { NAME: "Для закупок", ID: [1, 2, 6, 7, 8, 9] },
           { NAME: "Животные", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Запасные части", ID: [2, 3, 4, 5, 6, 7, 10, 8, 9] },
+          { NAME: "Запасные части", ID: [2, 5, 6, 7, 10, 12, 8, 9, 11] },
           { NAME: "Инвентарь", ID: [2, 4, 6, 7, 8, 9] },
           {
             NAME: "Канцтовары и хоз.принадлежности",
@@ -62,7 +68,7 @@ export default {
           },
           { NAME: "Оборудование", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Основные средства", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Оргтехника и комплектующие", ID: [2, 4, 5, 7, 8, 9] },
+          { NAME: "Оргтехника и комплектующие", ID: [2, 4, 5, 6, 7, 8, 9] },
           { NAME: "Тара и тарные материалы", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Стройматериалы", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Технические жидкости", ID: [2, 3, 4, 6, 7, 8, 9] },
@@ -77,14 +83,15 @@ export default {
           { NAME: "Продукты питания", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Мясо и мясопродукты", ID: [2, 4, 6, 7, 8, 9] },
           { NAME: "Услуга", ID: [2, 4, 6, 7, 8, 9] },
-          { NAME: "Фильтры", ID: [2, 3, 4, 5, 6, 7, 8, 9] },
-          { NAME: "Шины", ID: [2, 3, 4, 5, 6, 7, 8, 9] },
+          { NAME: "Фильтры", ID: [2, 5, 6, 7, 8, 9, 11] },
+          { NAME: "Шины", ID: [2, 5, 6, 7, 8, 9, 11] },
           { NAME: "Электроматериалы", ID: [1, 2, 4, 5, 6, 7, 8, 9] },
         ],
         outlined: true,
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
     ],
     items: [
@@ -168,11 +175,13 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
       {
         id: 2,
         name: "Предварительное наименование:*",
-        label: "",
+        label: "Коленвал ЯМЗ-236Д",
+        hint: "Наименование вносится в соответствии с наименованием в приходном документе. Формат: 1-ая - Заглавная буква.  Только один знак '_' или '-'",
         value: "",
         cs: "12",
         sm: "6",
@@ -181,10 +190,12 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        rule: [(value) => !!value || "Поле обязательно для заполнения"],
+        required: true,
       },
       {
         id: 3,
-        name: "Характеристика:*",
+        name: "Характеристика:",
         label: "Пример: Винт регулир. коромысла ЯМЗ-236, -238, -240.",
         value: "",
         cs: "12",
@@ -198,8 +209,8 @@ export default {
       },
       {
         id: 4,
-        name: "Доп.характеристика:*",
-        label: "Пример: SAS Russia Training Center",
+        name: "Доп.характеристика:",
+        label: "Пример: Наружнее применение",
         value: "",
         cs: "12",
         sm: "6",
@@ -211,8 +222,9 @@ export default {
       },
       {
         id: 5,
-        name: "Артикул:*",
-        label: "Пример: SAS Virtual Learning Conference",
+        name: "Артикул:",
+        label: "Пример: CYFS12Y2",
+        hint: "Артикул вносится в соответствии с артикулом в приходном документе.",
         value: "",
         cs: "12",
         sm: "6",
@@ -222,24 +234,27 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: false,
       },
       {
         id: 6,
         name: "Единица измерения:*",
-        label: "Пример: SAS Russia Training Center",
+        label: "Пример: шт./м./дн.",
         value: "",
+        items: [],
         cs: "12",
         sm: "6",
         md: "6",
-        type: "string",
+        type: "autocomplete",
         outlined: true,
         dense: true,
         solo: true,
+        required: true,
       },
       {
         id: 7,
         name: "Ставка НДС:*",
-        label: "Пример: SAS Virtual Learning Conference",
+        label: "Пример: 20%",
         value: "",
         cs: "12",
         sm: "6",
@@ -250,11 +265,11 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true,
       },
       {
         id: 8,
         name: "Наименование номенклатуры:*",
-        label: "Пример: SAS Russia Training Center",
         value: "",
         cs: "12",
         sm: "6",
@@ -264,11 +279,13 @@ export default {
         dense: true,
         solo: true,
         disabled: true,
+        required: true,
       },
       {
         id: 9,
         name: "Комментарий:",
         label: "Пример: SAS Russia Training Center",
+        hint: "Данная графа заполняется максимально подробно. (Оригинал или аналог и на какую технику планируется приобретение)",
         value: "",
         cs: "12",
         sm: "6",
@@ -277,16 +294,46 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        required: false,
       },
       {
         id: 10,
-        name: "Марка техники:*",
-        label: "Пример: SAS Russia Training Center",
+        name: "Бренд техники:*",
+        label: "Пример: ACROS",
+        value: "",
+        items: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "autocomplete",
+        outlined: true,
+        dense: true,
+        solo: true,
+        required: true,
+      },
+      {
+        id: 12,
+        name: "Вид техники:*",
+        label: "Пример: Автобус",
+        value: "",
+        items: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "autocomplete",
+        outlined: true,
+        dense: true,
+        solo: true,
+        required: true,
+      },
+      {
+        id: 11,
+        name: "Скан приходного документа:",
         value: "",
         cs: "12",
         sm: "6",
         md: "6",
-        type: "string",
+        type: "file",
         outlined: true,
         dense: true,
         solo: true,
@@ -295,22 +342,16 @@ export default {
   }),
   computed: {
     fullName() {
-      let previeName = this.items.filter(
-        (item) => item.name == "Предварительное наименование:*"
-      );
-      let charasters = this.items.filter(
-        (item) => item.name == "Характеристика:*"
-      );
-      let charastersAditional = this.items.filter(
-        (item) => item.name == "Доп.характеристика:*"
-      );
-      return (
+      let previeName = this.items.filter((item) => item.id == 2);
+      let charasters = this.items.filter((item) => item.id == 3);
+      let charastersAditional = this.items.filter((item) => item.id == 4);
+      let str =
         previeName[0].value +
         " " +
         charasters[0].value +
         " " +
-        charastersAditional[0].value
-      );
+        charastersAditional[0].value;
+      return str.charAt(0).toUpperCase() + str.slice(1);
     },
     vidNomenklatury() {
       let vidNomenklaturyValue = this.input.filter(
@@ -332,6 +373,18 @@ export default {
       this.clearItemsValue();
       this.setVisibleInput(val);
     },
+    input: {
+      handler: function () {
+        for (let i = 0; i < this.input.length; i++) {
+          if (this.input[i].value === "" && this.input[i].required === true) {
+            this.sendButtonDisable = true;
+            break;
+          }
+          this.sendButtonDisable = false;
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     setVisibleInput(nomenklatura) {
@@ -345,6 +398,17 @@ export default {
           let input = this.items.filter((item) => item.id == idInput);
           this.input.push(input[0]);
         }
+        if (nomenklatura == "Запасные части") {
+          let item = this.input.filter((itemValue) => itemValue.id == 5);
+          item[0].name = "Артикул:*";
+          item[0].required = true;
+          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand", 10);
+          this.get1CUnits(
+            "https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes",
+            12
+          );
+        }
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes", 6);
       } else {
         for (let i = 0; i < this.items.length; i++) {
           this.input.splice(1);
@@ -355,6 +419,23 @@ export default {
       for (let i = 0; i < this.items.length; i++) {
         this.items[i].value = "";
       }
+    },
+    get1CUnits(url, id) {
+      let getUnitTypesArr = this.input.filter((item) => item.id == id);
+      axios({
+        method: "get",
+        withCredentials: true,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        url: url,
+        auth: {
+          username: "TestHTTP",
+          password: "123",
+        },
+      }).then((response) => {
+        if (response.status == 200) {
+          getUnitTypesArr[0].items = response.data;
+        }
+      });
     },
   },
 };
