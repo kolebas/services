@@ -68,7 +68,7 @@ export default {
         value: "",
         label: "Выбери необходимый тип услуги",
         select_arr: [
-          "Предоставаление нового номера",
+          "Предоставление нового номера",
           "Перевод личного номера на корпоративный контракт",
         ],
         cs: "11",
@@ -111,14 +111,14 @@ export default {
     },
     //Взаимодействие с переключателем
     funSwitch(status) {
-      let getSwitch = this.input.filter((item) => item.type == "switch");
-      if (status == true) {
+      let getSwitch = this.input.filter((item) => item.type === "switch");
+      if (status === true) {
         getSwitch[0].value = true;
       }
     },
     checkInput(value) {
       this.sendButtonDisable = true;
-      if (value.length != 12 ||  value == 0 || value[0] != '+' || value[1] != '7') {
+      if (value.length !== 12 ||  value === 0 || value[0] !== '+' || value[1] !== '7') {
         return "Неверный формат";
       }
       if (!Number.isInteger(Number(value))) {
@@ -131,11 +131,11 @@ export default {
   },
   computed: {
     typeService() {
-      let getTypeServiceValue = this.input.filter((item) => item.id == 0);
+      let getTypeServiceValue = this.input.filter((item) => item.id === 0);
       return getTypeServiceValue[0].value;
     },
     changeSwitch() {
-      let getSwitch = this.input.filter((item) => item.type == "switch");
+      let getSwitch = this.input.filter((item) => item.type === "switch");
       if (getSwitch.length > 0) {
         return getSwitch[0].value;
       } else {
@@ -147,7 +147,7 @@ export default {
     input: {
       handler: function () {
         for (let i = 0; i < this.input.length; i++) {
-          if (this.input[i].value === "" && this.input[i].type != "textarea") {
+          if (this.input[i].value === "" && this.input[i].type !== "textarea") {
             this.sendButtonDisable = true;
             break;
           }
@@ -209,9 +209,9 @@ export default {
       this.input.push(addCheckBox);
     },
     changeSwitch(newValue) {
-      if (newValue == true) {
+      if (newValue === true) {
         for (let i = 0; i < this.input.length; i++) {
-          if (this.input[i].type == "switch") {
+          if (this.input[i].type === "switch") {
             this.input[i].label = "Подтверждаю";
           }
         }
