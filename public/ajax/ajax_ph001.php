@@ -10,7 +10,6 @@ if(count($data)>3){
 }
 else {
 	$cmnt = $data[1]['value'];
-	echo $cmnt.'<br>';
 }
 $cnt = CIBlockElement::GetList(
 	array(),
