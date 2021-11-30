@@ -263,6 +263,19 @@
           </template>
           <span>{{ item.tooltip }}</span>
         </v-tooltip>
+        <v-subheader>Год: </v-subheader>
+        <v-select
+          v-model="year"
+          :items="years"
+          solo
+          single-line
+          dense
+          hide-details
+          chips
+          deletable-chips
+          style="max-width: 10%"
+          @change="fetchData(year)"
+        ></v-select>
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -420,24 +433,15 @@ export default {
         value: "1",
       },
     ],
+    years: [],
+    year: ["111111111111"],
     addInfo: false,
     log: false,
     source: "./ajax/ajax_op002.php",
     //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_op002.php",
     mainChart: [],
   }),
-  created() {
-    axios
-      .get(this.source, {
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        params: {
-          getItems: "getItems",
-        },
-      })
-      .then((response) => ((this.items = response.data), this.getValue()));
-  },
+  created() {},
   computed: {
     mainCard() {
       return this.cards.filter((getMain) => getMain.main == true);
@@ -447,6 +451,27 @@ export default {
     },
   },
   methods: {
+    fetchData(year) {
+      this.year = year;
+      console.log('year '+this.year)
+      axios
+        .get(this.source, {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          params: {
+            getItems: "getItems",
+            year: year,
+          },
+        })
+        .then(
+          (response) => (
+            (this.items = response.data),
+            this.getValue(),
+            this.getYears(this.items)
+          )
+        );
+    },
     getValue() {
       this.cards[0].value = this.items.length;
       let newTask = this.items.filter(
@@ -620,7 +645,20 @@ export default {
       downloadLink.click();
       document.body.removeChild(downloadLink);
     },
+    getYears(arrayItems) {
+      for (let i = 0; i < arrayItems.length; i++) {
+        let year = arrayItems[i].DATE.substr(6, 4);
+        if (!this.years.includes(year)) {
+          this.years.push(year);
+        }
+      }
+      return [1, 2, 3, 4];
+    },
   },
-  mounted() {},
+  mounted() {
+    let today = new Date();
+    let year = today.getFullYear();    
+    this.fetchData(year);    
+  },
 };
 </script>
