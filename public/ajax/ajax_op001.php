@@ -7,14 +7,15 @@ $data = json_decode($_POST['input'], true);
 $dataParams = json_decode($_POST['params'], true);
 
 	$org = $data[0]['value'];
-	$contactUser = $data[1]['value'];
-	$contactInfo = $data[2]['value'];
-	$theme = $data[3]['value'];
-	$target = $data[4]['value'];
-	$task = $data[5]['value'];
-	$object = $data[6]['value'];
-	$effective = $data[7]['value'];
-	$orgInfo = $data[8]['value'];
+	$category = $data[1]['value'];
+	$contactUser = $data[2]['value'];
+	$contactInfo = $data[3]['value'];
+	$theme = $data[4]['value'];
+	$target = $data[5]['value'];
+	$task = $data[6]['value'];
+	$object = $data[7]['value'];
+	$effective = $data[8]['value'];
+	$orgInfo = $data[9]['value'];
 	$agroName = $dataParams[0]['name'];
 	$agroAmount = $dataParams[0]['amount'];
 	$agroDv = $dataParams[0]['dv'];
@@ -59,7 +60,7 @@ $dataParams = json_decode($_POST['params'], true);
 	$wfId = CBPDocument::StartWorkflow(
 		369,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("org"=>$org, "contactUser"=>$contactUser, "contactInfo"=>$contactInfo, "theme"=>$theme, "target"=>$target, "task"=>$task, "object"=>$object, "effective"=>$effective, "agroName"=>$agroName, "orgInfo"=>$orgInfo, "agroItem"=>$agroAmount, "agroDv"=>$agroDv, "agroPhase"=>$agroPhase, "agroPrice"=>$agroPrice, "orgInfo"=>$orgInfo, "file"=>$files, "cmnt"=>$cmnt,"cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
+		array_merge(array("org"=>$org, "category"=>$category, "contactUser"=>$contactUser, "contactInfo"=>$contactInfo, "theme"=>$theme, "target"=>$target, "task"=>$task, "object"=>$object, "effective"=>$effective, "agroName"=>$agroName, "orgInfo"=>$orgInfo, "agroItem"=>$agroAmount, "agroDv"=>$agroDv, "agroPhase"=>$agroPhase, "agroPrice"=>$agroPrice, "orgInfo"=>$orgInfo, "file"=>$files, "cmnt"=>$cmnt,"cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
