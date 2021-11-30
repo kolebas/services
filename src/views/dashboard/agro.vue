@@ -272,7 +272,7 @@
           dense
           hide-details
           chips
-          max-width="50px"
+          style="max-width: 10%"
           @change="fetchData(year)"
         ></v-select>
         <v-spacer></v-spacer>
