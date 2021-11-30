@@ -7,7 +7,9 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
         $id=101;
         $arFilter = array(
         "IBLOCK_ID" => $id,
-        "ACTIVE" => "Y"
+        "ACTIVE" => "Y",
+        ">DATE_CREATE" => "01.01.".$_GET["year"],
+        "<DATE_CREATE" => "31.12.".$_GET["year"]
         );
         //Получим массив всех элементов информационного блока
         $res = CIBlockElement::GetList(Array('NAME'=>'ASC'), $arFilter);
@@ -38,7 +40,12 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
                     }
                     else{
                         $taskStatus = $PROPS['STATUS'];
-                    }                   
+                    }
+                    $oUserinfo = CUser::GetByID($task['RESPONSIBLE_ID']);
+                    $rs = $oUserinfo->getNext();
+                    $responsibleID = $rs["ID"];		
+                    $responsible = $rs["LAST_NAME"] ." ". $rs["NAME"];
+                    $photo = $rs["PERSONAL_PHOTO"];                   
                 }    
             }            
             else{
