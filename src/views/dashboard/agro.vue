@@ -272,8 +272,7 @@
           dense
           hide-details
           chips
-          deletable-chips
-          style="max-width: 10%"
+          max-width="50px"
           @change="fetchData(year)"
         ></v-select>
         <v-spacer></v-spacer>
@@ -292,6 +291,8 @@
         "
         :items="items"
         :search="search"
+        :loading="loading"
+        loading-text="Обновление данных"
       >
         <template v-slot:[`item.NAME`]="{ item }">
           <v-card-text @click="openTask(item.ID)"
@@ -434,12 +435,12 @@ export default {
       },
     ],
     years: [],
-    year: ["111111111111"],
+    year: "111111111111",
     addInfo: false,
     log: false,
     source: "./ajax/ajax_op002.php",
-    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_op002.php",
     mainChart: [],
+    loading: false
   }),
   created() {},
   computed: {
@@ -449,11 +450,15 @@ export default {
     addCard() {
       return this.cards.filter((getMain) => getMain.main != true);
     },
+    getCurrentYear(){
+      return this.year
+    }
   },
   methods: {
     fetchData(year) {
+      this.loading = !this.loading
       this.year = year;
-      console.log('year '+this.year)
+      this.items = [];
       axios
         .get(this.source, {
           headers: {
@@ -468,11 +473,13 @@ export default {
           (response) => (
             (this.items = response.data),
             this.getValue(),
-            this.getYears(this.items)
+            this.getYears(this.items),
+            this.loading = !this.loading
           )
         );
     },
     getValue() {
+      this.mainChart = [];      
       this.cards[0].value = this.items.length;
       let newTask = this.items.filter(
         (getTask) =>
@@ -652,13 +659,12 @@ export default {
           this.years.push(year);
         }
       }
-      return [1, 2, 3, 4];
     },
   },
   mounted() {
-    let today = new Date();
-    let year = today.getFullYear();    
-    this.fetchData(year);    
+    //let today = new Date();
+    //let year = today.getFullYear();
+    this.fetchData();
   },
 };
 </script>

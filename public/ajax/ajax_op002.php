@@ -5,11 +5,15 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
     
     if(isset($_GET["getItems"])){
         $id=101;
+        if(isset($_GET["year"])){
+            $date_start = "01.01.".$_GET["year"];
+            $date_end = "31.12.".$_GET["year"];
+        }
         $arFilter = array(
         "IBLOCK_ID" => $id,
         "ACTIVE" => "Y",
-        ">DATE_CREATE" => "01.01.".$_GET["year"],
-        "<DATE_CREATE" => "31.12.".$_GET["year"]
+        ">DATE_CREATE" => $date_start,
+        "<DATE_CREATE" => $date_end
         );
         //Получим массив всех элементов информационного блока
         $res = CIBlockElement::GetList(Array('NAME'=>'ASC'), $arFilter);
