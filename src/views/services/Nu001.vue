@@ -4,6 +4,9 @@
       :dialog="dialog"
       :warnMessage="dialogMessage"
       :route="route"
+      :titleDialogParam="titleDialog"
+      :alertMessage="alertMessage"
+      :alertMessageType="alertMessageType"
     />
     <TitleService />
     <v-card min-height="800px" class="py-12">
@@ -277,6 +280,9 @@ export default {
       'Данная заявка в первую очередь согласовывается сотрудниками "Департамента управления персоналом", если выбрана опция "Внешний сотрудник", то заявка дополнительно будет отправлена на согласование директору по информационной безопасности и директору департамента ИТ также вы сможете отслеживать статус заявки в разделе',
     dialog: false,
     dialogMessage: "",
+    alertMessage: "",
+    alertMessageType: "",
+    titleDialog: "",
     arr: [],
     inputs: [
       {
@@ -382,6 +388,18 @@ export default {
       this.dialog = data;
     });
   },
+  computed: {
+    checkUser(){
+      return [this.date_burn, this.inputs[0].value];
+    }
+  },
+  watch: {
+    checkUser(val) {
+      if(val[0] && val[1]){
+        this.checkUserInfo(val);
+      }
+    }
+  },
   methods: {
     formCancl: function () {
       this.$router.go(-1);
@@ -405,6 +423,35 @@ export default {
         this.sendButtonDisable = false;
         return true;        
       }
+    },
+    checkUserInfo(val){
+      this.sendButtonDisable = true;
+      axios({
+          method: "post",
+          withCredentials: true,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          url: "./ajax/ajax_nu001.php",
+          data: {
+            type: "checkUser",
+            array: val
+          },
+        })
+          .then((response) => {
+            if (response.status == 200 && response.data) {
+              this.dialog = true;
+              this.titleDialog = "Внимание";
+              this.alertMessageType = "warning";
+              this.alertMessage = "Пользователь: " + response.data[0].NAME + " должен быть только один :)";
+            }
+            else {
+              this.sendButtonDisable = false;
+            }
+          })
+          .catch((error) => {
+            this.dialog = true;
+            this.dialogMessage = "Произошла ошибка: " + error;
+            this.btnLoader = false;
+          });
     },
     formSend() {
       if (

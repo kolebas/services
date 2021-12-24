@@ -49,6 +49,24 @@ if (isset($data[arr][fio])){
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
 	   );
+}
+if($data[type] == "checkUser"){
+
+  $user = $data["array"][1];
+  $dateBirth = $data["array"][0];
+  $dateBirthFormat = date("d.m.Y", strtotime($dateBirth));
+  $data = CUser::GetList(($by="LAST_NAME"), ($order="ASC"),
+      array(
+          "ACTIVE" => "Y",
+          "NAME" => $user,
+          'PERSONAL_BIRTHDAY_1' => $dateBirthFormat,
+          'PERSONAL_BIRTHDAY_2' => $dateBirthFormat,
+      )
+  );
+  while($arUser = $data->Fetch()) {
+        $pl_users[] = array('ID' => $arUser['ID'], 'NAME' => $arUser['LAST_NAME']. " " .$arUser['NAME'], 'PHOTO' => CFile::GetPath($arUser['PERSONAL_PHOTO']), 'POSITION'=> $arUser['WORK_POSITION'], );
+      }
+  echo json_encode($pl_users);
 } else {
 	print_r($data[arr]);
 	$param = $_GET["param"];
