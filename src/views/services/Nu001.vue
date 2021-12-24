@@ -7,6 +7,7 @@
       :titleDialogParam="titleDialog"
       :alertMessage="alertMessage"
       :alertMessageType="alertMessageType"
+      :alertMessageOutlined="alertMessageOutlined"
     />
     <TitleService />
     <v-card min-height="800px" class="py-12">
@@ -195,7 +196,7 @@
             <v-col cols="8">
               <v-switch
                 v-model="buyWorkspace"
-                inset                
+                inset
                 label="Закупка оборудования для рабочего места"
               ></v-switch>
             </v-col>
@@ -282,6 +283,7 @@ export default {
     dialogMessage: "",
     alertMessage: "",
     alertMessageType: "",
+    alertMessageOutlined: "",
     titleDialog: "",
     arr: [],
     inputs: [
@@ -361,7 +363,7 @@ export default {
     cmnt: "",
     workspace: "",
     route: "",
-    sendButtonDisable: false
+    sendButtonDisable: false,
   }),
   created() {
     bus.$on("selectOrg", (data) => {
@@ -389,16 +391,16 @@ export default {
     });
   },
   computed: {
-    checkUser(){
+    checkUser() {
       return [this.date_burn, this.inputs[0].value];
-    }
+    },
   },
   watch: {
     checkUser(val) {
-      if(val[0] && val[1]){
+      if (val[0] && val[1]) {
         this.checkUserInfo(val);
       }
-    }
+    },
   },
   methods: {
     formCancl: function () {
@@ -414,44 +416,52 @@ export default {
     },
     inputRule(value) {
       this.sendButtonDisable = true;
-      if (value.length != 12 ||  value == 0 || value[0] != '+' || value[1] != '7') {
+      if (
+        value.length != 12 ||
+        value == 0 ||
+        value[0] != "+" ||
+        value[1] != "7"
+      ) {
         return "Неверный формат";
       }
       if (!Number.isInteger(Number(value))) {
         return "Недопустимый символ";
-      }else {
+      } else {
         this.sendButtonDisable = false;
-        return true;        
+        return true;
       }
     },
-    checkUserInfo(val){
+    checkUserInfo(val) {
       this.sendButtonDisable = true;
       axios({
-          method: "post",
-          withCredentials: true,
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          url: "./ajax/ajax_nu001.php",
-          data: {
-            type: "checkUser",
-            array: val
-          },
-        })
-          .then((response) => {
-            if (response.status == 200 && response.data) {
-              this.dialog = true;
-              this.titleDialog = "Внимание";
-              this.alertMessageType = "warning";
-              this.alertMessage = "Пользователь: " + response.data[0].NAME + " должен быть только один :)";
-            }
-            else {
-              this.sendButtonDisable = false;
-            }
-          })
-          .catch((error) => {
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        url: "./ajax/ajax_nu001.php",
+        data: {
+          type: "checkUser",
+          array: val,
+        },
+      })
+        .then((response) => {
+          if (response.status == 200 && response.data) {
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка: " + error;
-            this.btnLoader = false;
-          });
+            this.titleDialog = "Внимание";
+            this.alertMessageType = "warning";
+            this.alertMessage =
+              "Пользователь: " +
+              response.data[0].NAME +
+              " должен быть только один :)";
+            this.alertMessageOutlined = true;
+          } else {
+            this.sendButtonDisable = false;
+          }
+        })
+        .catch((error) => {
+          this.dialog = true;
+          this.dialogMessage = "Произошла ошибка: " + error;
+          this.btnLoader = false;
+        });
     },
     formSend() {
       if (
