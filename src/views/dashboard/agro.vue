@@ -166,6 +166,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogSettings" max-width="40%" class="mx-auto">
+      <v-card>
+        <v-card-title class="headline grey lighten-2">
+          Настройка списка "Перечень опытов"
+        </v-card-title>
+        <v-row class="mx-auto">
+          <v-col cols="3" v-for="item in headers" :key="item.key">
+            <v-checkbox v-model="item.visibleInTable" :label="item.text"></v-checkbox>
+          </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialogSettings = false"> OK </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <h1 class="classh1 mt-n4">{{ $router.currentRoute.name }}</h1>
     <v-divider class="mb-2" />
     <v-row>
@@ -253,7 +270,7 @@
             <v-btn
               v-bind="attrs"
               v-on="on"
-              @click="exportTableToFile()"
+              @click="clickButtonSettings(item.id)"
               :color="item.color"
               class="mr-2"
               fab
@@ -263,18 +280,34 @@
           </template>
           <span>{{ item.tooltip }}</span>
         </v-tooltip>
-        <v-subheader>Год: </v-subheader>
+        <v-divider class="mx-4" inset vertical></v-divider>
         <v-select
           v-model="year"
           :items="years"
           solo
+          label="Год"
           single-line
           dense
           hide-details
           chips
+          deletable-chips
           style="max-width: 10%"
           @change="fetchData(year)"
         ></v-select>
+        <!--<v-select
+          v-model="status"
+          :items="statuses"
+          solo
+          label="Статус"
+          single-line
+          dense
+          hide-details
+          chips
+          deletable-chips
+          class="ml-2"
+          style="max-width: 10%"
+          @change="fetchData(null, status)"
+        ></v-select>-->
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -295,7 +328,7 @@
         loading-text="Обновление данных"
       >
         <template v-slot:[`item.NAME`]="{ item }">
-          <v-card-text @click="openTask(item.ID)"
+          <v-edit-dialog @open="openTask(item.ID)"
             >{{ item.NAME }}
             <!--<v-tooltip right>
               <template v-slot:activator="{}">
@@ -305,7 +338,7 @@
               </template>
               <span>test</span>
             </v-tooltip>-->
-          </v-card-text>
+          </v-edit-dialog>
         </template>
         <template v-slot:[`item.STATUS`]="{ item }">
           <v-chip :color="getStatus(item.STATUS)" dark>
@@ -391,6 +424,11 @@ export default {
         visibleInTable: true,
       },
       {
+        text: "Категория",
+        value: "CATEGORY",
+        visibleInTable: false,
+      },
+      {
         text: "Статус",
         value: "STATUS",
         visibleInTable: true,
@@ -409,15 +447,18 @@ export default {
     items: [],
     search: "",
     dialog: false,
+    dialogSettings: false,
     taskInfo: [],
     tableButtons: [
       {
+        id: 0,
         text: "Настройка полей",
         icon: "mdi-cog-transfer-outline",
         color: "info",
         tooltip: "Настройка полей",
       },
       {
+        id: 1,
         text: "Эспорт в Excel",
         icon: "mdi-file-export-outline",
         color: "success",
@@ -435,12 +476,12 @@ export default {
       },
     ],
     years: [],
-    year: "111111111111",
+    statuses: [],
     addInfo: false,
     log: false,
     source: "./ajax/ajax_op002.php",
     mainChart: [],
-    loading: false
+    loading: false,
   }),
   created() {},
   computed: {
@@ -450,13 +491,13 @@ export default {
     addCard() {
       return this.cards.filter((getMain) => getMain.main != true);
     },
-    getCurrentYear(){
-      return this.year
-    }
+    getCurrentYear() {
+      return this.year;
+    },
   },
   methods: {
-    fetchData(year) {
-      this.loading = !this.loading
+    fetchData(year, status) {
+      this.loading = !this.loading;
       this.year = year;
       this.items = [];
       axios
@@ -467,6 +508,7 @@ export default {
           params: {
             getItems: "getItems",
             year: year,
+            status: status,
           },
         })
         .then(
@@ -474,12 +516,13 @@ export default {
             (this.items = response.data),
             this.getValue(),
             this.getYears(this.items),
-            this.loading = !this.loading
+            this.getStatuses(this.items),
+            (this.loading = !this.loading)
           )
         );
     },
     getValue() {
-      this.mainChart = [];      
+      this.mainChart = [];
       this.cards[0].value = this.items.length;
       let newTask = this.items.filter(
         (getTask) =>
@@ -562,7 +605,6 @@ export default {
           { color: am4core.color("#F57C00") }
         )
       );
-
       this.addCharts();
     },
     getStatus(status) {
@@ -626,6 +668,17 @@ export default {
         pieSeries.hiddenState.properties.startAngle = -90;
       }
     },
+    clickButtonSettings(id) {
+      if (id == 0) {
+        this.showDialogSettings();
+      }
+      if (id == 1) {
+        this.exportTableToFile();
+      }
+    },
+    showDialogSettings() {
+      this.dialogSettings = !this.dialogSettings;
+    },
     exportTableToFile() {
       let htmltable = document.getElementsByClassName("v-data-table__wrapper");
       let html = htmltable[0].outerHTML;
@@ -657,6 +710,14 @@ export default {
         let year = arrayItems[i].DATE.substr(6, 4);
         if (!this.years.includes(year)) {
           this.years.push(year);
+        }
+      }
+    },
+    getStatuses(arrayItems) {
+      for (let i = 0; i < arrayItems.length; i++) {
+        let status = arrayItems[i].STATUS;
+        if (!this.statuses.includes(status)) {
+          this.statuses.push(status);
         }
       }
     },

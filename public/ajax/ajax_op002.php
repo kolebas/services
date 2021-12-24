@@ -23,43 +23,48 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
         //Получим свойства элемента инфоблока
         $db_props = CIBlockElement::GetProperty($id,$el["ID"], array());
         $PROPS = array();
-        while($ar_props = $db_props->Fetch()):
-        if($ar_props[VALUE] != NULL){                       
-            $PROPS[$ar_props[CODE]] = $ar_props[VALUE];
-            //Получим ФИО отвественного
-			$oUserinfo = CUser::GetByID($PROPS['OTVESTVENNYY']);
-			$rs = $oUserinfo->getNext();
-            $responsibleID = $rs["ID"];		
-			$responsible = $rs["LAST_NAME"] ." ". $rs["NAME"];
-            $photo = $rs["PERSONAL_PHOTO"];
-            //Получим информацию о задаче
-            if($PROPS['ZADACHA'] != ""){
-                if (CModule::IncludeModule("tasks")){
-                    $taskStatus = NULL;
-                    $taskId = $PROPS['ZADACHA'];
-                    $userId = $USER->getId();
-                    $task = CTaskItem::getInstance($taskId, $userId);
-                    if($task['STATUS'] == '-1'){
-                        $taskStatus = 'Просрочено';
-                    }
-                    else{
-                        $taskStatus = $PROPS['STATUS'];
-                    }
-                    $oUserinfo = CUser::GetByID($task['RESPONSIBLE_ID']);
+            while($ar_props = $db_props->Fetch()):
+                if($ar_props[VALUE] != NULL){                       
+                    $PROPS[$ar_props[CODE]] = $ar_props[VALUE];
+                    //Получим ФИО отвественного
+                    $oUserinfo = CUser::GetByID($PROPS['OTVESTVENNYY']);
                     $rs = $oUserinfo->getNext();
                     $responsibleID = $rs["ID"];		
                     $responsible = $rs["LAST_NAME"] ." ". $rs["NAME"];
-                    $photo = $rs["PERSONAL_PHOTO"];                   
-                }    
-            }            
-            else{
-                $taskStatus = $PROPS['STATUS'];
-            } 
-        }
-
-        endwhile;
-        //По элементу информационного блока выведем значение свойства
-        $get_result[] = array('CREATED_BY' => $el['CREATED_USER_NAME'], 'ID' => $el['ID'], 'DATE' => $el['DATE_CREATE'], 'NAME' => $el['NAME'], 'STATUS' => $taskStatus, 'RESPONSIBLEID' => $responsibleID, 'NAZVANIE_ORGANIZATSII' => $PROPS['NAZVANIE_ORGANIZATSII'], 'TASK' => $PROPS['ZADACHA'], 'RESPONSIBLE' => $responsible, 'PHOTO' => CFile::GetPath($photo));
+                    $photo = $rs["PERSONAL_PHOTO"];
+                    //Получим информацию о задаче
+                    if($PROPS['ZADACHA'] != ""){
+                        if (CModule::IncludeModule("tasks")){
+                            $taskStatus = NULL;
+                            $taskId = $PROPS['ZADACHA'];
+                            $userId = $USER->getId();
+                            $task = CTaskItem::getInstance($taskId, $userId);
+                            if($task['STATUS'] == '-1'){
+                                $taskStatus = 'Просрочено';
+                            }
+                            else{
+                                $taskStatus = $PROPS['STATUS'];
+                            }
+                            $oUserinfo = CUser::GetByID($task['RESPONSIBLE_ID']);
+                            $rs = $oUserinfo->getNext();
+                            $responsibleID = $rs["ID"];		
+                            $responsible = $rs["LAST_NAME"] ." ". $rs["NAME"];
+                            $photo = $rs["PERSONAL_PHOTO"];                   
+                        }    
+                    }            
+                    else{
+                        $taskStatus = $PROPS['STATUS'];
+                    } 
+                }        
+            endwhile;
+            //По элементу информационного блока выведем значение свойства
+            if(isset($_GET["status"]) && $taskStatus == $_GET["status"]){
+                echo $_GET["status"] .'----'. $taskStatus.'<br>';
+                $get_result[] = array('CREATED_BY' => $el['CREATED_USER_NAME'], 'ID' => $el['ID'], 'DATE' => $el['DATE_CREATE'], 'NAME' => $el['NAME'], 'CATEGORY' => $PROPS['KATEGORIYA'], 'STATUS' => $taskStatus, 'RESPONSIBLEID' => $responsibleID, 'NAZVANIE_ORGANIZATSII' => $PROPS['NAZVANIE_ORGANIZATSII'], 'TASK' => $PROPS['ZADACHA'], 'RESPONSIBLE' => $responsible, 'PHOTO' => CFile::GetPath($photo));    
+            }
+            else {
+                $get_result[] = array('CREATED_BY' => $el['CREATED_USER_NAME'], 'ID' => $el['ID'], 'DATE' => $el['DATE_CREATE'], 'NAME' => $el['NAME'], 'CATEGORY' => $PROPS['KATEGORIYA'], 'STATUS' => $taskStatus, 'RESPONSIBLEID' => $responsibleID, 'NAZVANIE_ORGANIZATSII' => $PROPS['NAZVANIE_ORGANIZATSII'], 'TASK' => $PROPS['ZADACHA'], 'RESPONSIBLE' => $responsible, 'PHOTO' => CFile::GetPath($photo));
+            }        
         endwhile;
         echo json_encode($get_result);      
     }
