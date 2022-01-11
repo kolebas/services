@@ -52,7 +52,10 @@ export default {
     usrGroup: "",
     top_bar: "",
     tabs: [
-      { text: "Отправить заявку", route: "/" },
+      {
+        text: "Отправить заявку",
+        route: "/",
+      },
       {
         text: "Мои заявки",
         lnk: "../../it-uslugi/helpdesk/my_ticket.php",
@@ -68,21 +71,28 @@ export default {
       {
         text: "Панель управления 1С",
         route: "/dashboard",
+        permissionGroup: ["1", "48"],
       },
-      /*{
+      {
         text: "AdminPanel",
         lnk: "../../it-uslugi/adminpanel.php",
         permissionGroup: ["1", "18", "19", "20", "21", "26"],
-      },
-      {
-        text: "1С Поддержка",
-        lnk: "../../it-uslugi/1c-support.php",
-        permissionGroup: ["1"],
-      },
+      },      
       {
         text: "RFC",
         lnk: "../../it-uslugi/uslugi/soglasovanie-izmeneniy.php",
         permissionGroup: ["1", "36"],
+      },
+      {
+        text: "Отчеты по задачам",
+        lnk: "../../ahstep/reports/dashboard/",
+        permissionGroup: ["1", "53"],
+      },
+      
+      /*{
+        text: "1С Поддержка",
+        lnk: "../../it-uslugi/1c-support.php",
+        permissionGroup: ["1"],
       },*/
     ],
   }),
@@ -100,10 +110,21 @@ export default {
   },
   computed: {
     getTabs() {
-      return this.tabs.filter(
-        (getTab) =>
-          getTab.permissionGroup == null 
-      );
+      let arrTabs = [];
+      this.tabs.forEach((element) => {
+        if (element.permissionGroup == null) {
+          arrTabs.push(element);
+        } else {
+          element.permissionGroup.forEach((elementPG) => {
+            for (let i = 0; i < this.usrGroup.length; i++) {
+              if (elementPG == this.usrGroup[i]) {
+                arrTabs.push(element);
+              }
+            }
+          });
+        }
+      });
+      return arrTabs;
     },
     getRouteService() {
       return this.$route.path;

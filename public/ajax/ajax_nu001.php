@@ -9,13 +9,13 @@ if (isset($data[arr][fio])){
 	$fio = $data[arr][fio];
 	$wp = $data[arr][wp];
 	$out_u_mail = $data[arr][out_user_mail];
-	$out_u_date = $data[arr][out_user_date];
+	$out_u_date = date("d.m.Y", strtotime($data[arr][out_user_date]));
 	$org = $data[arr][org];
 	$dep = $data[arr][dep];
 	$mng = $data[arr][mng];
 	$tel = $data[arr][tel];
-	$start = $data[arr][start];
-	$burn = $data[arr][burn];
+	$start = date("d.m.Y", strtotime($data[arr][start]));
+	$burn = date("d.m.Y", strtotime($data[arr][burn]));
 	$cmnt = $data[arr][cmnt];
 	$workspace = $data[arr][workspace];
 	
@@ -48,8 +48,8 @@ if (isset($data[arr][fio])){
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
-	   );
-}
+	  ); 
+} 
 if($data[type] == "checkUser"){
 
   $user = $data["array"][1];
@@ -68,7 +68,6 @@ if($data[type] == "checkUser"){
       }
   echo json_encode($pl_users);
 } else {
-	print_r($data[arr]);
 	$param = $_GET["param"];
 	if($param=="АО Агрохолдинг «СТЕПЬ»"){
 		$org = '1. Управляющая компания';
@@ -101,10 +100,9 @@ if($data[type] == "checkUser"){
 			   while ($arSect = $rsSect->GetNext())
 			   {
 			   		$dep[] = array('ID' => $arSect['ID'], 'NAME' => $arSect['NAME']);
-			       	//echo $arSect[NAME].'<br>';
 			   }
 			}   
 		}
 	echo json_encode($dep);
-}	
+}
 ?>
