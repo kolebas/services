@@ -1,9 +1,6 @@
 <?
-	require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_before.php');
-	?>
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_before.php');
 
-
-<?
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 
@@ -59,7 +56,8 @@ if (isset($_POST["cmnt"])){
 } else {
 	$dbExport= array();
 	$arFilter = Array(
-		'IBLOCK_ID'=>'70'
+		"IBLOCK_ID"=> 70,
+		"IBLOCK_SECTION_ID" => 877
 	);
 	$res = CIBlockElement::GetList(Array('NAME'=>'ASC'), $arFilter);
 	while($ar_fields = $res->GetNext())
