@@ -17,20 +17,25 @@
                   :key="item.name"
                 >
                   <v-text-field
-                    v-if="item.type=='string'"
+                    v-if="item.type == 'string'"
                     v-model="item.value"
                     :label="item.name"
                     required
                   ></v-text-field>
                   <v-select
-                    v-if="item.type=='select'"
+                    v-if="item.type == 'select'"
                     v-model="item.value"
-                    :items="['План АФК', 'План Степь', 'Внеплан АФК', 'Внеплан Степь']"
+                    :items="[
+                      'План АФК',
+                      'План Степь',
+                      'Внеплан АФК',
+                      'Внеплан Степь',
+                    ]"
                     :label="item.name"
                     required
                   ></v-select>
                   <v-file-input
-                    v-if="item.type=='file'"
+                    v-if="item.type == 'file'"
                     v-model="item.value"
                     chips
                     show-size
@@ -38,39 +43,52 @@
                     label="Файл"
                   ></v-file-input>
                   <v-combobox
-                    v-if="item.type=='link'"
+                    v-if="item.type == 'link'"
                     v-model="item.value"
                     clearable
                     label="Ссылки"
                     multiple
                   >
-                    <template v-slot:selection="{ attrs, item, select, selected }">
+                    <template
+                      v-slot:selection="{ attrs, item, select, selected }"
+                    >
                       <v-chip
                         v-bind="attrs"
                         :input-value="selected"
                         close
                         @click="select"
                         @click:close="remove(item)"
-                      >{{ item }}&nbsp;</v-chip>
+                        >{{ item }}&nbsp;</v-chip
+                      >
                     </template>
                   </v-combobox>
                 </v-col>
               </v-row>
             </v-container>
-            <small>{{msgRequiredFiled}}</small>
+            <small>{{ msgRequiredFiled }}</small>
           </v-card-text>
           <v-divider />
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">Отмена</v-btn>
-            <v-btn color="blue darken-1" text @click="dialog = false;saveElement()">Сохранить</v-btn>
+            <v-btn color="blue darken-1" text @click="dialog = false"
+              >Отмена</v-btn
+            >
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="
+                dialog = false;
+                saveElement();
+              "
+              >Сохранить</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-row>
     <v-card>
       <v-card-title>
-        {{title}}
+        {{ title }}
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-text-field
@@ -80,7 +98,9 @@
           single-line
           hide-details
         ></v-text-field>
-        <v-btn color="primary" @click="addElement()" dark class="mb-2 ml-2">Добавить</v-btn>
+        <v-btn color="primary" @click="addElement()" dark class="mb-2 ml-2"
+          >Добавить</v-btn
+        >
       </v-card-title>
       <v-divider />
       <v-data-table
@@ -91,7 +111,7 @@
         :loading="loading"
         item-key="ID"
       >
-       <template v-slot:[`item.PROPERTY_731_VALUE`]="{ item }">
+        <template v-slot:[`item.PROPERTY_731_VALUE`]="{ item }">
           <v-chip
             class="ma-1 blue lighten-4"
             outlined
@@ -101,23 +121,24 @@
             target="_blank"
             small
           >
-              <v-icon color="green" small left>mdi-file-document-outline</v-icon>
-            {{link.NAME}}
+            <v-icon color="green" small left>mdi-file-document-outline</v-icon>
+            {{ link.NAME }}
           </v-chip>
         </template>
         <template v-slot:[`item.PROPERTY_729_VALUE`]="{ item }">
           <v-chip
             class="ma-1 blue lighten-4"
             outlined
-            v-for="link in item.PROPERTY_729_VALUE"
+            v-for="(link, index) in item.PROPERTY_729_VALUE"
             :key="link"
-            :href="link"
+            :href="link"            
+            style="width='20%'"
             target="_blank"
             maxlength="20"
             small
           >
-              <v-icon color="primary" small left>mdi-microsoft-internet-explorer</v-icon>
-            {{link}}
+            <v-icon color="#FF0000" small left>mdi-youtube</v-icon>
+            Видео №{{ index + 1 }}
           </v-chip>
         </template>
       </v-data-table>
@@ -131,20 +152,55 @@ export default {
   data: () => ({
     title: "Раздел презентаций и докладов",
     headers: [
-      { text: "Тема", value: "NAME", class: "blue-grey lighten-4"},
-      { text: "Партнёр", value: "PROPERTY_728_VALUE", class: "blue-grey lighten-4", sortable: false },
-      { text: "Контактное лицо партёра", value: "PROPERTY_724_VALUE", class: "blue-grey lighten-4", align: "center"  },
-      { text: "Анотация", value: "PROPERTY_725_VALUE", class: "blue-grey lighten-4", width: "150px" },
-      { text: "Решение/Выводы", value: "PROPERTY_726_VALUE", class: "blue-grey lighten-4",sortable: false  },
-      { text: "Файл", value: "PROPERTY_731_VALUE", class: "blue-grey lighten-4", width: "150px"  },
-      { text: "Отвественный", value: "PROPERTY_727_VALUE", class: "blue-grey lighten-4", align: "center", sortable: false  },
-      { text: "Ссылка", value: "PROPERTY_729_VALUE", class: "blue-grey lighten-4", width: "150px"  },
+      { text: "Тема", value: "NAME", class: "blue-grey lighten-4" },
+      {
+        text: "Партнёр",
+        value: "PROPERTY_728_VALUE",
+        class: "blue-grey lighten-4",
+        sortable: false,
+      },
+      {
+        text: "Контактное лицо партёра",
+        value: "PROPERTY_724_VALUE",
+        class: "blue-grey lighten-4",
+        align: "center",
+      },
+      {
+        text: "Анотация",
+        value: "PROPERTY_725_VALUE",
+        class: "blue-grey lighten-4",
+        width: "150px",
+      },
+      {
+        text: "Решение/Выводы",
+        value: "PROPERTY_726_VALUE",
+        class: "blue-grey lighten-4",
+        sortable: false,
+      },
+      {
+        text: "Файл",
+        value: "PROPERTY_731_VALUE",
+        class: "blue-grey lighten-4",
+        width: "150px",
+      },
+      {
+        text: "Отвественный",
+        value: "PROPERTY_727_VALUE",
+        class: "blue-grey lighten-4",
+        align: "center",
+        sortable: false,
+      },
+      {
+        text: "Ссылка",
+        value: "PROPERTY_729_VALUE",
+        class: "blue-grey lighten-4",
+        width: "150px",
+      },
     ],
     items: [],
     search: "",
     loading: false,
-    source:
-      "https://portal.ahstep.ru/ahstep/services/ajax/docs/ajax_learning.php",
+    source: "./ajax/docs/ajax_learning.php",
     dialog: false,
     itemsFormFileds: [
       {
@@ -245,7 +301,7 @@ export default {
       this.sendData("NewElement", this.itemsFormFileds);
     },
     sendData(type, data) {
-        console.log(this.itemsFormFileds);
+      console.log(this.itemsFormFileds);
       axios({
         method: "post",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
