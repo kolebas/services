@@ -12,7 +12,7 @@
             max-width="85%"
             raised
             class="mx-auto"
-            color="grey lighten-4"
+            color="#fafafa"
             v-if="card"
           >
             <v-card-text class="pa-0">
