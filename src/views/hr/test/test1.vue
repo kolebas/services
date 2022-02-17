@@ -5,137 +5,136 @@
       :warnMessage="dialogMessage"
       route="test1"
     />
-    <v-row>
-      <v-col cols="12">
-        <v-card
-          max-width="85%"
-          raised
-          class="mx-auto"
-          color="grey lighten-4"
-          v-if="card"
-        >
-          <v-card-text class="pa-0">
-            <p class="text-center pt-4 headline text--primary">
-              {{ title }}
-            </p>
-          </v-card-text>
-          <v-row>
-            <v-col cols="4">
-              <v-text-field
-                class="pl-6"
-                v-model="org"
-                dense
-                label="Организация"
-                :error-messages="name_err"
-              ></v-text-field>
-              <v-text-field
-                class="pl-6"
-                v-model="user"
-                dense
-                label="ФИО"
-                :error-messages="name_err"
-              ></v-text-field>
-              <v-text-field
-                class="pl-6"
-                v-model="prof"
-                dense
-                label="Должность"
-                :error-messages="name_err"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-alert
-                v-if="testStatus == 'Выполняется...'"
-                border="top"
-                colored-border
-                color="info"
-                elevation="2"
-              >
-                <span class="d-flex justify-center"
-                  >До завершения теста осталось:</span
+    <v-card class="py-12">
+      <v-row>
+        <v-col cols="12">
+          <v-card
+            max-width="85%"
+            raised
+            class="mx-auto"
+            color="grey lighten-4"
+            v-if="card"
+          >
+            <v-card-text class="pa-0">
+              <p class="text-center pt-4 headline text--primary">
+                {{ title }}
+              </p>
+            </v-card-text>
+            <v-row>
+              <v-col cols="4">
+                <v-text-field
+                  class="pl-6"
+                  v-model="org"
+                  dense
+                  label="Организация"
+                  :error-messages="name_err"
+                ></v-text-field>
+                <v-text-field
+                  class="pl-6"
+                  v-model="user"
+                  dense
+                  label="ФИО"
+                  :error-messages="name_err"
+                ></v-text-field>
+                <v-text-field
+                  class="pl-6"
+                  v-model="prof"
+                  dense
+                  label="Должность"
+                  :error-messages="name_err"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-alert
+                  v-if="testStatus == 'Выполняется...'"
+                  border="top"
+                  colored-border
+                  color="info"
+                  elevation="2"
                 >
-                <span class="d-flex justify-center display-2">{{
-                  setTimer
-                }}</span>
-              </v-alert>
-              <v-row class="mt-6 d-flex justify-center">
-                <!-- <span class="display-2" v-if="testStatus == 'Выполняется...'">{{
-                  setTimer
-                }}</span> -->
-                <v-btn
-                  v-if="testStatus != 'Выполняется...'"
-                  :disabled="startTimerBtn"
-                  @click="startTimer()"
-                >
-                  {{ testStatus }}</v-btn
-                >
-              </v-row>
-            </v-col>
-            <v-col cols="4" class="d-flex justify-center">
-              <v-card outlined class="mr-4" color="grey lighten-4">
-                <v-list-item>
-                  <v-list-item-content>
-                    <span class="subtitle-1 mr-2"
-                      >Прогресс выполнения теста</span
-                    >
-                  </v-list-item-content>
-                  <v-progress-circular
-                    :rotate="360"
-                    :size="100"
-                    :width="15"
-                    :value="getProgressCount"
-                    color="green"
+                  <span class="d-flex justify-center"
+                    >До завершения теста осталось:</span
                   >
-                    <span class="title">{{ getProgressCount }}% </span>
-                  </v-progress-circular>
-                </v-list-item>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-expand-transition>
-            <div v-if="startTest">
-              <v-container fluid>
-                <v-banner single-line>
-                  <v-icon slot="icon" color="info" size="36">
-                    mdi-information-outline
-                  </v-icon>
-                  <span class="title"
-                    >Блок №1 Требования Российский стандартов</span
-                  >
-                </v-banner>
-              </v-container>
-              <Input :arrInput="quest" />
-              <v-container fluid>
-                <v-banner single-line>
-                  <v-icon slot="icon" color="info" size="36">
-                    mdi-information-outline
-                  </v-icon>
-                  <span class="title">Блок №2 Технологический процесс</span>
-                </v-banner>
-              </v-container>
-              <Input :arrInput="quest2" />
-              <hr />
-              <v-card-actions class="py-4">
-                <div class="mx-auto">
+                  <span class="d-flex justify-center display-2">{{
+                    setTimer
+                  }}</span>
+                </v-alert>
+                <v-row class="mt-6 d-flex justify-center">
                   <v-btn
-                    class="mx-1"
-                    color="green lighten-2 white--text"
-                    :loading="btnLoader"
-                    @click="formSend()"
+                    v-if="testStatus != 'Выполняется...'"
+                    :disabled="startTimerBtn"
+                    @click="startTimer()"
                   >
-                    Отправить
-                  </v-btn>
-                  <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-                </div>
-              </v-card-actions>
-            </div>
-          </v-expand-transition>
-        </v-card>
-      </v-col>
-      <v-overlay :value="overlay">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-      </v-overlay>
-    </v-row>
+                    {{ testStatus }}</v-btn
+                  >
+                </v-row>
+              </v-col>
+              <v-col cols="4" class="d-flex justify-center">
+                <v-card outlined class="mr-4" color="grey lighten-4">
+                  <v-list-item>
+                    <v-list-item-content>
+                      <span class="subtitle-1 mr-2"
+                        >Прогресс выполнения теста</span
+                      >
+                    </v-list-item-content>
+                    <v-progress-circular
+                      :rotate="360"
+                      :size="100"
+                      :width="15"
+                      :value="getProgressCount"
+                      color="green"
+                    >
+                      <span class="title">{{ getProgressCount }}% </span>
+                    </v-progress-circular>
+                  </v-list-item>
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-expand-transition>
+              <div v-if="startTest">
+                <v-container fluid>
+                  <v-banner single-line>
+                    <v-icon slot="icon" color="info" size="36">
+                      mdi-information-outline
+                    </v-icon>
+                    <span class="title"
+                      >Блок №1 Требования Российский стандартов</span
+                    >
+                  </v-banner>
+                </v-container>
+                <Input :arrInput="quest" />
+                <v-container fluid>
+                  <v-banner single-line>
+                    <v-icon slot="icon" color="info" size="36">
+                      mdi-information-outline
+                    </v-icon>
+                    <span class="title">Блок №2 Технологический процесс</span>
+                  </v-banner>
+                </v-container>
+                <Input :arrInput="quest2" />
+                <hr />
+                <v-card-actions class="py-4">
+                  <div class="mx-auto">
+                    <v-btn
+                      class="mx-1"
+                      color="green lighten-2 white--text"
+                      :loading="btnLoader"
+                      @click="formSend()"
+                    >
+                      Отправить
+                    </v-btn>
+                    <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+                  </div>
+                </v-card-actions>
+              </div>
+            </v-expand-transition>
+          </v-card>
+        </v-col>
+        <v-overlay :value="overlay">
+          <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -165,8 +164,7 @@ export default {
     quest: [
       {
         id: 0,
-        name:
-          "ВОПРОС №1.1: В течении, которого времени (мин), должен быть просеян образец, для определения зараженности в явной форме, согласно ГОСТ 13586.6-93 «Зерно. Методы определения зараженности вредителями.»",
+        name: "ВОПРОС №1.1: В течении, которого времени (мин), должен быть просеян образец, для определения зараженности в явной форме, согласно ГОСТ 13586.6-93 «Зерно. Методы определения зараженности вредителями.»",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "radio",
@@ -179,8 +177,7 @@ export default {
       },
       {
         id: 1,
-        name:
-          "ВОПРОС №1.2: Время сушки измельченного зерна зерновых и зернобобовых культур, кроме кукурузы, с момента установления нормируемой температуры, согласно ГОСТ 13586.5-2015 «Зерно. Методы определения влажности»",
+        name: "ВОПРОС №1.2: Время сушки измельченного зерна зерновых и зернобобовых культур, кроме кукурузы, с момента установления нормируемой температуры, согласно ГОСТ 13586.5-2015 «Зерно. Методы определения влажности»",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "radio",
@@ -192,8 +189,7 @@ export default {
       },
       {
         id: 2,
-        name:
-          "ВОПРОС №1.3: Опишите явные признаки повреждения зерен вредным клопом-черепашкой, согласно ГОСТ 33538-2015 «Защита растений. Методы выявления и учета поврежденных зерен злаковых культур клопами-черепашками».",
+        name: "ВОПРОС №1.3: Опишите явные признаки повреждения зерен вредным клопом-черепашкой, согласно ГОСТ 33538-2015 «Защита растений. Методы выявления и учета поврежденных зерен злаковых культур клопами-черепашками».",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "textarea",
@@ -203,8 +199,7 @@ export default {
       },
       {
         id: 4,
-        name:
-          "ВОПРОС №1.4: Опишите отличительные признаки фузариозных зерен от здорового зерна, согласно ГОСТ 31646-2012 «Зерновые культуры. Методы определения содержания фузариозных зерен».",
+        name: "ВОПРОС №1.4: Опишите отличительные признаки фузариозных зерен от здорового зерна, согласно ГОСТ 31646-2012 «Зерновые культуры. Методы определения содержания фузариозных зерен».",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "textarea",
@@ -214,8 +209,7 @@ export default {
       },
       {
         id: 5,
-        name:
-          "ВОПРОС №1.5: В каких единицах измерения выражается показатель «качество клейковины», согласно ГОСТ Р 54478-2011 «Зерно. Методы определения количества и качества клейковины в пшенице»?",
+        name: "ВОПРОС №1.5: В каких единицах измерения выражается показатель «качество клейковины», согласно ГОСТ Р 54478-2011 «Зерно. Методы определения количества и качества клейковины в пшенице»?",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "textarea",
@@ -225,8 +219,7 @@ export default {
       },
       {
         id: 6,
-        name:
-          "ВОПРОС №1.6: По какому показателю определяется класс пшеницы, согласно ГОСТ 9353-2016 «Пшеница. Технические условия.»? массовая доля белка, %, (на сухое вещество); массовая доля сырой клейковины, %; по наихудшему значению одного из показателей качества, указанных в стандарте; натура, г/л; содержание сорной примеси, %. ",
+        name: "ВОПРОС №1.6: По какому показателю определяется класс пшеницы, согласно ГОСТ 9353-2016 «Пшеница. Технические условия.»? массовая доля белка, %, (на сухое вещество); массовая доля сырой клейковины, %; по наихудшему значению одного из показателей качества, указанных в стандарте; натура, г/л; содержание сорной примеси, %. ",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "textarea",
@@ -236,8 +229,7 @@ export default {
       },
       {
         id: 7,
-        name:
-          "ВОПРОС №1.7: Определите степень зараженности зерна при суммарной плотности заражения от 1,1 до 3,0 экз./кг., согласно ГОСТ 13586.6-93.",
+        name: "ВОПРОС №1.7: Определите степень зараженности зерна при суммарной плотности заражения от 1,1 до 3,0 экз./кг., согласно ГОСТ 13586.6-93.",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "textarea",
@@ -247,8 +239,7 @@ export default {
       },
       {
         id: 9,
-        name:
-          "ВОПРОС №1.8: Навеску зерна при определении количества и качества клейковины очищают от, согласно ГОСТ Р 54478-2011:",
+        name: "ВОПРОС №1.8: Навеску зерна при определении количества и качества клейковины очищают от, согласно ГОСТ Р 54478-2011:",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "radio",
@@ -264,8 +255,7 @@ export default {
       },
       {
         id: 10,
-        name:
-          "ВОПРОС №1.9: Какая навеска нормируется для проведения анализа на содержание спорыньи, согласно ГОСТ 30483-97:",
+        name: "ВОПРОС №1.9: Какая навеска нормируется для проведения анализа на содержание спорыньи, согласно ГОСТ 30483-97:",
         value: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
         type: "radio",
@@ -279,8 +269,7 @@ export default {
     quest2: [
       {
         id: 0,
-        name:
-          "ВОПРОС №2.1: Укажите периодичность измерений температуры в зерновой массе при хранении и какие отраслевые журналы заполняются. От чего она зависит?",
+        name: "ВОПРОС №2.1: Укажите периодичность измерений температуры в зерновой массе при хранении и какие отраслевые журналы заполняются. От чего она зависит?",
         value: "",
         err: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
@@ -291,8 +280,7 @@ export default {
       },
       {
         id: 1,
-        name:
-          "ВОПРОС №2.2: Какие показатели качества влияют на стойкость продукции при хранении.",
+        name: "ВОПРОС №2.2: Какие показатели качества влияют на стойкость продукции при хранении.",
         value: "",
         err: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
@@ -303,8 +291,7 @@ export default {
       },
       {
         id: 2,
-        name:
-          "ВОПРОС №2.3: Дайте определение термину «самосогревание зерновой массы».",
+        name: "ВОПРОС №2.3: Дайте определение термину «самосогревание зерновой массы».",
         value: "",
         err: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
@@ -315,8 +302,7 @@ export default {
       },
       {
         id: 3,
-        name:
-          "ВОПРОС №2.4: Отпишите ситуации, в которых необходимо инициировать включение установок активного вентилирования зерна в силосе/ или охлаждения путем пропуска через зерносушилку. Какие факторы (условия) необходимо?",
+        name: "ВОПРОС №2.4: Отпишите ситуации, в которых необходимо инициировать включение установок активного вентилирования зерна в силосе/ или охлаждения путем пропуска через зерносушилку. Какие факторы (условия) необходимо?",
         value: "",
         err: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
@@ -327,8 +313,7 @@ export default {
       },
       {
         id: 4,
-        name:
-          "ВОПРОС №2.5: Укажите перечень показателей, по которым производятся испытания на объединенные пробы с каждой автомашины при приеме продукции?",
+        name: "ВОПРОС №2.5: Укажите перечень показателей, по которым производятся испытания на объединенные пробы с каждой автомашины при приеме продукции?",
         value: "",
         err: "",
         textPosition: "subtitle-1 font-weight-bold text-left pt-2",
@@ -458,8 +443,7 @@ export default {
           method: "post",
           withCredentials: true,
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          url:
-            "https://portal.ahstep.ru/ahstep/services/ajax/hr/tests/ajax_test.php",
+          url: "https://portal.ahstep.ru/ahstep/services/ajax/hr/tests/ajax_test.php",
           data: {
             user: this.user,
             org: this.org,
