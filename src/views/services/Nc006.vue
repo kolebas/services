@@ -3,23 +3,24 @@
     <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
     <TitleService />
     <v-card min-height="800px" class="py-12">
-    <v-row>
-      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle
-          :title="$router.currentRoute.name"
-          :sub_message="sub_message"
-        ></RqCardTitle>
-        <hr />
-        <Input :arrInput="input" />
-         <v-card-text> * Поля обязательные для заполнения </v-card-text>
+      <v-row>
+        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle
+            :title="$router.currentRoute.name"
+            :sub_message="sub_message"
+          ></RqCardTitle>
+          <hr />
+          <Input :arrInput="input" />
+          <v-card-text> * Поля обязательные для заполнения </v-card-text>
           <hr />
           <Buttons
             :input="input"
             :sendButtonDisable="sendButtonDisable"
             ajax="./ajax/ajax_nc.php.php"
           />
-      </v-card>
-    </v-row>
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 

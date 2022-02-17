@@ -3,31 +3,32 @@
     <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
     <TitleService />
     <v-card min-height="800px" class="py-12">
-    <v-row>
-      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle
-          :title="$router.currentRoute.name"
-          :sub_message="sub_message"
-        ></RqCardTitle>
-        <hr />
-        <Input :arrInput="input" />
-        <hr />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              :disabled="btnStatus"
-              color="green lighten-2 white--text"
-              @click="checkData()"
-            >
-              Отправить
-            </v-btn>
-            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+      <v-row>
+        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle
+            :title="$router.currentRoute.name"
+            :sub_message="sub_message"
+          ></RqCardTitle>
+          <hr />
+          <Input :arrInput="input" />
+          <hr />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                :disabled="btnStatus"
+                color="green lighten-2 white--text"
+                @click="checkData()"
+              >
+                Отправить
+              </v-btn>
+              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -43,10 +44,11 @@ export default {
     DialogAfterSendForm,
     RqCardTitle,
     Input,
-    TitleService
+    TitleService,
   },
   data: () => ({
-    sub_message: "Данная услуга позволяет увеличить размер сетевого каталога. Также вы сможете отслеживать статус заявки в разделе",
+    sub_message:
+      "Данная услуга позволяет увеличить размер сетевого каталога. Также вы сможете отслеживать статус заявки в разделе",
     dialog: false,
     btnLoader: false,
     btnStatus: true,
@@ -85,7 +87,7 @@ export default {
         dense: true,
         solo: true,
         err: "",
-      },      
+      },
     ],
   }),
   created() {
@@ -102,10 +104,10 @@ export default {
     change_switch1(newValue) {
       if (newValue == true) {
         this.input[0].label = "Подтверждаю";
-        this.btnStatus = false
+        this.btnStatus = false;
       } else {
         this.input[0].label = "";
-        this.btnStatus = true
+        this.btnStatus = true;
       }
     },
   },
@@ -178,7 +180,6 @@ export default {
       }
     },
   },
-  
 
   mounted() {
     this.getFolder();

@@ -3,31 +3,32 @@
     <v-row>
       <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
       <TitleService />
-    <v-card min-height="800px" class="py-12">
-      <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-        <RqCardTitle
-          :title="$router.currentRoute.name"
-          :sub_message="sub_message"
-        ></RqCardTitle>
-        <hr />
-        <Input :arrInput="input" />
+      <v-card min-height="800px" class="py-12">
+        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+          <RqCardTitle
+            :title="$router.currentRoute.name"
+            :sub_message="sub_message"
+          ></RqCardTitle>
+          <hr />
+          <Input :arrInput="input" />
 
-        <v-card-text> * Поля обязательные для заполнения </v-card-text>
-        <hr />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              :disabled="btnStatus"
-              color="green lighten-2 white--text"
-              @click="formSend()"
-            >
-              Отправить
-            </v-btn>
-            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-          </div>
-        </v-card-actions>
+          <v-card-text> * Поля обязательные для заполнения </v-card-text>
+          <hr />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                :disabled="btnStatus"
+                color="green lighten-2 white--text"
+                @click="formSend()"
+              >
+                Отправить
+              </v-btn>
+              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
       </v-card>
     </v-row>
   </v-container>
