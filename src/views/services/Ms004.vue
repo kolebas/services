@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
-      <TitleService />
-      <v-card min-height="800px" class="py-12">
+    <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
+    <TitleService />
+    <v-card min-height="800px" class="py-12">
+      <v-row>
         <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
           <RqCardTitle
             :title="$router.currentRoute.name"
@@ -29,8 +29,8 @@
             </div>
           </v-card-actions>
         </v-card>
-      </v-card>
-    </v-row>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
