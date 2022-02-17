@@ -149,7 +149,7 @@ if ($data['data']['type'] == 'updateStoreOrders') {
 
   function sendEmail ($subject, $user)
   {
-    $to      = 'Smirnova.IV@ahstep.ru';
+    $to      = 'Zavorueva.II@ahstep.ru';
     $headers  = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
      
