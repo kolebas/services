@@ -18,8 +18,12 @@
                   }}</v-list-item-title>
                   <v-list-item-subtitle>{{
                     item.subtitle
-                  }}</v-list-item-subtitle> </v-list-item-content
-                ><img :src="require('../../assets/img/hr/tests/' + item.img)" />
+                  }}</v-list-item-subtitle>
+                </v-list-item-content>
+                <img
+                  :src="require('../../assets/img/hr/tests/' + item.img)"
+                  contain
+                />
               </v-list-item>
             </v-card>
           </v-hover>
@@ -50,5 +54,3 @@ export default {
   }),
 };
 </script>
-
-
