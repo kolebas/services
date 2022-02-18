@@ -1,3 +1,25 @@
+<?php
+    // Allow from any origin
+    if (isset($_SERVER['HTTP_ORIGIN'])) {
+        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Max-Age: 86400');    // cache for 1 day
+    }
+
+    // Access-Control headers are received during OPTIONS requests
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+            header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+
+        exit(0);
+    }
+
+    //echo "You have CORS!";
+?>
 <?
 require_once($_SERVER["DOCUMENT_ROOT"] . '/bitrix/modules/main/include/prolog_before.php');
 $postData = file_get_contents('php://input');
@@ -39,22 +61,26 @@ if ($_GET[type] == "getStoreOrders") {
         "IBLOCK_SECTION_ID" => array($sectionID, $_GET[sectionId]),
     );
     //Получим массив всех элементов информационного блока
-    $res = CIBlockElement::GetList(array('DATE_CREATE' => 'DESC'), $arFilter);
+    $res = CIBlockElement::GetList(array('NAME' => 'ASC'), $arFilter);
     $get_result = array();
     while ($el = $res->GetNext()):
         $value = array();
         $db_props = CIBlockElement::GetProperty($id, $el["ID"], array());
-            $PROPS = array();
+        $PROPS = array();
+		$oUserinfo = CUser::GetByID($el['CREATED_BY']);
+		$author = $oUserinfo->getNext();
+		$authorID = $author["ID"];		
+		$author = $author["LAST_NAME"] ." ". $author["NAME"];
         while ($ar_props = $db_props->Fetch()):
-                if ($ar_props[VALUE] != NULL) {
-                    $PROPS[$ar_props[CODE]] = $ar_props[VALUE];
-                    if ($ar_props[CODE] == 'ITEMS')
-                    {                        
-                        array_push($value, $ar_props[VALUE]);
-                    }
-                }
+			if ($ar_props[VALUE] != NULL) {
+				$PROPS[$ar_props[CODE]] = $ar_props[VALUE];
+				if ($ar_props[CODE] == 'ITEMS')
+				{                        
+					array_push($value, $ar_props[VALUE]);
+				}
+			}
         endwhile;
-        $get_result[] = array("ID" => $el['ID'], "NUMBER" => $el['NAME'], "DATE" => $el['DATE_CREATE'], "USER" => $el['CREATED_USER_NAME'], "ORDER" => $value, "ORDER_STATUS" => $PROPS['ORDER_STATUS']);        
+        $get_result[] = array("ID" => $el['ID'], "NUMBER" => $el['NAME'], "DATE" => $el['DATE_CREATE'], "USER_ID" => $el['CREATED_BY'], "USER" => $author, "ORDER" => $value, "ORDER_STATUS" => $PROPS['ORDER_STATUS']);        
     endwhile;
     echo json_encode($get_result);
 }
@@ -149,7 +175,7 @@ if ($data['data']['type'] == 'updateStoreOrders') {
 
   function sendEmail ($subject, $user)
   {
-    $to      = 'Zavorueva.II@ahstep.ru';
+    $to      = 'zakaz-milk@ahstep.ru';
     $headers  = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
      
