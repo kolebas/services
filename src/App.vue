@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="root">
     <v-main>
       <v-container fluid v-if="getRouteService == '/'" class="mt-n2">
         <v-card>
@@ -155,6 +155,9 @@ body {
 }
 #uiToolbarContainer {
   display: none;
+}
+.root {
+  min-height: 85vh;
 }
 .v-breadcrumbs {
   background: #f5f5f5;
