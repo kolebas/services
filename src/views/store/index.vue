@@ -137,7 +137,7 @@
             <v-card shaped elevation="3" class="mx-auto">
               <v-list-item @click="showDialogItem(item)">
                 <v-list-item-avatar tile rounded size="80">
-                  <v-img :src="'https://portal.ahstep.ru' + item.img"></v-img>
+                  <v-img :src="'https://portal.ahstep.ru' + item.img" contain></v-img>
                 </v-list-item-avatar>
                 <v-list-item-title>{{ item.text }}</v-list-item-title>
               </v-list-item>

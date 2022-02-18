@@ -70,7 +70,7 @@
                 </v-row>
               </v-col>
               <v-col cols="4" class="d-flex justify-center">
-                <v-card outlined class="mr-4" color="grey lighten-4">
+                <v-card outlined class="mr-4">
                   <v-list-item>
                     <v-list-item-content>
                       <span class="subtitle-1 mr-2"
@@ -338,6 +338,7 @@ export default {
     progValue: "0",
     card: true,
     table: false,
+    source: "./ajax/hr/tests/ajax_test1.php"
   }),
   created() {
     bus.$on("resultArray", (data) => {
@@ -418,17 +419,6 @@ export default {
     },
     formSend() {
       this.btnLoader = true;
-      /* for (let i = 0; i < this.quest.length; i++) {
-        if (!this.quest[i].value) {
-          this.quest[i].err = "Необходимо заполнить данное поле";
-        }
-      }
-      for (let i = 0; i < this.quest2.length; i++) {
-        if (!this.quest2[i].value) {
-          this.quest2[i].err = "Необходимо заполнить данное поле";
-        }
-      } */
-
       if (this.sendData) {
         var questAll = this.quest.concat(this.quest2);
         var quest = [];
@@ -443,7 +433,7 @@ export default {
           method: "post",
           withCredentials: true,
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          url: "https://portal.ahstep.ru/ahstep/services/ajax/hr/tests/ajax_test.php",
+          url: this.source,
           data: {
             user: this.user,
             org: this.org,
