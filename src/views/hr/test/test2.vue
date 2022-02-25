@@ -3,18 +3,32 @@
     <DialogAfterSendFrom
       :dialog="dialog"
       :warnMessage="dialogMessage"
-      route="test1"
+      route="test2"
     />
     <v-card class="py-12">
       <v-card class="form">
         <h1 class="form__title">{{ title }}</h1>
         <p class="form__subtitle">{{ subtitle }}</p>
         <div class="form__user-info">
-          <div class="ui-ctl ui-ctl-textbox ui-ctl-underline ui-ctl-w33 ui-ml-0">
-            <input type="text" class="ui-ctl-element" v-model="user" placeholder="ФИО" />            
+          <div
+            class="ui-ctl ui-ctl-textbox ui-ctl-underline ui-ctl-w33 ui-ml-0"
+          >
+            <input
+              type="text"
+              class="ui-ctl-element"
+              v-model="user"
+              placeholder="ФИО"
+            />
           </div>
-          <div class="ui-ctl ui-ctl-textbox ui-ctl-underline ui-ctl-w33 ui-ml-0">
-            <input type="text" class="ui-ctl-element" v-model="job" placeholder="Должность" />
+          <div
+            class="ui-ctl ui-ctl-textbox ui-ctl-underline ui-ctl-w33 ui-ml-0"
+          >
+            <input
+              type="text"
+              class="ui-ctl-element"
+              v-model="job"
+              placeholder="Должность"
+            />
           </div>
           <div
             class="
@@ -27,9 +41,13 @@
             "
           >
             <div class="ui-ctl-after ui-ctl-icon-angle"></div>
-            <select class="ui-ctl-element" v-model="slectedOrg">
+            <select class="ui-ctl-element" v-model="selectedOrg">
               <option value="" disabled selected>Организация</option>
-              <option v-for="(item, index) in org" :key="index" value="">
+              <option
+                v-for="(item, index) in org"
+                :key="index"
+                :value="item.NAME"
+              >
                 {{ item.NAME }}
               </option>
             </select>
@@ -68,6 +86,16 @@
                 class="question__label"
                 ><p>{{ answer.title }}</p></label
               >
+              <div v-if="answer.textarea" class="ui-ctl ui-ctl-textarea">
+                <textarea
+                :id="
+                  'textarea' +
+                  questions.findIndex((el) => el.title === item.title)
+                "
+                  class="ui-ctl-element question__textarea"
+                  @change="getTextareaValue(questions.findIndex((el) => el.title === item.title))"
+                ></textarea>
+              </div>
             </div>
           </li>
         </ul>
@@ -98,14 +126,11 @@
 </template>
 
 <script>
-import { bus } from "@/main.js";
 import axios from "axios";
 import DialogAfterSendFrom from "@/components/DialogAfterSendForm.vue";
-//import Input from "@/components/Input.vue";
 export default {
   components: {
     DialogAfterSendFrom,
-    //Input,
   },
   data: () => ({
     user: "",
@@ -215,6 +240,7 @@ export default {
           },
           {
             title: "Иное (опишите)",
+            textarea: false,
           },
         ],
         value: [],
@@ -237,21 +263,17 @@ export default {
           },
           {
             title: "Иное (опишите)",
+            textarea: false,
           },
         ],
         value: [],
       },
     ],
     org: [],
-    slectedOrg: "",
+    selectedOrg: "",
     dialog: false,
     source: "./ajax/hr/tests/ajax_test2.php",
   }),
-  created() {
-    bus.$on("SelectUsr", (data) => {
-      this.user = data;
-    });
-  },
   mounted() {
     axios
       .get("./ajax/GetOrg.php", {})
@@ -264,19 +286,41 @@ export default {
     },
     answer2() {
       return this.questions[1].value;
-    }
+    },
+    answer4() {
+      return this.questions[3].value.includes("Иное (опишите)");   
+    },
+    answer5() {
+      return this.questions[4].value.includes("Иное (опишите)");   
+    },
   },
   watch: {
     answer1(val) {
-      if(val.length > 1 ){
+      if (val.length > 1) {
         this.questions[0].value.shift();
       }
     },
     answer2(val) {
-      if(val.length > 3 ){
+      if (val.length > 3) {
         this.questions[1].value.shift();
       }
-    }
+    },
+    answer4(val) {      
+      if (val == true) {              
+        this.questions[3].answers[4].textarea = true;
+      }
+      else {
+        this.questions[3].answers[4].textarea = false;
+      }
+    },
+    answer5(val) {      
+      if (val == true) {              
+        this.questions[4].answers[4].textarea = true;
+      }
+      else {
+        this.questions[4].answers[4].textarea = false;
+      }
+    },
   },
   methods: {
     formCancl() {
@@ -292,6 +336,8 @@ export default {
         url: this.source,
         data: {
           user: this.user,
+          job: this.job,
+          org: this.selectedOrg,
           questions: this.questions,
         },
       })
@@ -308,6 +354,14 @@ export default {
           this.btnLoader = false;
         });
     },
+    getTextareaValue(id) {
+      console.log(id);
+      let val = document.querySelector("#textarea" + id).value;
+      console.log(val);
+      if(val){
+        this.questions[id].value.push(val);
+      }
+    }, 
   },
 };
 </script>
@@ -341,7 +395,7 @@ export default {
   margin: 0 !important;
 }
 .ui-ml-0 {
-  margin-left: 0!important;
+  margin-left: 0 !important;
 }
 .question {
   margin: 2% 5% 0 5%;
@@ -366,8 +420,16 @@ export default {
   align-items: baseline;
   margin-left: 5%;
 }
+.question__answer:nth-child(3n) {
+  flex-wrap: wrap;
+}
 .question__answer:first-of-type {
   margin-top: 1%;
+}
+.question__textarea {
+
+  margin: -2% 0 0 1%;
+  border-radius: 15px;
 }
 label.question__label {
   margin-left: 0.5%;
@@ -376,7 +438,16 @@ label.question__label {
   font-size: 14px;
   color: #525c69;
   line-height: 17px;
+  width: 50%;
 }
+.ui-ctl-textarea {
+  animation: show .5s;
+}
+
+@keyframes show {
+  from {opacity: 0;} to {opacity: 1;}  
+}
+
 
 @media screen and (max-width: 1380px) {
   .form {
