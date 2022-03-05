@@ -157,5 +157,5 @@ else {
     unset($value);   
     echo json_encode($get_result);
   }
-
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');
 ?>

@@ -65,5 +65,6 @@ if (isset($_POST["cmnt"])){
 			$dbExport[] = array('ID' => $ar_fields['ID'], 'NAME' => $ar_fields['NAME']);
 		}
 	echo json_encode($dbExport);
-}	
+}
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');	
 ?>

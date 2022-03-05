@@ -102,4 +102,5 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
         endwhile;
         echo json_encode($get_result);      
     }
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');    
 ?>
