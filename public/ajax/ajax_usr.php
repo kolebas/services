@@ -11,4 +11,5 @@ if(CModule::IncludeModule("socialnetwork"))
 $pl_users = array();
     $userInfo[] = array('ID' => $USER->GetID(), 'GROUP' => $arGroups, 'SocGROUP' => $SocGROUP);
 echo json_encode($userInfo);
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');
 ?>

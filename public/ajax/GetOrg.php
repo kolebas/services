@@ -42,4 +42,5 @@ $id = 67;
 	$org[] = array('ID' => $el['ID'], 'NAME' => $el['NAME'], 'RDT' => $PROPS[SOKRASHCHENIE]);
 	endwhile;
 	echo json_encode($org);
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');  
 ?>
