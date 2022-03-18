@@ -61,6 +61,20 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        visible: true,
+      },
+      { 
+        name: "Подразделение*",
+        value: "",
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "select",
+        select_arr: [ "Агро-Кевсалинский", "Агро-Марьинский", "Агро-ПервоеМая", "Агро-Восход" ],
+        outlined: true,
+        dense: true,
+        solo: true,
+        visible: false,
       },
       {
         name: "Наименование ОС:*",
@@ -72,6 +86,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        visible: true,
       },
       {
         name: "Государственный регистрационный номер или инвентарный номер:*",
@@ -83,6 +98,7 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        visible: true,
       },
       {
         name: "Арендованная техника:",
@@ -92,6 +108,7 @@ export default {
         cs: "12",
         sm: "6",
         md: "6",
+        visible: true,
       },
       {
         name: "Код ОС 1С:",
@@ -118,7 +135,7 @@ export default {
     });
   },
   computed: {
-    getValue() {
+    getValue() {      
       return (
         this.input[0].value &&
         this.input[1].value &&
@@ -127,7 +144,7 @@ export default {
       );
     },
     getValueSwitch() {
-      return this.input[3].value;
+      return this.input.filter((item) => item.type === "switch").value;
     },
   },
   watch: {
