@@ -35,5 +35,6 @@ $cmnt = $data["cmnt"];
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
-	   );
+	  );
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');    
 ?>

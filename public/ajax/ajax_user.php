@@ -37,4 +37,5 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_befo
 				$pl_users[] = array('ID' => $arUser['ID'], 'NAME' => $arUser['LAST_NAME']. " " .$arUser['NAME'], 'PHOTO' => CFile::GetPath($arUser['PERSONAL_PHOTO']), 'POSITION'=> $arUser['WORK_POSITION']);
 			}
 	echo json_encode($pl_users);
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');
 ?>

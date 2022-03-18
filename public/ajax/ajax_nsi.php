@@ -82,4 +82,5 @@ if($DOCUMENT_ID = $el->Add($arLoadDocumentArray)){
 else{
   echo "Error: ".$el->LAST_ERROR;
 }
+require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');
 ?>
