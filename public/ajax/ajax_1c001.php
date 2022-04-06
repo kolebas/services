@@ -7,13 +7,13 @@ $data = json_decode($postData, true);
 //Добавление заявки на доступ в БД 1С
 if ($data[type] == "1c001") {
 
-    $org = $data[input][7]['value'];
+    $org = $data[input][0]['value'];
     $temptime = $data[input][1]['value'];
-    $db = $data[input][2]['value'];
-    $permision = $data[input][3]['value'];
-    $access = $data[input][4]['value'];
-    $cmnt = $data[input][5]['value'];
-    $user = $data[input][6]['value'];
+    $db = $data[input][3]['value'];
+    $permision = $data[input][4]['value'];
+    $access = $data[input][5]['value'];
+    $cmnt = $data[input][6]['value'];
+    $user = $data[input][7]['value'];
 
 
     $cnt = CIBlockElement::GetList(
@@ -119,7 +119,7 @@ if ($_GET[type] == "getUsers") {
         "ACTIVE" => "Y",
         "IBLOCK_SECTION_ID" => array($sectionID, $_GET[sectionId]),
     );
-    $res = CIBlockElement::GetList(array('NAME' => 'ASC'), $arFilter);
+    $res = CIBlockElement::GetList(array('DATE_CREATE' => 'DESC'), $arFilter);
     $get_result = array();
     while ($el = $res->GetNext()):
         $arElementID[] = $el["ID"];
@@ -132,9 +132,9 @@ if ($_GET[type] == "getUsers") {
 
             endwhile;
             if ($PROPS['ZADACHI'] != null){
-                $rsUser = CUser::GetByID($PROPS['FIO_SOTRUDNIKA']);
+				$rsUser = CUser::GetByID($PROPS['FIO_SOTRUDNIKA']);
                 $arUser = $rsUser->Fetch();
-            	$get_result[] = array("ID" => $el['ID'], "USER" => $arUser['LAST_NAME'] . " " . $arUser['NAME'], "DATE_CONNECT" => $el['CREATED_DATE'], "TASK_CONNECT" => $PROPS['ZADACHI']['TEXT'], "DATE_DISCONNECT" => $PROPS['NAME'], "TASK_DISCONNECT" => $PROPS['NAME']);
+            	$get_result[] = array("ID" => $el['ID'], "USER" => $arUser['LAST_NAME'] . " " . $arUser['NAME'], "DATE_CONNECT" => $el['DATE_CREATE'], "TASK_CONNECT" => $PROPS['ZADACHI']['TEXT'], "DATE_DISCONNECT" => $PROPS['NAME'], "TASK_DISCONNECT" => $PROPS['NAME']);
             }
         
     endwhile;
@@ -279,5 +279,6 @@ if ($data[type] == "remDB") {
     $el = new CIBlockElement;
     CIBlockElement::Delete($id);
 }
+
 require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/epilog_after.php');
 ?>

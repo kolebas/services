@@ -4,47 +4,39 @@
     <TitleService icon="./assets/img/1s.png" />
     <v-card min-height="800px" class="py-12">
       <v-row>
-        <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-          <RqCardTitle
-            :title="$router.currentRoute.name"
-            :sub_message="sub_message"
-          ></RqCardTitle>
-          <hr />
-          <SelectUsr
-            :cols_title="5"
-            :cols_input="6"
-            title="ФИО сотрудника:"
-            :id="6"
-            :userId_err="input[6].err"
-          />
-          <v-card outlined class="my-6 mx-6" color="grey lighten-2">
-            <v-card-title class="mx-auto">
-              Куда предоставляется доступ
-            </v-card-title>
+        <form id="form" novalidate>
+          <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+            <RqCardTitle
+              :title="$router.currentRoute.name"
+              :sub_message="sub_message"
+            ></RqCardTitle>
             <hr />
-            <SelectOrg
-              :cols_title="5"
-              :cols_input="6"
-              :org_err="input[7].err"
-            />
-            <Input :arrInput="input" />
+
+            <Input :arrInput="input.filter(item => item.title === 'user')" />
+            <v-card outlined class="my-6 mx-6" color="grey lighten-2">
+              <v-card-title class="mx-auto">
+                Куда предоставляется доступ
+              </v-card-title>
+              <hr />
+              <Input :arrInput="input.filter(item => item.title != 'user')" />
+            </v-card>
+            <hr />
+            <v-card-actions class="py-4">
+              <div class="mx-auto">
+                <v-btn
+                  class="mx-1"
+                  :loading="btnLoader"
+                  :disabled="btnStatus"
+                  color="green lighten-2 white--text"
+                  @click="checkData()"
+                >
+                  Отправить
+                </v-btn>
+                <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+              </div>
+            </v-card-actions>
           </v-card>
-          <hr />
-          <v-card-actions class="py-4">
-            <div class="mx-auto">
-              <v-btn
-                class="mx-1"
-                :loading="btnLoader"
-                :disabled="btnStatus"
-                color="green lighten-2 white--text"
-                @click="checkData()"
-              >
-                Отправить
-              </v-btn>
-              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-            </div>
-          </v-card-actions>
-        </v-card>
+        </form>
       </v-row>
     </v-card>
   </v-container>
@@ -52,8 +44,6 @@
 
 <script>
 import { bus } from "@/main.js";
-import SelectUsr from "@/components/SelectUsr.vue";
-import SelectOrg from "@/components/SelectOrg.vue";
 import RqCardTitle from "@/components/RqCardTitle.vue";
 import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
@@ -61,8 +51,6 @@ import axios from "axios";
 import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
-    SelectUsr,
-    SelectOrg,
     RqCardTitle,
     DialogAfterSendForm,
     Input,
@@ -75,7 +63,22 @@ export default {
     btnStatus: false,
     input: [
       {
-        id: 0,
+        name: "Организация",
+        value: [],
+        visible: true,
+        items: [],
+        err: "",
+        multiple: true,
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "autocomplete",
+        outlined: true,
+        dense: true,
+        solo: true,
+        required: true,
+      },
+      {
         name: "Временный доступ:",
         value: false,
         cs: "12",
@@ -86,7 +89,7 @@ export default {
         class: "mt-2",
       },
       {
-        id: 1,
+        title: "timeInterwall",
         name: "Период временного доступа:",
         value: [],
         cs: "12",
@@ -101,14 +104,14 @@ export default {
       },
       {
         id: 2,
+        title: "db",
         name: "Список БД 1С:",
         value: "",
         cs: "12",
         sm: "6",
         md: "6",
-        type: "select",
-        select_arr: [],
-        selectDB: [],
+        type: "autocomplete",
+        items: [],
         outlined: true,
         dense: true,
         solo: true,
@@ -116,7 +119,8 @@ export default {
         err: "",
       },
       {
-        id: 3,
+        id: 3,        
+        title: "accessLevel",
         name: "Права как у кого:",
         value: "",
         cs: "12",
@@ -157,60 +161,58 @@ export default {
       },
       {
         id: 7,
+        title: "user",
         name: "ФИО",
         value: "",
-        visible: false,
-        err: "",
-      },
-      {
-        id: 8,
-        name: "Организация",
-        value: "",
-        visible: false,
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "selectUsr",
+        outlined: true,
+        dense: true,
+        solo: true,
         err: "",
       },
     ],
     cmnt: "",
     cmnt_err: "",
     db: "",
+    org: [],
     file: [],
     dialog: false,
     dialogMessage: "",
     source: "./ajax/ajax_1c001.php",
   }),
   created() {
-    bus.$on("resultArray", (data) => {
-      this.input = data;
-      this.input[1].visible = this.input[0].value;
-    });
-    bus.$on("selectOrg", (data) => {
-      this.input[7].value = data.name;
-      this.input[7].err = "";
-    });
     bus.$on("SelectUsr", (data) => {
-      if (data.input_id == "6") {
-        this.input[6].err = "";
-        this.input[6].value = "user_" + data.userId;
+      if (data.input_id == "7") {
+        this.input.find((item) => {
+          if (item.title === "user") {
+            item.err = "";
+            item.value = "user_" + data.userId;
+          }
+        });
       }
       if (data.input_id == "3") {
-        this.input[3].err = "";
-        this.input[3].value = "user_" + data.userId;
+        this.input.find((item) => {
+          if (item.title === "accessLevel") {
+            item.err = "";
+            item.value = "user_" + data.userId;
+          }
+        });
       }
     });
   },
   mounted() {
-    axios
-      .get(this.source, {
-        params: {
-          type: "getDB",
-        },
-      })
-      .then((response) => (this.input[2].select_arr = response.data));
+    this.getDB();
+    this.getOrg();
+    this.enableValidation();
   },
   methods: {
     formCancl: function () {
       this.$router.go(-1);
     },
+
     checkInput() {
       for (var i = 0; i < this.input.length; i++) {
         if (this.input[i].value == "") {
@@ -221,9 +223,42 @@ export default {
         }
       }
     },
+
+    enableValidation() {
+      const form = document.querySelector("#form");
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+      });
+    },
+
+    getDB() {
+      axios
+        .get(this.source, {
+          params: {
+            type: "getDB",
+          },
+        })
+        .then((response) =>
+          this.input.find((item) => {
+            if (item.name === "Список БД 1С:") {
+              response.data.forEach(element => {
+                item.items.push({NAME: element})
+              });
+            }
+          })
+        );
+    },
+
+    getOrg() {
+      axios
+        .get("./ajax/GetOrg.php", {})
+        .then((response) => this.findItemArray("Организация", response));
+    },
+
     checkArr(arr) {
       return arr.value != "";
     },
+
     checkData() {
       let tempArr = this.input.filter((test) => test.id > 1);
       let sts = tempArr.every(this.checkArr);
@@ -233,12 +268,21 @@ export default {
         this.checkInput();
       }
     },
+
+    findItemArray(elementName, response) {
+      this.input.find((item) => {
+        if (item.name === elementName) {
+          item.items = response.data;
+        }
+      });
+    },
+
     formSend() {
+      console.log(this.input);
       this.btnLoader = true;
       if (this.input) {
         axios({
           method: "post",
-          withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
           url: this.source,
           data: {
@@ -263,16 +307,17 @@ export default {
     },
   },
   computed: {
-    condition() {
-      this.usrid;
-      return (
-        this.usrid == 1 ||
-        this.usrid == 2318 ||
-        this.usrid == 2416 ||
-        this.usrid == 2385 ||
-        this.usrid == 3371 ||
-        this.usrid == 1940
+    getValueSwitch() {
+      const inputSwitch = this.input.find((item) => item.type === "switch");
+      return inputSwitch.value;
+    },
+  },
+  watch: {
+    getValueSwitch(newValue) {
+      const inputTimeInterval = this.input.find(
+        (item) => item.title === "timeInterwall"
       );
+      inputTimeInterval.visible = newValue;
     },
   },
 };
