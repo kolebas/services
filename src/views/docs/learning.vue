@@ -3,6 +3,7 @@
     <v-row justify="center">
       <v-dialog v-model="dialog" persistent max-width="80%">
         <v-card>
+          <form id="formElement"> 
           <v-card-title class="headline grey lighten-2" primary-title>
             <span class="headline">Добавление элемента</span>
           </v-card-title>
@@ -22,18 +23,6 @@
                     :label="item.name"
                     required
                   ></v-text-field>
-                  <v-select
-                    v-if="item.type == 'select'"
-                    v-model="item.value"
-                    :items="[
-                      'План АФК',
-                      'План Степь',
-                      'Внеплан АФК',
-                      'Внеплан Степь',
-                    ]"
-                    :label="item.name"
-                    required
-                  ></v-select>
                   <v-file-input
                     v-if="item.type == 'file'"
                     v-model="item.value"
@@ -83,6 +72,7 @@
               >Сохранить</v-btn
             >
           </v-card-actions>
+          </form>
         </v-card>
       </v-dialog>
     </v-row>
@@ -148,12 +138,16 @@
 
 <script>
 import axios from "axios";
+//import Buttons from "@/components/Buttons.vue";
 export default {
+  components: {
+    //Buttons,
+  },
   data: () => ({
     title: "Раздел презентаций и докладов",
     headers: [
-      { text: "Тема", value: "NAME", class: "blue-grey lighten-4" },
-      {
+      { text: "Тема", value: "NAME", class: "blue-grey lighten-4", width: "25%" },
+      /*{
         text: "Партнёр",
         value: "PROPERTY_728_VALUE",
         class: "blue-grey lighten-4",
@@ -164,19 +158,19 @@ export default {
         value: "PROPERTY_724_VALUE",
         class: "blue-grey lighten-4",
         align: "center",
-      },
+      },*/
       {
         text: "Анотация",
         value: "PROPERTY_725_VALUE",
         class: "blue-grey lighten-4",
-        width: "150px",
-      },
+        width: "40%",
+      },/*
       {
         text: "Решение/Выводы",
         value: "PROPERTY_726_VALUE",
         class: "blue-grey lighten-4",
         sortable: false,
-      },
+      },*/
       {
         text: "Файл",
         value: "PROPERTY_731_VALUE",
@@ -298,18 +292,29 @@ export default {
       this.dialog = true;
     },
     saveElement() {
-      this.sendData("NewElement", this.itemsFormFileds);
+      this.sendData("newElement", this.itemsFormFileds);
     },
     sendData(type, data) {
-      console.log(this.itemsFormFileds);
+      var formData = new FormData(this.formElement);
+      var file = data.find(item => item.type === "file").value;
+        for (var i = 0; i < file.length; i++) {
+          formData.append("file[" + i + "]", file[i]);          
+        } 
+      formData.append("name", data[0].value);
+      formData.append("partner", data[1].value);
+      formData.append("contact", data[2].value);
+      formData.append("anotation", data[3].value);
+      formData.append("resolution", data[4].value);
+      formData.append("responsible", data[5].value);
+      formData.append("cmnt", data[6].value);
+      formData.append("file", data[8].value);
+      //formData.append("link", data[9].value);
+      formData.append("type", type);
       axios({
         method: "post",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: { "Content-Type": "multipart/form-data" },
         url: this.source,
-        data: {
-          type: type,
-          data: data,
-        },
+        data: formData,
       }).then((response) => {
         if (response.status == 200) {
           this.getData();

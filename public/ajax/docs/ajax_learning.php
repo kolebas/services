@@ -43,29 +43,36 @@ while($arElements = $element->Fetch())
 echo json_encode($arrElems);
 
 }
-if($data['type'] == 'NewElement'){
-	echo $data['data'][0]['value'];
-
-	$file = $_FILES[$data['data'][7]['value']];
-
-	//Добавление ПУНа
-	$name = $data['data'][0]['value'];	
+//Добавление нвого элемента
+if($_POST["type"] == 'newElement'){
+	$files = $_FILES['file'];
+	$name = $_POST["name"];	
 	$el = new CIBlockElement;
-    $section_id = false;
-    //$section_id[$i] = $_POST['section_id']; //Разделы для добавления
+  $section_id = false;
 
-    //Свойства
-    $PROP = array();
-	$PROP[728] = $data['data'][1]['value'];
-	$PROP[724] = $data['data'][2]['value'];
-	$PROP[725] = $data['data'][3]['value'];
-	$PROP[726] = $data['data'][4]['value'];
-	$PROP[727] = $data['data'][5]['value'];
-	$PROP[729] = $data['data'][8]['value'];
-	$PROP[731] = $_FILES['data'][7]['value'];
 
-	print_r($PROP[731]);
-	//
+  //Добавление файлов
+  if (isset($files)){
+		$countfiles = count($_FILES['file']['name']);
+		for ($i=0; $i<$countfiles; $i++){
+			$filename = $_FILES['file']['name'][$i];
+			move_uploaded_file($_FILES["file"]["tmp_name"][$i], "/home/bitrix/www/ahstep/upload/".$filename);
+			$arrFiles['n'.$i] = array("VALUE"=>CFile::MakeFileArray("/home/bitrix/www/ahstep/upload/".$filename));
+			
+		}
+	}
+	print_r($arrFiles);
+
+  //Свойства
+  $PROP = array();
+	$PROP[728] = $_POST["partner"];
+	$PROP[724] = $_POST["contact"];
+	$PROP[725] = $_POST["anotation"];
+	$PROP[726] = $_POST["resolution"];
+	$PROP[727] = $_POST["responsible"];
+	$PROP[729] = $_POST["link"];
+	$PROP['FILE'] = $arrFiles;
+
 	$fields = array(
         "NAME" => $name,
         "CREATED_BY" => $GLOBALS['USER']->GetID(),//Передаем ID пользователя кто добавляет
