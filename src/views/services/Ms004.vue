@@ -10,7 +10,7 @@
             :sub_message="sub_message"
           ></RqCardTitle>
           <hr />
-          <Input :arrInput="input" />
+          <Input :arrInput="input.filter((item) => item.visible === true)" />
 
           <v-card-text> * Поля обязательные для заполнения </v-card-text>
           <hr />
@@ -64,7 +64,7 @@ export default {
         visible: true,
       },
       { 
-        name: "Подразделение*",
+        name: "Подразделение:*",
         value: "",
         cs: "12",
         sm: "6",
@@ -120,9 +120,10 @@ export default {
         outlined: true,
         dense: true,
         solo: true,
+        visible: true,
       },
     ],
-    btnStatus: true,
+    btnStatus: false,
     btnLoader: false,
     dialog: false,
     dialogMessage: "",
@@ -130,53 +131,45 @@ export default {
 
   created() {
     bus.$on("selectOrg", (data) => {
-      this.input[0].org_err = "";
-      this.input[0].value = data.name;
+      const inputOrg = this.input.find((item) => item.type === "selectOrg");
+      const inputDepartment = this.input.find(item => item.type === "select");
+      inputOrg.org_err = "";
+      inputOrg.value = data.name;
+      if (inputOrg.value === "АО «Агрохлебопродукт»") {
+        inputDepartment.visible = true;
+      } else {
+        inputDepartment.visible = false;
+        inputDepartment.value = null;
+      }
     });
   },
   computed: {
-    getValue() {      
-      return (
-        this.input[0].value &&
-        this.input[1].value &&
-        this.input[2].value &&
-        this.input[4].value
-      );
+    getValue() {
+      return this.input;
     },
     getValueSwitch() {
-      return this.input.filter((item) => item.type === "switch").value;
+      const inputSwitch = this.input.find((item) => item.type === "switch");      
+      return inputSwitch.value;
     },
   },
   watch: {
-    getValue(newValue) {
-      if (newValue) {
-        if (this.input[3].value == true) {
-          this.btnStatus = false;
-          this.getValueSwitch();
-        }
-        if (this.input[3].value == false) {
-          this.btnStatus = false;
-        }
-      } else {
-        this.btnStatus = true;
-      }
-    },
+    getValue: {
+      handler(val) {
+        console.log('a thing changed ' + val.value);
+      },
+      deep: true
+    },    
     getValueSwitch(newValue) {
-      if (!newValue) {
-        this.input[4].visible = true;
-        this.input[4].value = "";
-        this.input[3].label = "";
-        this.btnStatus = true;
+      const inputKode1C = this.input.find((item) => item.name === "Код ОС 1С:");
+      if (newValue === true) {
+        inputKode1C.visible = false;
       } else {
-        this.input[4].visible = false;
-        this.input[3].label = "Да";
-        this.btnStatus = false;
+        inputKode1C.visible = true;
       }
     },
   },
   methods: {
     formSend: function () {
-      console.log(this.input);
       this.btnLoader = true;
       axios({
         method: "post",
@@ -201,18 +194,6 @@ export default {
           this.dialogMessage = "Произошла ошибка";
           this.btnLoader = false;
         });
-      /*if(!this.org_name){
-                this.org_err = 'Не выбрана организация';                
-            }
-            if(!this.inputs[0].value){
-                this.inputs[0].err = 'Не указано наименование ОС'                
-            }
-            if(!this.inputs[1].value){
-                this.inputs[1].err = 'Не указан государственный регистрационный номер или инвентарный номер'                
-            }
-            if(!this.inputs[2].value){
-                this.inputs[2].err = 'Не указан код ОС 1С'                
-            } */
     },
     //Действие кнопки "назад"
     formCancl: function () {

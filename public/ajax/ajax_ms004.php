@@ -7,10 +7,11 @@
 	$data = json_decode($postData, true);
 
 	$org_name = $data[input][0]['value'];
-	$os_name = $data[input][1]['value'];
-	$reg_nmbr = $data[input][2]['value'];
-	$arenda = $data[input][3]['value'];
-	$code_1c = $data[input][4]['value'];
+  $dep_name = $data[input][1]['value'];
+	$os_name = $data[input][2]['value'];
+	$reg_nmbr = $data[input][3]['value'];
+	$arenda = $data[input][4]['value'];
+	$code_1c = $data[input][5]['value'];
 
 	$cnt = CIBlockElement::GetList(
 		array(),
@@ -37,7 +38,7 @@
 	   $wfId = CBPDocument::StartWorkflow(
 	   345,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("org_name"=>$org_name, "os_name"=>$os_name, "reg_nmbr"=>$reg_nmbr, "arenda"=>$arenda, "code_1c"=>$code_1c, "cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
+		array_merge(array("org_name"=>$org_name, "os_name"=>$os_name, "dep_name"=>$dep_name, "reg_nmbr"=>$reg_nmbr, "arenda"=>$arenda, "code_1c"=>$code_1c, "cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
