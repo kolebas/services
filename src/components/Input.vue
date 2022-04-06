@@ -183,7 +183,6 @@ export default {
   methods: {
     change() {
       this.item.err = "";
-      //console.log(this.arrInput);
     },
     input: function () {
       bus.$emit("resultArray", this.arrInput);

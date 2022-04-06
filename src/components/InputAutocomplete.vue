@@ -9,6 +9,7 @@
               clearable
               cache-items
               autofocus
+              :multiple="items.multiple"
               :label="items.label"
               item-text="NAME"
               item-value="NAME"
