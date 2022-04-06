@@ -5,11 +5,28 @@ $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 $IBLOCK_ID = 28;
 
+if(isset($_POST[0])){	
+	$Nomenklatura = $_POST[0];
+	$Statya = $_POST[1];
+	$Nds = $_POST[7];
 
-$Nomenklatura = $data[array_search(0, array_column($data, 'id'))]['value'];
-$Statya = $data[array_search(1, array_column($data, 'id'))]['value'];
-$Nds = $data[array_search(7, array_column($data, 'id'))]['value'];
-$File = $data[array_search(11, array_column($data, 'id'))]['value'];
+	//Работа с файлами
+	$files = $_FILES['file'];
+	if (isset($files)){
+		$countfiles = count($_FILES['file']['name']);
+		for ($i=0; $i<$countfiles; $i++){
+			$filename = $_FILES['file']['name'][$i];
+			move_uploaded_file($_FILES["file"]["tmp_name"][$i], "/home/bitrix/www/ahstep/upload/".$filename);
+			$arrFiles['n'.$i] = array("VALUE"=>CFile::MakeFileArray("/home/bitrix/www/ahstep/upload/".$filename));
+			
+		}
+	}
+} else {
+	$Nomenklatura = $data[array_search(0, array_column($data, 'id'))]['value'];
+	$Statya = $data[array_search(1, array_column($data, 'id'))]['value'];
+	$Nds = $data[array_search(7, array_column($data, 'id'))]['value'];
+}
+
 
 
 $cnt = CIBlockElement::GetList(
@@ -22,12 +39,20 @@ $cnt = CIBlockElement::GetList(
 $cnt = $cnt + '1';
 
 #Поиск значения в массиве
-function getFieldValue($id){
+function getFieldValue($id){	
     global $data;
-	$val = array_search($id, array_column($data, 'id'));
-	if($val){
-		return $data[$val]['value'];;		
-	}
+	global $_POST;
+	if(isset($_POST[0])){		
+		$val = $_POST[$id];
+		if($val){
+			return $val;		
+		}		
+	} else {
+		$val = array_search($id, array_column($data, 'id'));
+		if($val){
+			return $data[$val]['value'];		
+		}
+	}	
 }
  
 #Возвращает список вариантов значений свойств типа "список" по фильтру arFilter отсортированные в порядке arOrder
@@ -57,6 +82,7 @@ $PROP[145] = getFieldValue(9);
 $PROP[147] = getFieldValue(8);
 $PROP[148] = getFieldValue(10);
 $PROP[883] = getFieldValue(12);
+$PROP["FILE"] = $arrFiles;
 $PROP[399] = Array("VALUE" => getEnumFieldId($Statya, 'STATYA_BYUDZHETA_ZAKUPOK'));
 
 $arLoadDocumentArray = Array(
