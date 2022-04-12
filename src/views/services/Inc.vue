@@ -2,7 +2,6 @@
   <v-container fluid>
     <TitleService />
     <v-card min-height="800px" class="py-12">
-      <v-row>
         <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
         <v-card width="55%" raised class="mx-auto" color="grey lighten-4">
           <v-card-text class="pa-0">
@@ -23,6 +22,9 @@
                 :error-messages="title_inc_err"
                 :label="title_inc_label"
               ></v-text-field>
+              <div v-if="condition">              
+              <Input :arrInput="inputs" />
+              </div>
               <v-switch
                 v-model="switch_1c"
                 @change="switch_mon = false"
@@ -78,7 +80,6 @@
             </div>
           </v-card-actions>
         </v-card>
-      </v-row>
     </v-card>
   </v-container>
 </template>
@@ -89,12 +90,13 @@ import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import InputFileCard from "@/components/InputFileCard.vue";
 import axios from "axios";
 import TitleService from "@/components/TitleService.vue";
-
+import Input from "@/components/Input.vue";
 export default {
   components: {
     InputFileCard,
     DialogAfterSendForm,
     TitleService,
+    Input,
   },
   data: () => ({
     title: "Новое обращение",
@@ -129,10 +131,29 @@ export default {
     dialog: false,
     dialogMessage: "",
     btnLoader: false,
+    responsible: null,
+    inputs: [
+      { 
+        label: "Отвественный:",
+        value: "",
+        type: "selectUsr",
+        class: "mt-n2",
+        outlined: true,
+        dense: true,
+        solo: true,
+        err: "",
+      },
+    ],
+    usrid: null,
+    usrGroup: [],
   }),
   created() {
     bus.$on("inputFile", (data) => {
       this.file = data;
+    });
+    bus.$on("SelectUsr", (data) => {
+      this.inputs.find(item => item.type === "selectUsr").value = data;      
+      console.log(this.inputs.find(item => item.type === "selectUsr").value);
     });
   },
   methods: {
@@ -151,6 +172,7 @@ export default {
         formData.append("type_1c_slct", this.type_1c_slct);
         formData.append("switch_mon", this.switch_mon);
         formData.append("cmnt", this.cmnt);
+        formData.append("responsible", this.inputs.find(item => item.type === "selectUsr").value);
         axios({
           method: "post",
           withCredentials: true,
@@ -180,6 +202,23 @@ export default {
     },
     formCancl: function () {
       this.$router.go(-1);
+    },
+  },
+  mounted() {
+  axios
+    .get("./ajax/ajax_usr.php", {
+      auth: {},
+    })
+    .then(
+      (response) => (
+        (this.usrid = response.data[0]["ID"]),
+        (this.usrGroup = response.data[0]["GROUP"])
+      )
+    );
+  },
+  computed: {
+    condition() {
+      return this.usrid == 1940 || this.usrGroup.includes(22);
     },
   },
 };

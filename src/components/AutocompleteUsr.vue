@@ -15,10 +15,9 @@
         dense
         chips
         clearable
-        class=""
         cache-items
-        autofocus
-        label="Начните набирать фамилию или имя сотрудника"
+        :label="label"
+        placeholder="Начните набирать фамилию или имя сотрудника"
         item-text="NAME"
         item-value="ID"
         :error-messages="userId_err"
@@ -28,7 +27,7 @@
             color="#bcedfc"
             label
             close
-            @click:close="userId = '', value= '', selectUsr()"
+            @click:close="(userId = ''), (value = ''), selectUsr()"
           >
             <v-avatar left>
               <img v-if="data.item.PHOTO" :src="data.item.PHOTO" />
@@ -38,23 +37,18 @@
           </v-chip>
         </template>
         <template v-slot:item="data">
-          <template v-if="typeof data.item !== 'object'">
-            <v-list-item-content v-text="data.item.NAME"></v-list-item-content>
-          </template>
-          <template v-else>
-            <v-list-item-avatar v-if="data.item.PHOTO">
-              <img :src="data.item.PHOTO" />
-            </v-list-item-avatar>
-            <v-list-item-avatar v-else color="#bcedfc">
-              <v-icon color="white">mdi-account-circle</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-html="data.item.NAME"></v-list-item-title>
-              <v-list-item-subtitle
-                v-html="data.item.POSITION"
-              ></v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
+          <v-list-item-avatar v-if="data.item.PHOTO">
+            <img :src="data.item.PHOTO" />
+          </v-list-item-avatar>
+          <v-list-item-avatar v-else color="#bcedfc">
+            <v-icon color="white">mdi-account-circle</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title v-html="data.item.NAME"></v-list-item-title>
+            <v-list-item-subtitle
+              v-html="data.item.POSITION"
+            ></v-list-item-subtitle>
+          </v-list-item-content>
         </template>
       </v-autocomplete>
     </v-row>
@@ -68,6 +62,7 @@ export default {
   props: {
     title: { type: String },
     classItem: { type: String, default: "mb-n6" },
+    label: { type: String, default: null },
     userId_err: { type: String },
     cols_title: { type: Number },
     cols_input: { type: Number },
@@ -76,7 +71,6 @@ export default {
   },
   data: () => ({
     source: "./ajax/ajax_user.php",
-    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_user.php",
     users: [],
     userId: "",
     userIdErr: "",
@@ -87,7 +81,6 @@ export default {
   methods: {
     selectUsr: function () {
       this.searchInput = "";
-      //Условие когда необходимо использовать несколько селектов на одной форме
       if (this.id != null) {
         this.value.input_id = this.id;
         this.value.userId = this.userId;
@@ -99,10 +92,7 @@ export default {
   },
   //Получение списка пользователей
   mounted() {
-    axios
-      .get(this.source, {
-      })
-      .then((response) => (this.users = response.data));
+    axios.get(this.source, {}).then((response) => (this.users = response.data));
   },
 };
 </script>
