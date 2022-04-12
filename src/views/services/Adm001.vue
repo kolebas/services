@@ -57,7 +57,6 @@ export default {
     input: [
       {
         name: "ФИО*:",
-        label: "Пример: Крючков Иван Петрович",
         value: "",
         cs: "12",
         sm: "6",
