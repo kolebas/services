@@ -103,6 +103,18 @@ export default {
             img: "lists.png",
             route: "/nsi001",
           },
+          {
+            name: "Создание Контрагента",
+            img: "lists.png",
+            route: "/nsi002",
+            status:"dev",
+          },
+          {
+            name: "Редактирование Контрагента",
+            img: "lists.png",
+            route: "/nsi003",
+            status:"dev",
+          },
         ],
       },
       {
