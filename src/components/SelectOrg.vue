@@ -16,7 +16,6 @@
           dense
           clearable
           cache-items
-          autofocus
           label="Начните набирать название организации"
           item-text="NAME"
           item-value="NAME"

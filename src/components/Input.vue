@@ -118,6 +118,7 @@
           @change="input"
           :classItem="item.class"
           :id="item.id"
+          :label="item.label"
           :userId_err="item.err"
         />
         <InputFileCard v-if="item.type == 'file'" />

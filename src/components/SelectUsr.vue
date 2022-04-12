@@ -20,8 +20,7 @@
           class=""
           deletable-chips
           cache-items
-          autofocus
-          label="Начните набирать фамилию или имя сотрудника"
+          placeholder="Начните набирать фамилию или имя сотрудника"
           item-text="NAME"
           item-value="ID"
           :error-messages="userId_err"
@@ -44,25 +43,18 @@
             </v-chip>
           </template>
           <template v-slot:item="data">
-            <template v-if="typeof data.item !== 'object'">
-              <v-list-item-content
-                v-text="data.item.NAME"
-              ></v-list-item-content>
-            </template>
-            <template v-else>
-              <v-list-item-avatar v-if="data.item.PHOTO">
-                <img :src="data.item.PHOTO" />
-              </v-list-item-avatar>
-              <v-list-item-avatar v-else color="#bcedfc">
-                <v-icon color="white">mdi-account-circle</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title v-html="data.item.NAME"></v-list-item-title>
-                <v-list-item-subtitle
-                  v-html="data.item.POSITION"
-                ></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
+            <v-list-item-avatar v-if="data.item.PHOTO">
+              <img :src="data.item.PHOTO" />
+            </v-list-item-avatar>
+            <v-list-item-avatar v-else color="#bcedfc">
+              <v-icon color="white">mdi-account-circle</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title v-html="data.item.NAME"></v-list-item-title>
+              <v-list-item-subtitle
+                v-html="data.item.POSITION"
+              ></v-list-item-subtitle>
+            </v-list-item-content>
           </template>
         </v-autocomplete>
       </v-col>
@@ -77,7 +69,8 @@ export default {
   props: {
     title: { type: String },
     classItem: { type: String, default: "mb-n6" },
-    userId_err: { type: String },
+    userId_err: { type: String, default: "" },
+    label: { type: String, default: "" },
     cols_title: { type: Number },
     cols_input: { type: Number },
     multiple: { type: Boolean },
@@ -86,7 +79,6 @@ export default {
   data: () => ({
     users: [],
     userId: "",
-    userIdErr: "",
     searchInput: "",
     error: [],
     value: [],

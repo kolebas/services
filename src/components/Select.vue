@@ -16,7 +16,6 @@
           dense
           clearable
           cache-items
-          autofocus
           :label="label"
           item-text="NAME"
           item-value="NAME"
