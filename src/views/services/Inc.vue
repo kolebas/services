@@ -71,7 +71,7 @@
               <v-btn
                 class="mx-1"
                 :loading="btnLoader"
-                color="blue lighten-1 white--text"
+                color="green lighten-2 white--text"
                 @click="formSend()"
               >
                 Отправить
@@ -134,7 +134,7 @@ export default {
     responsible: null,
     inputs: [
       { 
-        label: "Отвественный:",
+        label: "Кто обратился:",
         value: "",
         type: "selectUsr",
         class: "mt-n2",
@@ -218,7 +218,7 @@ export default {
   },
   computed: {
     condition() {
-      return this.usrid == 1940 || this.usrGroup.includes(22);
+      return this.usrid == 1 || this.usrGroup.includes(22);
     },
   },
 };

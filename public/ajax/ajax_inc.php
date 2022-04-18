@@ -7,12 +7,16 @@
 	$postData = file_get_contents('php://input');
 	$data = json_decode($postData, true);
 
+	$author = $GLOBALS["USER"]->GetID();
 	$title_inc = $_POST["title_inc"];
 	$type_1c_slct = $_POST["type_1c_slct"];
 	$switch_mon = $_POST["switch_mon"];
 	$cmnt = $_POST["cmnt"];
-	$responsible = "user_".$_POST["responsible"];		
+	if(isset($_POST["responsible"])){		
+		$author = $_POST["responsible"];
+	}	
 	$file = $_FILES['file'];
+	
 
 	if (isset($file)){
 		$files = array();
@@ -39,7 +43,7 @@
 		array(
 			"IBLOCK_ID" => 88,
 			"NAME" => $title_inc,
-			"CREATED_BY" => "user_".$GLOBALS["USER"]->GetID(),
+			"CREATED_BY" => "user_".$author,
 			)
 	);
 
@@ -48,7 +52,7 @@
 	$wfId = CBPDocument::StartWorkflow(
 		313,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("author"=>$GLOBALS["USER"]->GetID(), "title"=>$title_inc, "type_1s"=>$type_1c_slct, "switch_mon"=>$switch_mon, "body"=>$cmnt, "file"=>$files, "responsible"=>$responsible, "cnt"=>$cnt), array("TargetUser" => "user_".intval($GLOBALS["USER"]->GetID()),
+		array_merge(array("author"=>$author, "title"=>$title_inc, "type_1s"=>$type_1c_slct, "switch_mon"=>$switch_mon, "body"=>$cmnt, "file"=>$files, "responsible"=>$responsible, "cnt"=>$cnt), array("TargetUser" => "user_".intval($author),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
