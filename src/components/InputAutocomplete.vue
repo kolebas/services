@@ -8,7 +8,6 @@
               :dense="items.dense"
               clearable
               cache-items
-              autofocus
               :multiple="items.multiple"
               :label="items.label"
               item-text="NAME"

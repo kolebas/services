@@ -23,6 +23,7 @@
           :disabled="item.disabled"
           :error-messages="item.err"
           :append-icon="item.icon"
+          :required="item.required"
           :suffix="item.suffix"
           :rules="item.rule"
           @input="item.err = ''"
@@ -67,7 +68,7 @@
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
-          required
+          :rules="item.rule"
           :multiple="item.multiple"
           :error-messages="item.err"
           @change="

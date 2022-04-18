@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <TitleService />
-    <form id="nsi002" action="" novalidate>
+    <form id="nsi002" name="nsi002" action="submit" novalidate>
       <v-card min-height="800px" class="py-12">
         <v-row>
           <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
@@ -50,23 +50,37 @@ export default {
         cs: "12",
         sm: "6",
         md: "6",
+        required: true,
+        rule: [(value) => !!value || "Обязательное поле"],
         items: [
           {
             NAME: "Юридическое лицо",
             ID: [
-              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-              19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+              0, 1, 2, 3, 4, 5, 6, 9, 10, 12, 13, 14, 17, 18, 19, 20, 21, 22,
+              23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             ],
           },
-          { NAME: "Физическое лицо", ID: [0, 1, 2, 3] },
+          {
+            NAME: "Физическое лицо",
+            ID: [
+              0, 33, 34, 35, 4, 5, 9, 17, 11, 15, 16, 13, 14, 19, 20, 21, 22,
+              23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+            ],
+          },
           {
             NAME: "Обособленное подразделение",
             ID: [
-              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-              19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+              0, 1, 2, 3, 4, 5, 6, 9, 10, 12, 13, 14, 17, 18, 19, 20, 21, 22,
+              23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             ],
           },
-          { NAME: "Государственный орган", ID: [0, 1, 2, 3, 5, 6, 7] },
+          {
+            NAME: "Государственный орган",
+            ID: [
+              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 17, 18, 19, 20, 21,
+              22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+            ],
+          },
         ],
         outlined: true,
         dense: true,
@@ -74,19 +88,16 @@ export default {
       },
       {
         title: "resident",
-        name: "Тип контрагента",
-        type: "autocomplete",
-        value: "Резидент РФ",
+        name: "Резидент РФ",
+        type: "switch",
+        value: true,
         cs: "12",
         sm: "6",
         md: "6",
-        items: [
-          { NAME: "Резидент РФ", ID: [0, 1, 2, 3] },
-          { NAME: "Нерезидент", ID: [0, 1, 2, 3] },
-        ],
         outlined: true,
         dense: true,
         solo: true,
+        class: "mt-1",
       },
     ],
     items: [
@@ -100,12 +111,14 @@ export default {
           { NAME: "Управление холдингом" },
           { NAME: "Документооборот" },
         ],
+        rule: [(value) => !!value || "Обязательное поле"],
         multiple: true,
       },
       {
         id: 1,
         name: "Внутригрупповой",
         type: "switch",
+        class: "mt-1",
       },
       {
         id: 2,
@@ -147,11 +160,13 @@ export default {
         id: 4,
         name: "Краткое наименование",
         type: "string",
+        rule: [(value) => !!value || "Обязательное поле"],
       },
       {
         id: 5,
         name: "Полное наименование",
         type: "string",
+        rule: [(value) => !!value || "Обязательное поле"],
       },
       {
         id: 6,
@@ -174,16 +189,26 @@ export default {
         id: 9,
         name: "ИНН",
         type: "string",
+        required: true,
+        rule: [
+          (value) => !!value || "Обязательное поле",
+          (value) => (value && value.length == 10) || "Количество символов 10",
+        ],
       },
       {
         id: 10,
         name: "КПП",
         type: "string",
+        required: true,
+        rule: [
+          (value) => !!value || "Обязательное поле",
+          (value) => (value && value.length == 9) || "Количество символов 9",
+        ],
       },
       {
         id: 11,
-        name: "Бюджетная организация",
-        type: "switch",
+        name: "ОГРНИП",
+        type: "string",
       },
       {
         id: 12,
@@ -202,13 +227,13 @@ export default {
       },
       {
         id: 15,
-        name: "ИНН головного контрагента",
+        name: "Серия свидетельства",
         type: "string",
       },
       {
         id: 16,
-        name: "Головной",
-        type: "switch",
+        name: "Номер свидетельства",
+        type: "string",
       },
       {
         id: 17,
@@ -293,55 +318,141 @@ export default {
         name: "Описание",
         type: "textarea",
       },
+      {
+        id: 33,
+        name: "Пайщик",
+        type: "select",
+        rule: [(value) => !!value || "Обязательное поле"],
+        select_arr: ["Да", "Нет"],
+      },
+      {
+        id: 34,
+        name: "Физическое лицо",
+        type: "string",
+      },
+      {
+        id: 35,
+        name: "Код физического лица",
+        type: "string",
+      },
+      {
+        id: 36,
+        name: "Банк",
+        type: "string",
+      },
+      {
+        id: 37,
+        name: "Номер счета",
+        type: "string",
+      },
+      {
+        id: 38,
+        name: "Валюта счета",
+        type: "select",
+        select_arr: ["CAD", "CHF", "CNY", "EUR", "GPB", "USD", "РУБ"],
+      },
+      {
+        id: 39,
+        name: "Страна регистрации",
+        type: "string",
+        rule: [(value) => !!value || "Обязательное поле"],
+      },
+      {
+        id: 40,
+        name: "Налоговый номер налогоплательщика",
+        type: "string",
+        rule: [(value) => !!value || "Обязательное поле"],
+      },
     ],
+    type: null,
+    resident: true,
   }),
   mounted() {
-    this.enableValidation();
+    this.enableValidation({
+      formSelector: "#nsi002",
+    });
   },
   computed: {
-    computedInputs() {
-      const selectedInput = this.inputs.find((item) => item.title === "type");
-      return selectedInput.value;
+    computedType() {
+      const type = this.inputs.find((item) => item.title === "type").value;
+      return type;
+    },
+    computedResident() {
+      const resident = this.inputs.find(
+        (item) => item.title === "resident"
+      ).value;
+      return resident;
     },
   },
   watch: {
-    computedInputs(val) {
-      this.addInput(val);
+    computedType(type) {
+      this.inputs.splice(2);
+      this.type = type;
+      this.addInput(type, this.resident);
+    },
+    computedResident(resident) {
+      this.resident = resident;
+      this.addInput(this.type, resident);
     },
   },
   methods: {
-    addInput(type) {
-      if (type) {
-        const itemsID = this.inputs[0].items.find(
+    addInput(type, resident) {
+      if (type && resident === true) {
+        let itemsID = this.inputs[0].items.find(
           (item) => item.NAME === type
         ).ID;
-        itemsID.forEach((element) => {
-          let item = this.items.find((item) => item.id === element);
-          const obj = {
-            value: "",
-            cs: "12",
-            sm: "6",
-            md: "6",
-            outlined: true,
-            dense: true,
-            solo: true,
-            err: "",
-          };
-          item = Object.assign(obj, item);
-          this.inputs.push(item);
-        });
-      } else {
-        this.inputs.splice(2);
+        this.renderInputs(itemsID);
+      }
+      if (type && resident === false) {
+        let itemsID = [0, 39, 4, 5, 40, 19, 36, 37, 38, 32];
+        this.renderInputs(itemsID);
       }
     },
-    enableValidation() {
-      const form = document.querySelector("#nsi002");
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
+    enableValidation(formData) {
+      const forms = Array.from(
+        document.querySelectorAll(formData.formSelector)
+      );
+
+      forms.forEach((form) => {
+        form.addEventListener("submit", (event) =>
+          this.handleFormSubmit(event)
+        );
+        form.addEventListener("input", () => this.handleFormInput(form));
       });
     },
-    sendData() {
-      alert("SendData");
+    renderInputs(arrayInputs) {
+      this.sendButtonDisable = true;
+      this.inputs.splice(2);
+      arrayInputs.forEach((element) => {
+        let item = this.items.find((item) => item.id === element);
+        const obj = {
+          value: "",
+          cs: "12",
+          sm: "6",
+          md: "6",
+          outlined: true,
+          dense: true,
+          solo: true,
+          err: "",
+        };
+        item = Object.assign(obj, item);
+        this.inputs.push(item);
+      });
+    },
+    handleFormSubmit(event) {
+      event.preventDefault();
+    },
+    handleFormInput(form) {
+      this.checkForm(form);
+    },
+    checkForm(form) {
+      const isValid = form.checkValidity();
+      const db = this.inputs.find((item) => item.title === "db").value;
+      if (isValid && db.length > 0) {
+        this.sendButtonDisable = false;
+      } else {
+        this.sendButtonDisable = true;
+      }
     },
   },
 };
