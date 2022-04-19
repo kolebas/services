@@ -102,19 +102,7 @@ export default {
             name: "Редактирование справочника номенклатуры",
             img: "lists.png",
             route: "/nsi001",
-          },
-          {
-            name: "Создание Контрагента",
-            img: "lists.png",
-            route: "/nsi002",
-            status:"dev",
-          },
-          {
-            name: "Редактирование Контрагента",
-            img: "lists.png",
-            route: "/nsi003",
-            status:"dev",
-          },
+          }
         ],
       },
       {
@@ -277,10 +265,28 @@ export default {
           },
         ],
       },
+      {
+        name: "Разработка",
+        status: "dev",
+        img: "request.png",
+        items: [
+          {
+            name: "Создание Контрагента",
+            img: "lists.png",
+            route: "/nsi002",
+          },
+          {
+            name: "Редактирование Контрагента",
+            img: "lists.png",
+            route: "/nsi003",
+          },
+        ],
+      },
     ],
     inset: true,
     focusable: true,
     tile: true,
+    userData: {}
   }),
   methods: {
     itemclk: function (lnk, route) {

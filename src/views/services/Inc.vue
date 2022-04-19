@@ -144,6 +144,7 @@ export default {
         err: "",
       },
     ],
+    userData: {},
     usrid: null,
     usrGroup: [],
   }),
@@ -152,9 +153,9 @@ export default {
       this.file = data;
     });
     bus.$on("SelectUsr", (data) => {
-      this.inputs.find(item => item.type === "selectUsr").value = data;      
-      console.log(this.inputs.find(item => item.type === "selectUsr").value);
+      this.inputs.find(item => item.type === "selectUsr").value = data;
     });
+    this.getUserData();
   },
   methods: {
     formSend: function () {
@@ -203,22 +204,22 @@ export default {
     formCancl: function () {
       this.$router.go(-1);
     },
-  },
-  mounted() {
-  axios
-    .get("./ajax/ajax_usr.php", {
-      auth: {},
-    })
-    .then(
-      (response) => (
-        (this.usrid = response.data[0]["ID"]),
-        (this.usrGroup = response.data[0]["GROUP"])
-      )
-    );
+    getUserData(){
+      axios
+      .get("./ajax/ajax_usr.php", {
+        auth: {},
+      })
+      .then(
+        (response) => (
+          this.usrid = response.data[0]["ID"],
+          this.usrGroup = response.data[0]["GROUP"]
+        )
+      );
+    }
   },
   computed: {
     condition() {
-      return this.usrid == 1 || this.usrGroup.includes(22);
+      return this.usrid == 1 || this.usrGroup.includes("22");
     },
   },
 };
