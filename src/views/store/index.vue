@@ -5,7 +5,7 @@
         <v-card-title>{{ itemPreview.text }}</v-card-title>
         <v-divider />
         <v-container>
-          <v-row class="mx-auto">
+          <v-row class="mx-auto my-auto">
             <v-col cols="5">
               <v-img
                 max-height="480"
