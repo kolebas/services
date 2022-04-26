@@ -137,7 +137,7 @@ export default {
     });
     bus.$on("SelectUsr", (data) => {
       const userInput = this.inputs.find((item) => item.type === "selectUsr");
-      userInput.value = data.userId;
+      userInput.value = data;
     });
     this.getUserData();
   },
