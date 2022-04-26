@@ -1,14 +1,19 @@
 import axios from "axios";
 class UserInfo{
   constructor(source){
-    this._source = source;
+    this._source = source,
+    this._data = []
   }
-  getData(){
-    return axios
+  async _getData(){
+    axios
       .get(this._source, {
         auth: {},
       })
-      .then(response => response.data)
+      .then(response => this._data = response.data)
+  }
+  returnData(){
+    await this._getData();
+    return this._data;
   }
 }
 

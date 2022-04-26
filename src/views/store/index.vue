@@ -124,7 +124,7 @@
       <v-divider />
     </v-col>
     <template>
-      <v-card min-width="100%" class="py-12">
+      <v-card min-width="100%">
         <Alert
           :text="accessText"
           :type="'info'"

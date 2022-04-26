@@ -102,7 +102,12 @@ export default {
             name: "Редактирование справочника номенклатуры",
             img: "lists.png",
             route: "/nsi001",
-          }
+          },
+          {
+            name: "Создание контрагента",
+            img: "lists.png",
+            route: "/nsi002",
+          },
         ],
       },
       {

@@ -82,6 +82,8 @@
           :outlined="item.outlined"
           :dense="item.dense"
           :solo="item.solo"
+          :class="item.class"
+          :label="item.label"
           :error-messages="item.err"
           :hint="item.hint"
           @input="item.err = ''"
