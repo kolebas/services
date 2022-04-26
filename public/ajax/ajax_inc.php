@@ -7,13 +7,15 @@
 	$postData = file_get_contents('php://input');
 	$data = json_decode($postData, true);
 
-	$author = $GLOBALS["USER"]->GetID();
 	$title_inc = $_POST["title_inc"];
 	$type_1c_slct = $_POST["type_1c_slct"];
 	$switch_mon = $_POST["switch_mon"];
 	$cmnt = $_POST["cmnt"];
-	if(isset($_POST["responsible"])){		
-		$author = $_POST["responsible"];
+	$user = $_POST["responsible"];
+	if($user != NULL){
+		$author = $user;
+	} else {
+		$author = $GLOBALS["USER"]->GetID();
 	}	
 	$file = $_FILES['file'];
 	
@@ -52,7 +54,7 @@
 	$wfId = CBPDocument::StartWorkflow(
 		313,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("author"=>$author, "title"=>$title_inc, "type_1s"=>$type_1c_slct, "switch_mon"=>$switch_mon, "body"=>$cmnt, "file"=>$files, "responsible"=>$responsible, "cnt"=>$cnt), array("TargetUser" => "user_".intval($author),
+		array_merge(array("author"=>$author, "title"=>$title_inc, "type_1s"=>$type_1c_slct, "switch_mon"=>$switch_mon, "body"=>$cmnt, "file"=>$files, "cnt"=>$cnt), array("TargetUser" => "user_".intval($author),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
