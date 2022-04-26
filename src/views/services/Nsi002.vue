@@ -14,9 +14,9 @@
             <v-card-text> * Поля обязательные для заполнения </v-card-text>
             <hr />
             <Buttons
-              :input="null"
+              :input="sendData()"
               :sendButtonDisable="sendButtonDisable"
-              ajax="./ajax/ajax_nsi.php"
+              ajax="./ajax/ajax_nsi002.php"
             />
           </v-card>
         </v-row>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-//import axios from "axios";
+import { bus } from "@/main.js";
 import RqCardTitle from "@/components/RqCardTitle";
 import Input from "@/components/Input.vue";
 import TitleService from "@/components/TitleService.vue";
@@ -43,6 +43,7 @@ export default {
     sendButtonDisable: true,
     inputs: [
       {
+        id: 100,
         title: "type",
         name: "Тип контрагента",
         type: "autocomplete",
@@ -87,6 +88,7 @@ export default {
         solo: true,
       },
       {
+        id: 101,
         title: "resident",
         name: "Резидент РФ",
         type: "switch",
@@ -116,12 +118,15 @@ export default {
       },
       {
         id: 1,
+        value: false,
+        title: "insidegroup",
         name: "Внутригрупповой",
         type: "switch",
         class: "mt-1",
       },
       {
         id: 2,
+        title: "segment",
         name: "Сегмент",
         type: "autocomplete",
         items: [
@@ -142,10 +147,12 @@ export default {
           { NAME: "УК" },
           { NAME: "Прочее" },
         ],
+        visible: false,
       },
       {
         id: 3,
         name: "Кластер",
+        title: "cluster",
         type: "autocomplete",
         items: [
           { NAME: "Краснодарский кластер" },
@@ -155,6 +162,7 @@ export default {
           { NAME: "УК" },
           { NAME: "Прочее" },
         ],
+        visible: false,
       },
       {
         id: 4,
@@ -367,6 +375,12 @@ export default {
     type: null,
     resident: true,
   }),
+  created() {
+    bus.$on("SelectUsr", (data) => {
+      const userInput = this.inputs.find((item) => item.type === "selectUsr");
+      userInput.value = data.userId;
+    });
+  },
   mounted() {
     this.enableValidation({
       formSelector: "#nsi002",
@@ -383,6 +397,16 @@ export default {
       ).value;
       return resident;
     },
+    computedInsideGroup() {
+      const insidegroup = this.inputs.find(
+        (item) => item.title === "insidegroup"
+      );
+      if(insidegroup){
+        return insidegroup.value;
+      } else {
+        return false;
+      }
+    },
   },
   watch: {
     computedType(type) {
@@ -393,6 +417,12 @@ export default {
     computedResident(resident) {
       this.resident = resident;
       this.addInput(this.type, resident);
+    },
+    computedInsideGroup(val) {
+      const segment = this.inputs.find((item) => item.title === "segment");
+      const cluster = this.inputs.find((item) => item.title === "cluster");
+      segment.visible = val;
+      cluster.visible = val;
     },
   },
   methods: {
@@ -453,6 +483,15 @@ export default {
       } else {
         this.sendButtonDisable = true;
       }
+    },
+    sendData(){
+      const formData = new FormData();
+      this.inputs.forEach((element) => {
+        if(element.value != null){          
+          formData.append(element.id, element.value);
+        }
+      });
+      return formData;    
     },
   },
 };
