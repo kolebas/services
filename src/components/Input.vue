@@ -27,7 +27,7 @@
           :suffix="item.suffix"
           :rules="item.rule"
           @input="item.err = ''"
-          @change="input"
+          @change="input()"
         ></v-text-field>
         <v-menu
           v-if="item.type == 'date' && item.visible != false"
@@ -48,14 +48,14 @@
               :solo="item.solo"
               :error-messages="item.err"
               @input="item.err = ''"
-              @change="input"
+              @change="input()"
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="item.value"
             locale="ru-RU"
             @input="menu = false"
-            @change="input"
+            @change="input()"
           ></v-date-picker>
         </v-menu>
 
@@ -72,7 +72,7 @@
           :multiple="item.multiple"
           :error-messages="item.err"
           @change="
-            input;
+            input();
             item.err = '';
           "
         ></v-select>
@@ -87,7 +87,7 @@
           :error-messages="item.err"
           :hint="item.hint"
           @input="item.err = ''"
-          @change="input"
+          @change="input()"
         >
         </v-textarea>
         <v-radio-group
@@ -109,7 +109,7 @@
           :label="item.label"
           inset
           :class="item.class"
-          @change="input"
+          @change="input()"
           ><template slot="label"
             ><span class="green--text text-uppercase">{{
               item.label
@@ -118,7 +118,7 @@
         >
         <AutocompleteUsr
           v-if="item.type == 'selectUsr' && item.visible != false"
-          @change="input"
+          @change="input()"
           :classItem="item.class"
           :id="item.id"
           :label="item.label"
