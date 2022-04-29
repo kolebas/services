@@ -170,7 +170,7 @@ export default {
     getSwitch1C(value){
       const select1C = this.inputs.find(item => item.title === "type_1c_slct");
       if(value === false){
-        select1C.value = null;
+        select1C.value = "";
       }
       select1C.visible = value;
       select1C.required = value;
