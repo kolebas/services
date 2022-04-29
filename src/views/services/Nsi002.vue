@@ -45,7 +45,7 @@ export default {
       {
         id: 100,
         title: "type",
-        name: "Тип контрагента",
+        name: "Вид контрагента*",
         type: "autocomplete",
         value: "",
         cs: "12",
@@ -57,29 +57,29 @@ export default {
           {
             NAME: "Юридическое лицо",
             ID: [
-              0, 1, 2, 3, 4, 5, 6, 9, 10, 12, 13, 14, 17, 18, 19, 20, 21, 22,
-              23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+              0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 19, 20, 21, 22,
+              23, 24, 25, 32,
             ],
           },
           {
             NAME: "Физическое лицо",
             ID: [
-              0, 33, 34, 35, 4, 5, 9, 17, 11, 15, 16, 13, 14, 19, 20, 21, 22,
-              23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+              0, 33, 34, 35, 4, 5, 9, 17, 13, 14, 19, 20, 21, 22,
+              23, 24, 25, 32,
             ],
           },
           {
             NAME: "Обособленное подразделение",
             ID: [
-              0, 1, 2, 3, 4, 5, 6, 9, 10, 12, 13, 14, 17, 18, 19, 20, 21, 22,
-              23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+              0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 19, 20, 21, 22,
+              23, 24, 25, 32,
             ],
           },
           {
             NAME: "Государственный орган",
             ID: [
-              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 17, 18, 19, 20, 21,
-              22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+              0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 19, 20, 21,
+              22, 23, 24, 25, 32,
             ],
           },
         ],
@@ -106,12 +106,14 @@ export default {
       {
         id: 0,
         title: "db",
-        name: "Список БД 1С:",
+        name: "База/базы, где необходим контрагент*",
         type: "autocomplete",
         items: [
           { NAME: "Агрокомплекс" },
           { NAME: "Управление холдингом" },
           { NAME: "Документооборот" },
+          { NAME: "Агрокомплекс (Узел ПИР)" },
+          { NAME: "Весовая" },
         ],
         rule: [(value) => !!value || "Обязательное поле"],
         multiple: true,
@@ -120,7 +122,7 @@ export default {
         id: 1,
         value: false,
         title: "insidegroup",
-        name: "Внутригрупповой",
+        name: "Входит в АО Агрохолдинг СТЕПЬ",
         type: "switch",
         class: "mt-1",
       },
@@ -148,6 +150,7 @@ export default {
           { NAME: "Прочее" },
         ],
         visible: false,
+        rule: [(value) => !!value || "Обязательное поле"],
       },
       {
         id: 3,
@@ -162,25 +165,19 @@ export default {
           { NAME: "УК" },
           { NAME: "Прочее" },
         ],
+        rule: [(value) => !!value || "Обязательное поле"],        
         visible: false,
       },
       {
         id: 4,
-        name: "Краткое наименование",
+        name: "Наименование",
         type: "string",
-        rule: [(value) => !!value || "Обязательное поле"],
       },
       {
         id: 5,
         name: "Полное наименование",
+        title: "fullTitle",
         type: "string",
-        rule: [(value) => !!value || "Обязательное поле"],
-      },
-      {
-        id: 6,
-        name: "Сети/оптовик",
-        type: "select",
-        select_arr: ["Сети", "Оптовик"],
       },
       {
         id: 7,
@@ -195,17 +192,18 @@ export default {
       },
       {
         id: 9,
-        name: "ИНН",
+        name: "ИНН*",
+        title: "inn",
         type: "string",
         required: true,
         rule: [
           (value) => !!value || "Обязательное поле",
-          (value) => (value && value.length == 10) || "Количество символов 10",
-        ],
+          (value) => (value && value.length == 10 ) || "Количество символов 10",
+        ]
       },
       {
         id: 10,
-        name: "КПП",
+        name: "КПП*",
         type: "string",
         required: true,
         rule: [
@@ -214,13 +212,9 @@ export default {
         ],
       },
       {
-        id: 11,
-        name: "ОГРНИП",
-        type: "string",
-      },
-      {
         id: 12,
-        name: "Лицевой счёт",
+        name: "Получатель платежа УФК",
+        title: "recipient",
         type: "string",
       },
       {
@@ -234,28 +228,9 @@ export default {
         type: "string",
       },
       {
-        id: 15,
-        name: "Серия свидетельства",
-        type: "string",
-      },
-      {
-        id: 16,
-        name: "Номер свидетельства",
-        type: "string",
-      },
-      {
-        id: 17,
-        name: "ОКПО",
-        type: "string",
-      },
-      {
-        id: 18,
-        name: "ОГРН",
-        type: "string",
-      },
-      {
         id: 19,
         name: "Юридический адрес",
+        title: "urAddress",
         type: "textarea",
       },
       {
@@ -275,52 +250,19 @@ export default {
       },
       {
         id: 23,
-        name: "Телефон",
+        name: "Телефон контрагента",
         type: "string",
       },
       {
         id: 24,
-        name: "Email",
+        name: "Email контрагента",
         type: "string",
       },
       {
         id: 25,
         name: "Контактное лицо",
         type: "string",
-      },
-      {
-        id: 26,
-        name: "Руководитель",
-        type: "string",
-      },
-      {
-        id: 27,
-        name: "Должность руководителя",
-        type: "string",
-      },
-      {
-        id: 28,
-        name: "Документ основание",
-        type: "string",
-      },
-      {
-        id: 29,
-        name: "Система налогооблажения",
-        type: "select",
-        select_arr: ["пусто", "УСН", "ПСН", "ЕНВД", "ОСНО"],
-      },
-      {
-        id: 30,
-        name: "В Узел ПИР",
-        type: "select",
-        select_arr: ["Да", "Нет"],
-      },
-      {
-        id: 31,
-        name: "В весовую",
-        type: "select",
-        select_arr: ["Да", "Нет"],
-      },
+      },      
       {
         id: 32,
         name: "Описание",
@@ -329,8 +271,8 @@ export default {
       {
         id: 33,
         name: "Пайщик",
+        title: "paishik",
         type: "select",
-        rule: [(value) => !!value || "Обязательное поле"],
         select_arr: ["Да", "Нет"],
       },
       {
@@ -367,7 +309,7 @@ export default {
       },
       {
         id: 40,
-        name: "Налоговый номер налогоплательщика",
+        name: "Налоговый номер в стране регистрации (УНН/УНП/БИН/VAT и т.п.)",
         type: "string",
         rule: [(value) => !!value || "Обязательное поле"],
       },
@@ -379,6 +321,9 @@ export default {
     bus.$on("SelectUsr", (data) => {
       const userInput = this.inputs.find((item) => item.type === "selectUsr");
       userInput.value = data.userId;
+    });
+    bus.$on("resultArray", () => {
+      this.checkForm();
     });
   },
   mounted() {
@@ -413,6 +358,7 @@ export default {
       this.inputs.splice(2);
       this.type = type;
       this.addInput(type, this.resident);
+      this.addInputRule(type);
     },
     computedResident(resident) {
       this.resident = resident;
@@ -422,7 +368,13 @@ export default {
       const segment = this.inputs.find((item) => item.title === "segment");
       const cluster = this.inputs.find((item) => item.title === "cluster");
       segment.visible = val;
+      segment.required = val;
       cluster.visible = val;
+      cluster.required = val;
+      if(val == false){
+        segment.value = "";
+        cluster.value = "";
+      }
     },
   },
   methods: {
@@ -434,9 +386,55 @@ export default {
         this.renderInputs(itemsID);
       }
       if (type && resident === false) {
-        let itemsID = [0, 39, 4, 5, 40, 19, 36, 37, 38, 32];
+        let itemsID = [0, 39, 4, 40, 19, 36, 37, 38, 32];
         this.renderInputs(itemsID);
       }
+    },
+    addInputRule(type){
+      if (type === "Физическое лицо"){
+        let inputInn = this.inputs.find(item => item.title === "inn"); 
+        let inputPaishik = this.inputs.find(item => item.title === "paishik");
+        inputInn.rule = [
+          (value) => !!value || "Обязательное поле",
+          (value) => (value && value.length == 12) || "Количество символов 12",
+        ]
+        const data = {          
+          name: `${inputPaishik.name}*`,
+          required: true,
+          rule: [
+            (value) => !!value || "Обязательное поле",
+          ]
+        }
+        inputPaishik = this.addInputObjects(inputPaishik, data);
+      } else if (type === "Государственный орган"){
+        let inputRecipient = this.inputs.find(item => item.title === "recipient");
+        const data = {          
+          name: `${inputRecipient.name}*`,
+          required: true,
+          rule: [
+            (value) => !!value || "Обязательное поле",
+          ]
+        }
+        inputRecipient = this.addInputObjects(inputRecipient, data);
+      } else if (type === "Обособленное подразделение"){        
+        let inputFullTitle = this.inputs.find(item => item.title === "fullTitle");
+        let inputUrAddress = this.inputs.find(item => item.title === "urAddress");
+        const arrInput = [inputFullTitle, inputUrAddress];
+        arrInput.forEach((item) => {
+          const data = {
+            name: `${item.name}*`,
+            required: true,
+            rule: [
+              (value) => !!value || "Обязательное поле",
+            ]
+          };
+          item = this.addInputObjects(item, data);
+        })
+      } 
+    },
+    addInputObjects(input, object){
+      const obj = Object.assign(input, object);
+      return obj;
     },
     enableValidation(formData) {
       const forms = Array.from(
@@ -447,7 +445,9 @@ export default {
         form.addEventListener("submit", (event) =>
           this.handleFormSubmit(event)
         );
-        form.addEventListener("input", () => this.handleFormInput(form));
+        form.addEventListener("input", () =>
+          this.checkForm()
+        );
       });
     },
     renderInputs(arrayInputs) {
@@ -472,13 +472,10 @@ export default {
     handleFormSubmit(event) {
       event.preventDefault();
     },
-    handleFormInput(form) {
-      this.checkForm(form);
-    },
-    checkForm(form) {
-      const isValid = form.checkValidity();
-      const db = this.inputs.find((item) => item.title === "db").value;
-      if (isValid && db.length > 0) {
+    checkForm() {
+      const input = this.inputs.filter((item) => (item.required === true));
+      const valid = !input.some((item) => item.value == "");
+      if (valid) {
         this.sendButtonDisable = false;
       } else {
         this.sendButtonDisable = true;
