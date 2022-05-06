@@ -57,7 +57,7 @@ export default {
           {
             NAME: "Юридическое лицо",
             ID: [
-              0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 19, 20, 21, 22,
+              0, 1, 2, 3, 4, 5, 9, 10, 13, 14, 19, 20, 21, 22,
               23, 24, 25, 32,
             ],
           },
@@ -71,7 +71,7 @@ export default {
           {
             NAME: "Обособленное подразделение",
             ID: [
-              0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 19, 20, 21, 22,
+              0, 1, 2, 3, 4, 5, 9, 10, 13, 14, 19, 20, 21, 22,
               23, 24, 25, 32,
             ],
           },
@@ -170,8 +170,12 @@ export default {
       },
       {
         id: 4,
-        name: "Наименование",
+        name: "Наименование*",
         type: "string",
+        required: true,
+         rule: [
+            (value) => !!value || "Обязательное поле",
+          ]
       },
       {
         id: 5,
@@ -406,16 +410,6 @@ export default {
           ]
         }
         inputPaishik = this.addInputObjects(inputPaishik, data);
-      } else if (type === "Государственный орган"){
-        let inputRecipient = this.inputs.find(item => item.title === "recipient");
-        const data = {          
-          name: `${inputRecipient.name}*`,
-          required: true,
-          rule: [
-            (value) => !!value || "Обязательное поле",
-          ]
-        }
-        inputRecipient = this.addInputObjects(inputRecipient, data);
       } else if (type === "Обособленное подразделение"){        
         let inputFullTitle = this.inputs.find(item => item.title === "fullTitle");
         let inputUrAddress = this.inputs.find(item => item.title === "urAddress");
