@@ -82,7 +82,7 @@ export default {
           { NAME: "Удобрения", ID: [2, 4, 6, 7, 8, 9, 11] },
           { NAME: "Продукция", ID: [2, 4, 6, 7, 8, 9, 11] },
           { NAME: "Продукты питания", ID: [2, 4, 6, 7, 8, 9, 11] },
-          { NAME: "Мясо и мясопродукты", ID: [2, 4, 6, 7, 8, 9, 11] },
+          { NAME: "Мясо и мясопродукты", ID: [2, 4, 6, 7, 8, 9, 11, 13] },
           { NAME: "Услуга", ID: [2, 4, 6, 7, 8, 9, 11] },
           { NAME: "Фильтры", ID: [2, 5, 6, 7, 8, 9, 11] },
           { NAME: "Шины", ID: [2, 5, 6, 7, 8, 9, 11] },
@@ -339,6 +339,21 @@ export default {
         dense: true,
         solo: true,
       },
+      {
+        id: 13,
+        name: "Тест:*",
+        label: "Пример: шт./м./дн.",
+        value: "",
+        items: [],
+        cs: "12",
+        sm: "6",
+        md: "6",
+        type: "autocomplete",
+        outlined: true,
+        dense: true,
+        solo: true,
+        required: true,
+      },
     ],
     formData: null
   }),
@@ -353,6 +368,20 @@ export default {
       });
       this.formData = formData;
     });
+  },
+  mounted() {    
+      const nomenclature = this.input.find(item => item.id === 0);
+      if(nomenclature) {
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/NomTypes").then(data => {
+          data.forEach(item => {
+            if(!nomenclature.items.some(function(value){ return value.NAME === item.NAME })){
+              const obj = {ID: [2, 6, 7, 8, 9, 11]}
+              const newItem = Object.assign(item, obj);
+              nomenclature.items.push(newItem);
+            }
+          });
+        });
+      }
   },
   computed: {
     fullName() {
@@ -411,6 +440,18 @@ export default {
     setVisibleInput(nomenklatura) {
       if (nomenklatura) {
         this.input.splice(1);
+        const unitTypes = this.items.find(item => item.id === 6);       
+        const technicsBrand = this.items.find(item => item.id === 10);
+        const technicsType = this.items.find(item => item.id === 12);
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes").then(data => { 
+          unitTypes.items = data;
+        });
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand").then(data => { 
+          technicsBrand.items = data;
+        });
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes").then(data => { 
+          technicsType.items = data;
+        });      
         let arrayInput = this.input
           .filter((item) => item.name == "Вид номенклатуры:*")[0]
           .items.filter((itemValue) => itemValue.NAME == nomenklatura);
@@ -423,13 +464,7 @@ export default {
           let item = this.input.filter((itemValue) => itemValue.id == 5);
           item[0].name = "Артикул:*";
           item[0].required = true;
-          this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand", 10);
-          this.get1CUnits(
-            "https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes",
-            12
-          );
         }
-        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes", 6);
       } else {
         for (let i = 0; i < this.items.length; i++) {
           this.input.splice(1);
@@ -441,9 +476,8 @@ export default {
         this.items[i].value = "";
       }
     },
-    get1CUnits(url, id) {
-      let getUnitTypesArr = this.input.filter((item) => item.id == id);
-      axios({
+    async get1CUnits(url) {
+      return await axios({
         method: "get",
         withCredentials: true,
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -453,8 +487,8 @@ export default {
           password: "123",
         },
       }).then((response) => {
-        if (response.status == 200) {
-          getUnitTypesArr[0].items = response.data;
+        if (response.status == 200) {          
+          return response.data;
         }
       });
     },
