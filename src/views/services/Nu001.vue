@@ -372,7 +372,6 @@ export default {
     });
     bus.$on("resultArray", (data) => {
       this.input = data;
-      console.log(data);
     });
     bus.$on("Select", (data) => {
       this.dep_err = "";
@@ -503,9 +502,8 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
+            this.dialogMessage = `Произошла ошибка: ${error}`;
             this.btnLoader = false;
           });
       }

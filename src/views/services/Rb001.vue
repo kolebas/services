@@ -172,9 +172,8 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
+            this.dialogMessage = `Произошла ошибка: ${error}`;
           });
       }
       if (!this.type) {

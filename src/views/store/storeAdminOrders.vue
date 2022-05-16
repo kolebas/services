@@ -208,7 +208,6 @@ export default {
         );
         this.newRowTableToExport.push(rowObject);
       }
-      console.log(this.newRowTableToExport)
       this.exportOrderItems = this.newHeaderTableToExport;
       setTimeout(
         () => this.downloadExportFile("exportOrderItemsTableId"),

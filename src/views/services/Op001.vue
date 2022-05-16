@@ -335,7 +335,6 @@ export default {
       this.editedIndex = this.params.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
-      console.log(item);
     },
 
     deleteItemConfirm() {
@@ -399,13 +398,11 @@ export default {
               this.dialogMessage =
                 "Успешно. Номер вашей заявки: " + response.data;
               this.btnLoader = false;
-              console.log(response.data);
             }
           })
           .catch((error) => {
-            console.log(error);
             this.dialog = true;
-            this.dialogMessage = "Произошла ошибка";
+            this.dialogMessage = `Произошла ошибка: ${error}`;
             this.btnLoader = false;
           });
       }
