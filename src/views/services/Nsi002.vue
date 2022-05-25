@@ -57,29 +57,29 @@ export default {
           {
             NAME: "Юридическое лицо",
             ID: [
-              0, 1, 2, 3, 4, 5, 9, 10, 13, 14, 19, 20, 21, 22,
-              23, 24, 25, 32,
+              0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
+              23, 24, 25, 32
             ],
           },
           {
             NAME: "Физическое лицо",
             ID: [
-              0, 33, 34, 35, 4, 5, 9, 17, 13, 14, 19, 20, 21, 22,
-              23, 24, 25, 32,
+              0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
+              23, 24, 25, 32
             ],
           },
           {
             NAME: "Обособленное подразделение",
             ID: [
-              0, 1, 2, 3, 4, 5, 9, 10, 13, 14, 19, 20, 21, 22,
-              23, 24, 25, 32,
+              0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
+              23, 24, 25, 32
             ],
           },
           {
             NAME: "Государственный орган",
             ID: [
-              0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 19, 20, 21,
-              22, 23, 24, 25, 32,
+              0, 1, 2, 3, 9, 10, 4, 5, 7, 8, 12, 13, 14, 19, 20, 21,
+              23, 24, 25, 32
             ],
           },
         ],
@@ -171,6 +171,7 @@ export default {
       {
         id: 4,
         name: "Наименование*",
+        title: "shortTitle",
         type: "string",
         required: true,
          rule: [
@@ -203,7 +204,9 @@ export default {
         rule: [
           (value) => !!value || "Обязательное поле",
           (value) => (value && value.length == 10 ) || "Количество символов 10",
-        ]
+        ],                
+        icon: "mdi-briefcase-search-outline",
+        messages: "Для автоматического заполнения реквизитов нажмите иконку лупы с чемоданом"
       },
       {
         id: 10,
@@ -248,13 +251,9 @@ export default {
         type: "textarea",
       },
       {
-        id: 22,
-        name: "Отвественный",
-        type: "selectUsr",
-      },
-      {
         id: 23,
         name: "Телефон контрагента",
+        title: "telephone",
         type: "string",
       },
       {
@@ -282,12 +281,16 @@ export default {
       {
         id: 34,
         name: "Физическое лицо",
+        title: "fiz",
         type: "string",
+        visible: false,
       },
       {
         id: 35,
         name: "Код физического лица",
+        title: "fizCode",
         type: "string",
+        visible: false,
       },
       {
         id: 36,
@@ -317,6 +320,16 @@ export default {
         type: "string",
         rule: [(value) => !!value || "Обязательное поле"],
       },
+      {
+        id: 41,
+        name: "Дата рождения",
+        type: "date",
+      },
+      {
+        id: 42,
+        name: "Файл:",
+        type: "file",
+      },
     ],
     type: null,
     resident: true,
@@ -326,8 +339,12 @@ export default {
       const userInput = this.inputs.find((item) => item.type === "selectUsr");
       userInput.value = data.userId;
     });
-    bus.$on("resultArray", () => {
+    bus.$on("resultArray", (data) => {
+      this.setPaishik(data.find(item => item.title === "paishik"))
       this.checkForm();
+    });
+    bus.$on("appendIconCallback", () => {
+      this.getDadata();
     });
   },
   mounted() {
@@ -382,6 +399,17 @@ export default {
     },
   },
   methods: {
+    setPaishik(paihik){
+      const fiz = this.inputs.find((item) => item.title === "fiz");
+      const fizCode = this.inputs.find((item) => item.title === "fizCode");
+      if(paihik.value === "Да"){
+        fiz.visible = true;
+        fizCode.visible = true;
+      } else {
+        fiz.visible = false;
+        fizCode.visible = false;
+      }
+    },
     addInput(type, resident) {
       if (type && resident === true) {
         let itemsID = this.inputs[0].items.find(
@@ -484,6 +512,34 @@ export default {
       });
       return formData;    
     },
+    getDadata(){
+      var url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
+      var token = "f504593845086a6ff8765db38660efbe829b65ba";
+      var query = this.inputs.find(item => item.title === 'inn').value;
+
+      var options = {
+          method: "POST",
+          mode: "cors",
+          headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Token " + token
+          },
+          body: JSON.stringify({query: query, branch_type: 'MAIN'})
+      }
+
+    fetch(url, options)
+      .then(response => response.json())
+      .then((result) => {
+        this.inputs.find(item => item.title === "shortTitle").value = result.suggestions[0].data.name.short_with_opf;
+        this.inputs.find(item => item.title === "fullTitle").value = result.suggestions[0].data.name.full_with_opf;
+        this.inputs.find(item => item.title === "urAddress").value = result.suggestions[0].data.address.value;
+        this.inputs.find(item => item.title === "telephone").value = result.suggestions[0].data.address.phones;
+        this.inputs.find(item => item.id === 10).value = result.suggestions[0].data.kpp;
+        this.checkForm();
+      })
+      .catch(error => console.log("error", error));
+    }
   },
 };
 </script>
