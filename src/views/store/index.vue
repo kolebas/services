@@ -126,13 +126,13 @@
     <template>
       <v-card min-width="100%">
         <Alert
-          :text="accessText"
-          :type="'info'"
+          :text="warningtext"
+          :type="'warning'"
           :colorBorder="true"
           :borderType="'bottom'"
           :btnBack="false"
         />
-        <v-row class="mx-auto">
+        <v-row class="mx-auto my-2">
           <v-col v-for="item in storeItems" :key="item.items" cols="2">
             <v-card shaped elevation="3" class="mx-auto">
               <v-list-item @click="showDialogItem(item)">
@@ -233,6 +233,7 @@ export default {
     dialog: false,
     btnLoader: false,
     OrderItems: [],
+    warningtext: "Уважаемые коллеги! Прием заказов по молочной продукции временно не осуществляется.",
     accessText:
       "Уважаемые коллеги, заказы на молочную продукцию принимаются с понедельника 9:00 по среду 18:00, получение заказов по молочной продукции осуществляется по пятницам в центральном офисе по адресу: пер. Соборный, 19",
     sourceUrl: "./ajax/marketing/store.php",
@@ -272,12 +273,13 @@ export default {
     },
     //Получение дня недели
     getOrderDay() {
-      let date = new Date();
+      return false; //Отключение магазина задача №40740
+      /*let date = new Date();
       if (date.getDay() > 0 && date.getDay() < 4) {
         return true;
       } else {
         return false;
-      }
+      }*/
     },
   },
   mounted() {
