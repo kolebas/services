@@ -10,7 +10,7 @@
             :sub_message="sub_message"
           ></RqCardTitle>
           <hr />
-          <v-row class="mb-n6">
+          <v-row class="mb-2">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
                 Описание требуемой доработки:
