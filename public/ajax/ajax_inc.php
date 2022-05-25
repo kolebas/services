@@ -10,6 +10,9 @@
 	$title_inc = $_POST["title_inc"];
 	$type_1c_slct = $_POST["type_1c_slct"];
 	$switch_mon = $_POST["switch_mon"];
+  $switch_nsi = $_POST["switch_nsi"];
+  $type_nsi = $_POST["type_nsi_slct"];
+  $db = $_POST["db"];
 	$cmnt = $_POST["cmnt"];
 	$user = $_POST["responsible"];
 	if($user != NULL){
@@ -54,7 +57,7 @@
 	$wfId = CBPDocument::StartWorkflow(
 		313,
 		array("lists", "BizprocDocument", $documentId),
-		array_merge(array("author"=>$author, "title"=>$title_inc, "type_1s"=>$type_1c_slct, "switch_mon"=>$switch_mon, "body"=>$cmnt, "file"=>$files, "cnt"=>$cnt), array("TargetUser" => "user_".intval($author),
+		array_merge(array("author"=>$author, "title"=>$title_inc, "type_1s"=>$type_1c_slct, "switch_mon"=>$switch_mon, "switch_nsi"=>$switch_nsi, "type_nsi"=>$type_nsi, "db"=>$db,  "body"=>$cmnt, "file"=>$files, "cnt"=>$cnt), array("TargetUser" => "user_".intval($author),
 		CBPDocument::PARAM_DOCUMENT_EVENT_TYPE =>
 		CBPDocumentEventType::Manual)),
 		$arErrorsTmp
