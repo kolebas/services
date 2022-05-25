@@ -1,42 +1,46 @@
 <template>
   <v-container fluid>
     <TitleService />
-    <v-card min-height="800px" class="py-12">
-      <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
-      <v-card width="55%" raised class="mx-auto" color="grey lighten-4">
-        <v-card-text class="pa-0">
-          <p class="text-center pt-4 headline text--primary">{{ title }}</p>
-          <p class="subtitle-1 font-weight-medium mx-8">{{ sub_title }}</p>
-        </v-card-text>
-        <v-divider />
-        <br />
-        <v-row>
-          <v-col cols="11" class="mx-auto">
-            <Input :arrInput="inputs" />
-          </v-col>
-        </v-row>
-        <v-divider />
-        <v-card-actions class="py-4">
-          <div class="mx-auto">
-            <v-btn
-              class="mx-1"
-              :loading="btnLoader"
-              :disabled="!getIncTitle"
-              color="green lighten-2 white--text"
-              @click="formSend()"
-            >
-              Отправить
-            </v-btn>
-            <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-          </div>
-        </v-card-actions>
+    <form id="inc" name="inc" action="submit" novalidate>
+      <v-card min-height="800px" class="py-12">
+        <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
+        <v-card width="55%" raised class="mx-auto" color="grey lighten-4">
+          <v-card-text class="pa-0">
+            <p class="text-center pt-4 headline text--primary">{{ title }}</p>
+            <p class="subtitle-1 font-weight-medium mx-8">{{ sub_title }}</p>
+          </v-card-text>
+          <v-divider />
+          <br />
+          <v-row>
+            <v-col cols="11" class="mx-auto">
+              <Input :arrInput="inputs" />
+            </v-col>
+          </v-row>
+          <v-divider />
+          <v-card-actions class="py-4">
+            <div class="mx-auto">
+              <v-btn
+                class="mx-1"
+                :loading="btnLoader"
+                :disabled="sendButtonDisable"
+                color="green lighten-2 white--text"
+                @click="formSend()"
+              >
+                Отправить
+              </v-btn>
+              <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
       </v-card>
-    </v-card>
+    </form>    
   </v-container>
 </template>
 
 <script>
 import { bus } from "@/main.js";
+import Api from "@/components/Api.js"
+import Validate from "@/components/Validate.js"
 import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import axios from "axios";
 import TitleService from "@/components/TitleService.vue";
@@ -49,12 +53,12 @@ export default {
   },
   data: () => ({
     title: "Новое обращение",
+    sendButtonDisable: true,
     sub_title:
       'Если у вас возникли проблемы с используемым оборудованием, программным обеспечением или вы нуждаетесь в консультации специалистов, заполните предлагаемую форму и нажмите кнопку "ОТПРАВИТЬ".',
     dialog: false,
     dialogMessage: "",
     btnLoader: false,
-    sendButtonDisable: false,
     inputs: [],
     fields: [
       {
@@ -79,16 +83,23 @@ export default {
       {
         label: "Проблема связана с 1С",
         title: "switch_1c",
-        value: "",
+        value: false,
         type: "switch",
-        class: "mt-n4",
+        class: "mt-n2",
       },
       {
-        label: "Проблема связана мониторингом",
+        label: "Проблема связана с мониторингом",
         title: "switch_mon",
         value: "",
         type: "switch",
-        class: "mt-n4",
+        class: "mt-n2",
+      },      
+      {
+        label: "Проблема связана с НСИ",
+        title: "switch_nsi",
+        value: false,
+        type: "switch",
+        class: "mt-n2",
       },
       {
         label: "Направление 1С",
@@ -107,10 +118,46 @@ export default {
           "Логистика",
           "МСФО",
           "1С не работает, работает медленно",
-          "Ошибка в НСИ",
         ],
         rule: [],
         visible: false,
+      },
+      {
+        label: "Справочник",
+        title: "type_nsi_slct",
+        value: "",
+        type: "select",
+        select_arr: [
+          "Агрегаты",
+          "Банки",
+          "Виды работ",
+          "Договоры",
+          "Классификатор автотранспорта и сх техники",
+          "Классификатор единиц измерения",
+          "Классификатор оборудования (прицепы и навесное оборудование)",
+          "Контрагенты",
+          "Номенклатура",
+          "Номенклатурные группы",
+          "Основные средства",
+          "Прочие доходы и расходы",
+          "Склады",
+          "Статьи движения денежных средств",
+          "Статьи затрат",
+          "Физические лица",
+          "Отсутствует в списке",
+        ],
+        rule: [],
+        visible: false,
+      },
+      {
+        id: 0,
+        title: "db",
+        label: "Список БД 1С",
+        type: "autocomplete",
+        items: [],
+        rule: [(value) => !!value || "Обязательное поле"],
+        visible: false,
+        multiple: true,
       },
       {
         label: "Подробное описание",
@@ -128,9 +175,14 @@ export default {
     userData: {},
     usrid: null,
     usrGroup: [],
+    valid: null,
+    api: new Api()
   }),
   created() {
-    this.createInputs();
+    this.createInputs();    
+    this.getUserData();
+    this.valid = new Validate(this.checkTitle);
+    this.getDb();
     bus.$on("inputFile", (data) => {
       this.file = data;
       this.inputs.find((item) => item.type === "file").value = data;
@@ -139,44 +191,48 @@ export default {
       const userInput = this.inputs.find((item) => item.type === "selectUsr");
       userInput.value = data;
     });
-    this.getUserData();
+    bus.$on("resultArray", (data) => {
+      this.sendButtonDisable = !this.valid.checkForm(data);
+    });
+    bus.$on("valueAutocomplete", () => {      
+      this.sendButtonDisable = !this.valid.checkForm(this.inputs);
+    });
   },
    computed: {
     condition() {
       return this.usrid == 1 || this.usrGroup.includes("22");
     },
     getSwitch1C(){
-      if(this.inputs.length > 0){
-        const switch1C = this.inputs.find(item => item.title === "switch_1c");
-        return switch1C.value;
-      } else {
-        return false;
-      }
+      return this.computedInput("switch_1c");
     },
-    getIncTitle(){
-      if(this.inputs.length > 0){
-        const title = this.inputs.find((item) => item.title === "title_inc").value;
-        if (title.length > 8){
-            return true;
-          } else {
-            return false;
-          }
-      } else {
-          return false;
-        }
-    }      
+    getSwitchNsi(){
+      return this.computedInput("switch_nsi");
+    },    
+    getSwitchMon(){
+      return this.computedInput("switch_mon");
+    },
   },
   watch:{
     getSwitch1C(value){
-      const select1C = this.inputs.find(item => item.title === "type_1c_slct");
-      if(value === false){
-        select1C.value = "";
+      const inputs = ["type_1c_slct"];
+      if(value){        
+        this.toggleSwitchs("switch_1c", inputs, ["type_nsi_slct", "db"], value);
+      } else { 
+        this.removeInput(inputs);
       }
-      select1C.visible = value;
-      select1C.required = value;
-      select1C.rule = [
-          (value) => !!value || "Обязательное поле",
-      ];
+    },
+    getSwitchMon(value){
+      if(value){        
+        this.toggleSwitchs("switch_mon", null, ["type_1c_slct", "type_nsi_slct", "db"], value);
+      }
+    },
+    getSwitchNsi(value){
+      const inputs = ["type_nsi_slct", "db"];
+      if(value){        
+        this.toggleSwitchs("switch_nsi", inputs, ["type_1c_slct"], value);
+      } else {
+        this.removeInput(inputs);
+      } 
     },
     condition(value){
       const userField = this.inputs.find(item => item.title === "responsible");
@@ -184,8 +240,47 @@ export default {
     }
   },
   methods: {
+    toggleSwitchs(sw, inputAdd, inputRem, val){
+      const switchArr = this.inputs.filter(item => item.type === "switch" && item.title != sw);
+      switchArr.forEach(item => item.value = false);
+      if(inputAdd){
+        inputAdd.forEach(elem => {
+          const selectInput = this.inputs.find(item => item.title === elem);        
+          selectInput.visible = val;
+          selectInput.required = val;
+          selectInput.rule = [
+              (value) => !!value || "Обязательное поле",
+          ];
+        })
+      }
+      this.removeInput(inputRem);
+      this.sendButtonDisable = !this.valid.checkForm(this.inputs);     
+    },
+    computedInput(title){
+      if(this.inputs.length > 0){
+        const sw = this.inputs.find(item => item.title === title);
+        return sw.value;
+      } else {
+        return false;
+      }
+    },
+    removeInput(inputs){            
+      inputs.forEach(elem => {
+        const selectInput = this.inputs.find(item => item.title === elem);        
+        selectInput.visible = false;
+        selectInput.required = false;
+        selectInput.value = "";
+      })
+    },
+    checkTitle() {
+      const title = this.inputs.find(item => item.title === "title_inc");
+      if(title.value.length > 8) {
+        return true; 
+      } else {
+        return false;
+      }
+    }, 
     formSend() {
-      this.checkArray(this.inputs);
       this.btnLoader = true;
       var formData = new FormData();
       this.inputs.forEach((element) => {
@@ -215,8 +310,28 @@ export default {
           this.dialogMessage = `Произошла ошибка ${error}`;
         });
     },
-    formCancl: function () {
+    formCancl() {
       this.$router.go(-1);
+    },
+    getDb(){      
+      this.api.getData({
+        url: "./ajax/ajax_1c001.php",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET",
+        params: {
+          type: "getDB"
+        }
+      })
+      .then(response => {
+        const inputDb = this.inputs.find(item => item.title === "db");
+        const db = [];
+        response.data.forEach(item => {
+          db.push({"NAME": item});
+        })
+        inputDb.items = db;
+      }) 
     },
     getUserData() {
       axios
@@ -245,15 +360,6 @@ export default {
         let item = Object.assign(obj, element);
         this.inputs.push(item);
       });
-    },
-    checkArray(){
-      this.inputs.filter(item => item.required === true).forEach((element) => {
-        if(element.value == null) {
-          return false;
-        } else {
-          return true;
-        }
-      })
     },
   },
 };
