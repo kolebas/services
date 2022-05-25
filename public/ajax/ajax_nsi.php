@@ -90,7 +90,7 @@ $arLoadDocumentArray = Array(
   "IBLOCK_SECTION_ID" => false,          // элемент лежит в корне раздела
   "IBLOCK_ID"      => $IBLOCK_ID,
   "PROPERTY_VALUES"=> $PROP,
-  "NAME"           => "Редактирование справочника номеклатуры (NS-001) №".$cnt,
+  "NAME"           => "Редактирование справочника номенклатуры (NS-001) №".$cnt,
   "ACTIVE"         => "Y",            // активен
   );
 
