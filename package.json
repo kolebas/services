@@ -6,7 +6,7 @@
   "author": "Zaikin Nikolay",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest /home/bitrix/www/ahstep/services",
+    "build": "vue-cli-service build --dest /home/bitrix/www/ahstep/services/build",
     "lint": "vue-cli-service lint"
   },
   "main": ".eslintrc.js",

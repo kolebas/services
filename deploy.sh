@@ -23,7 +23,9 @@
 #git push -f https://kolebas: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@github.com/kolebas/services.git
 
 #cd -
-
+cd /home/bitrix/www/ahstep/services
+mkdir "src"
+cd ./src
 git clone https://kolebas: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@github.com/kolebas/services.git
 cd services
 npm install
