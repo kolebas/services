@@ -5,15 +5,15 @@ $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 
 //Добавление заявки на доступ в БД 1С
-if ($data[type] == "1c001") {
+if ($_POST[type] == "1c001") {
 
-    $org = $data[input][0]['value'];
-    $temptime = $data[input][1]['value'];
-    $db = $data[input][3]['value'];
-    $permision = $data[input][4]['value'];
-    $access = $data[input][5]['value'];
-    $cmnt = $data[input][6]['value'];
-    $user = $data[input][7]['value'];
+    $org = $_POST[0];
+    $temptime = $_POST[12];
+    $db = $_POST[2];
+    $permision = $_POST[3];
+    $access = $_POST[4];
+    $cmnt = $_POST[5];
+    $user = $_POST[7];
 
 
     $cnt = CIBlockElement::GetList(

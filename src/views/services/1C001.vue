@@ -1,69 +1,63 @@
 <template>
   <v-container fluid>
-    <DialogAfterSendForm :dialog="dialog" :warnMessage="dialogMessage" />
-    <TitleService icon="./assets/img/1s.png" />
-    <v-card min-height="800px" class="py-12">
-      <v-row>
-        <form id="form" novalidate>
-          <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
-            <RqCardTitle
-              :title="$router.currentRoute.name"
-              :sub_message="sub_message"
-            ></RqCardTitle>
-            <hr />
-
-            <Input :arrInput="input.filter(item => item.title === 'user')" />
-            <v-card outlined class="my-6 mx-6" color="grey lighten-2">
-              <v-card-title class="mx-auto">
-                Куда предоставляется доступ
-              </v-card-title>
+    <TitleService />
+    <form id="1c001" name="1c001" action="submit" novalidate>
+      <v-card min-height="800px" class="py-12">
+        <v-row>
+            <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
+              <RqCardTitle
+                :title="$router.currentRoute.name"
+                :sub_message="sub_message"
+              ></RqCardTitle>
               <hr />
-              <Input :arrInput="input.filter(item => item.title != 'user')" />
+
+              <Input :arrInput="input.filter(item => item.title === 'user')" />
+              <v-card outlined class="my-6 mx-6" color="grey lighten-2">
+                <v-card-title class="mx-auto">
+                  Куда предоставляется доступ
+                </v-card-title>
+                <hr />
+                <Input :arrInput="input.filter(item => item.title != 'user')" />
+                <v-card-text> * Поля обязательные для заполнения </v-card-text>
+              </v-card>
+              <hr />
+              <Buttons
+                :input="sendData()"
+                :sendButtonDisable="sendButtonDisable"
+                :ajax="source"
+              />
             </v-card>
-            <hr />
-            <v-card-actions class="py-4">
-              <div class="mx-auto">
-                <v-btn
-                  class="mx-1"
-                  :loading="btnLoader"
-                  :disabled="btnStatus"
-                  color="green lighten-2 white--text"
-                  @click="checkData()"
-                >
-                  Отправить
-                </v-btn>
-                <v-btn class="mx-1" @click="formCancl()"> Отмена </v-btn>
-              </div>
-            </v-card-actions>
-          </v-card>
-        </form>
-      </v-row>
-    </v-card>
+        </v-row>
+      </v-card>
+      </form>
   </v-container>
 </template>
 
 <script>
 import { bus } from "@/main.js";
 import RqCardTitle from "@/components/RqCardTitle.vue";
-import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import Input from "@/components/Input.vue";
 import axios from "axios";
 import TitleService from "@/components/TitleService.vue";
+import Buttons from "@/components/Buttons.vue";
 export default {
   components: {
     RqCardTitle,
-    DialogAfterSendForm,
     Input,
     TitleService,
+    Buttons
   },
   data: () => ({
     sub_message:
       "В рамках исполнения данной заявки будет запущено согласование запрошенных доступов. При изменении статуса заявки, вы будете получать уведомления на электронный почтовый ящик, указанный у вас в профиле. Также вы можете отслеживать статус заявки в разделе.",
     btnLoader: false,
     btnStatus: false,
+    sendButtonDisable: true,
     input: [
       {
-        name: "Организация",
+        id: 0,
+        name: "Организация*",
+        title: "org",
         value: [],
         visible: true,
         items: [],
@@ -79,6 +73,7 @@ export default {
         required: true,
       },
       {
+        id: 11,
         name: "Временный доступ:",
         value: false,
         cs: "12",
@@ -89,6 +84,7 @@ export default {
         class: "mt-2",
       },
       {
+        id: 12,
         title: "timeInterwall",
         name: "Период временного доступа:",
         value: [],
@@ -105,7 +101,7 @@ export default {
       {
         id: 2,
         title: "db",
-        name: "Список БД 1С:",
+        name: "Список БД 1С:*",
         value: "",
         cs: "12",
         sm: "6",
@@ -117,11 +113,12 @@ export default {
         solo: true,
         multiple: true,
         err: "",
+        required: true
       },
       {
         id: 3,        
         title: "accessLevel",
-        name: "Права как у кого:",
+        name: "Права как у кого:*",
         value: "",
         cs: "12",
         sm: "6",
@@ -132,10 +129,11 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true
       },
       {
         id: 4,
-        name: "Описать уровень доступа:",
+        name: "Описать уровень доступа:*",
         value: "",
         cs: "12",
         sm: "6",
@@ -145,6 +143,7 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true
       },
       {
         id: 5,
@@ -172,6 +171,7 @@ export default {
         dense: true,
         solo: true,
         err: "",
+        required: true
       },
     ],
     cmnt: "",
@@ -179,12 +179,11 @@ export default {
     db: "",
     org: [],
     file: [],
-    dialog: false,
-    dialogMessage: "",
     source: "./ajax/ajax_1c001.php",
   }),
   created() {
     bus.$on("SelectUsr", (data) => {
+      this.checkForm();
       if (data.input_id == "7") {
         this.input.find((item) => {
           if (item.title === "user") {
@@ -201,36 +200,16 @@ export default {
           }
         });
       }
+    });    
+    bus.$on("resultArray", () => {
+      this.checkForm();
     });
   },
   mounted() {
     this.getDB();
     this.getOrg();
-    this.enableValidation();
   },
   methods: {
-    formCancl: function () {
-      this.$router.go(-1);
-    },
-
-    checkInput() {
-      for (var i = 0; i < this.input.length; i++) {
-        if (this.input[i].value == "") {
-          var item = this.input[i];
-          item["err"] = "Необходимо заполнить данное поле";
-        } else {
-          this.input[i]["err"] = "";
-        }
-      }
-    },
-
-    enableValidation() {
-      const form = document.querySelector("#form");
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-      });
-    },
-
     getDB() {
       axios
         .get(this.source, {
@@ -240,7 +219,7 @@ export default {
         })
         .then((response) =>
           this.input.find((item) => {
-            if (item.name === "Список БД 1С:") {
+            if (item.title === "db") {
               response.data.forEach(element => {
                 item.items.push({NAME: element})
               });
@@ -252,59 +231,42 @@ export default {
     getOrg() {
       axios
         .get("./ajax/GetOrg.php", {})
-        .then((response) => this.findItemArray("Организация", response));
+        .then((response) => this.findItemArray("org", response));
     },
 
     checkArr(arr) {
       return arr.value != "";
     },
 
-    checkData() {
-      let tempArr = this.input.filter((test) => test.id > 1);
-      let sts = tempArr.every(this.checkArr);
-      if (sts) {
-        this.formSend();
+    checkForm() {
+      const input = this.input.filter((item) => (item.required === true));
+      const valid = !input.some((item) => item.value == "");
+      if (valid) {
+        this.sendButtonDisable = false;
       } else {
-        this.checkInput();
+        this.sendButtonDisable = true;
       }
     },
 
     findItemArray(elementName, response) {
       this.input.find((item) => {
-        if (item.name === elementName) {
+        if (item.title === elementName) {
           item.items = response.data;
         }
       });
     },
-
-    formSend() {
-      console.log(this.input);
-      this.btnLoader = true;
-      if (this.input) {
-        axios({
-          method: "post",
-          headers: { "Content-Type": "multipart/form-data" },
-          url: this.source,
-          data: {
-            type: "1c001",
-            input: this.input,
-          },
-        })
-          .then((response) => {
-            if (response.status == 200) {
-              this.dialog = true;
-              this.dialogMessage =
-                "Успешно. Номер вашей заявки: " + response.data;
-              this.btnLoader = false;
-            }
-          })
-          .catch((error) => {
-            this.dialog = true;
-            this.dialogMessage = "Произошла ошибка: " + error;
-            this.btnLoader = false;
-          });
-      }
+    
+    sendData(){
+      const formData = new FormData();
+      formData.append('type', '1c001')
+      this.input.forEach((element) => {
+        if(element.value != null){          
+          formData.append(element.id, element.value);
+        }
+      });
+      return formData;    
     },
+
   },
   computed: {
     getValueSwitch() {
