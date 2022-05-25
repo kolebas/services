@@ -254,7 +254,7 @@ export default {
         })
       }
       this.removeInput(inputRem);
-      this.sendButtonDisable = !this.valid.checkForm(this.inputs);     
+      this.sendButtonDisable = !this.valid.checkForm(this.inputs);  
     },
     computedInput(title){
       if(this.inputs.length > 0){
@@ -264,13 +264,14 @@ export default {
         return false;
       }
     },
-    removeInput(inputs){            
-      inputs.forEach(elem => {
-        const selectInput = this.inputs.find(item => item.title === elem);        
-        selectInput.visible = false;
-        selectInput.required = false;
-        selectInput.value = "";
-      })
+    removeInput(inputs){              
+        inputs.forEach(elem => {
+          const selectInput = this.inputs.find(item => item.title === elem);        
+          selectInput.visible = false;
+          selectInput.required = false;
+          selectInput.value = "";
+        })      
+      this.sendButtonDisable = !this.valid.checkForm(this.inputs);   
     },
     checkTitle() {
       const title = this.inputs.find(item => item.title === "title_inc");
