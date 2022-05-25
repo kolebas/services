@@ -30,11 +30,12 @@ $IBLOCK_ID = 120;
 
 if(isset($_POST[0])){
 	$type = $_POST[100];
-	if($_POST[101] == true){
+	$rezident = $_POST[101];
+	if($rezident === "true"){
 		$rezident = "Да";
 	} else {
 		$rezident = "Нет";
-	}
+	} 
 	
 	$db = array();
 	foreach(explode(",",$_POST[0]) as &$value) {
@@ -98,7 +99,6 @@ function getEnumFieldId($field, $code){
 		}
 	}
 }
-
 #Добавление элемента инфоблока
 $el = new CIBlockElement;
 
@@ -132,6 +132,7 @@ $PROP["BANK"] = getFieldValue(36);
 $PROP["VALYUTA_SCHETA"] = Array("VALUE" => getEnumFieldId($valuta, 'VALYUTA_SCHETA'));
 $PROP["STRANA_REGISTRATSII"] = getFieldValue(39);
 $PROP["NALOGOVYY_NOMER_NALOGOPLATELSHCHIKA"] = getFieldValue(40);
+$PROP["DATA_ROZHDENIYA"] = date("d.m.Y", strtotime(getFieldValue(41)));
 $PROP["FILE"] = $arrFiles;
 
 $arLoadDocumentArray = Array(
