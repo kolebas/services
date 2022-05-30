@@ -23,6 +23,7 @@
 #git push -f https://kolebas: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@github.com/kolebas/services.git
 
 #cd -
+
 cd /home/bitrix/www/ahstep/services
 mkdir "src"
 cd ./src
@@ -30,3 +31,10 @@ git clone https://kolebas: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@github.com/ko
 cd services
 npm install
 npm run build
+rm -R /home/bitrix/www/ahstep/services/js
+rm -R /home/bitrix/www/ahstep/services/css
+rm -R /home/bitrix/www/ahstep/services/app.php
+cp -R /home/bitrix/www/ahstep/services/build/js /home/bitrix/www/ahstep/services/js
+cp -R /home/bitrix/www/ahstep/services/build/css /home/bitrix/www/ahstep/services/css
+cp -R /home/bitrix/www/ahstep/services/build/app.php /home/bitrix/www/ahstep/services/app.php
+rm -R /home/bitrix/www/ahstep/services/build
