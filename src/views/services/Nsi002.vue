@@ -58,28 +58,28 @@ export default {
             NAME: "Юридическое лицо",
             ID: [
               0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
-              23, 24, 25, 32
+              23, 24, 25, 49, 32, 42
             ],
           },
           {
             NAME: "Физическое лицо",
             ID: [
               0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
-              23, 24, 25, 32
+              23, 24, 25, 49, 32, 43, 44, 45, 46, 47, 48, 42
             ],
           },
           {
             NAME: "Обособленное подразделение",
             ID: [
               0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
-              23, 24, 25, 32
+              23, 24, 25, 49, 32, 42
             ],
           },
           {
             NAME: "Государственный орган",
             ID: [
               0, 1, 2, 3, 9, 10, 4, 5, 7, 8, 12, 13, 14, 19, 20, 21,
-              23, 24, 25, 32
+              23, 24, 25, 49, 32, 42
             ],
           },
         ],
@@ -206,7 +206,7 @@ export default {
           (value) => (value && value.length == 10 ) || "Количество символов 10",
         ],                
         icon: "mdi-briefcase-search-outline",
-        messages: "Для автоматического заполнения реквизитов нажмите иконку лупы с чемоданом"
+        messages: "Для автоматического заполнения реквизитов нажмите иконку лупы с чемоданом (работает для юрлиц и ИП/ГКФХ)"
       },
       {
         id: 10,
@@ -329,6 +329,55 @@ export default {
         id: 42,
         name: "Файл:",
         type: "file",
+      },      
+      {
+        id: 43,
+        name: "СНИЛС",
+        type: "string",
+      },            
+      {
+        id: 44,
+        name: "Паспорт",
+        type: "string",
+      },      
+      {
+        id: 45,
+        name: "Кем выдан паспорт",
+        type: "string",
+      },     
+      {
+        id: 46,
+        name: "Код подразделения",
+        type: "string",
+      },     
+      {
+        id: 47,
+        name: "Дата выдачи паспорта",
+        type: "date",
+      },     
+      {
+        id: 48,
+        name: "Место рождения",
+        type: "string",
+      },
+      {
+        id: 49,
+        name: "Канал сбыта",
+        title: "channel",
+        type: "autocomplete",
+        items: [
+          { NAME: "Федеральные сети" },
+          { NAME: "Региональные сети" },
+          { NAME: "HoReCa" },
+          { NAME: "Дистрибьютор" },
+          { NAME: "Экспорт" },
+          { NAME: "Опт" },
+          { NAME: "Розница" },
+          { NAME: "АЗС" },
+          { NAME: "E-com" },
+          { NAME: "Внутригрупповые" },
+          { NAME: "Прочие" },
+        ],
       },
     ],
     type: null,
@@ -345,6 +394,9 @@ export default {
     });
     bus.$on("appendIconCallback", () => {
       this.getDadata();
+    });
+    bus.$on("inputFile", (data) => {
+      this.inputs.find((item) => item.type === "file").value = data;
     });
   },
   mounted() {
@@ -505,12 +557,20 @@ export default {
     },
     sendData(){
       const formData = new FormData();
+      const fileInput = this.inputs.find(item => item.type === "file");
       this.inputs.forEach((element) => {
         if(element.value != null){          
           formData.append(element.id, element.value);
         }
       });
-      return formData;    
+      if(fileInput) {
+        const files = fileInput.value;
+        for (var i = 0; i < files.length; i++) {
+          let file = files[i];
+          formData.append("file[" + i + "]", file);
+        }
+      }    
+      return formData;   
     },
     getDadata(){
       var url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
@@ -533,7 +593,7 @@ export default {
       .then((result) => {
         this.inputs.find(item => item.title === "shortTitle").value = result.suggestions[0].data.name.short_with_opf;
         this.inputs.find(item => item.title === "fullTitle").value = result.suggestions[0].data.name.full_with_opf;
-        this.inputs.find(item => item.title === "urAddress").value = result.suggestions[0].data.address.value;
+        this.inputs.find(item => item.title === "urAddress").value = result.suggestions[0].data.address.unrestricted_value;
         this.inputs.find(item => item.title === "telephone").value = result.suggestions[0].data.address.phones;
         this.inputs.find(item => item.id === 10).value = result.suggestions[0].data.kpp;
         this.checkForm();

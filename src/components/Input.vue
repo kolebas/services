@@ -12,7 +12,7 @@
         </v-col>
         <v-col :cols="item.cs" :sm="item.sm" :md="item.md">
           <v-text-field
-            v-if="item.type == 'string' && item.visible != false"
+            v-if="(item.type == 'string' || item.type == 'S') && item.visible != false"
             v-model="item.value"
             :type="item.typeDomInput"
             :class="item.class"
@@ -127,8 +127,8 @@
             :label="item.label"
             :userId_err="item.err"
           />
-          <InputFileCard v-if="item.type == 'file'" />
-          <InputAutocomplete :items="item" v-if="item.type == 'autocomplete'" />
+          <InputFileCard v-if="item.type == 'file' || item.type === 'F'" />
+          <InputAutocomplete :items="item" v-if="item.type == 'autocomplete' || item.type === 'L'" />
           <SelectOrg
             :title="item.name"
             :cols_title="item.cols_title"

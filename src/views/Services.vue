@@ -107,6 +107,11 @@ export default {
             name: "Создание контрагента",
             img: "lists.png",
             route: "/nsi002",
+          },          
+          {
+            name: "Редактирование контрагента",
+            img: "lists.png",
+            route: "/nsi003",
           },
         ],
       },

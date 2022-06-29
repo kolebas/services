@@ -1,26 +1,3 @@
-<?php
-    // Allow from any origin
-    if (isset($_SERVER['HTTP_ORIGIN'])) {
-        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Max-Age: 86400');    // cache for 1 day
-    }
-
-    // Access-Control headers are received during OPTIONS requests
-    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-            header("Access-Control-Allow-Headers:        {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
-        exit(0);
-    }
-	error_reporting(E_ALL);
-
-    #echo "You have CORS!";
-?>
 <?
 require_once($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/main/include/prolog_before.php');
 
@@ -47,6 +24,17 @@ if(isset($_POST[0])){
 	$organ = $_POST[7];
 	$paishik = $_POST[33];
 	$valuta = $_POST[38];
+  $channel = $_POST[49];
+  $bitrhday = getFieldValue(41);
+  $dateExtract = getFieldValue(47);
+	
+	if(isset($bitrhday)){
+		$bitrhday = date("d.m.Y", strtotime(getFieldValue(41)));
+	}
+
+  if(isset($dateExtract)){
+		$dateExtract = date("d.m.Y", strtotime(getFieldValue(47)));
+	}
 
 	//Работа с файлами
 	$files = $_FILES['file'];
@@ -132,7 +120,14 @@ $PROP["BANK"] = getFieldValue(36);
 $PROP["VALYUTA_SCHETA"] = Array("VALUE" => getEnumFieldId($valuta, 'VALYUTA_SCHETA'));
 $PROP["STRANA_REGISTRATSII"] = getFieldValue(39);
 $PROP["NALOGOVYY_NOMER_NALOGOPLATELSHCHIKA"] = getFieldValue(40);
-$PROP["DATA_ROZHDENIYA"] = date("d.m.Y", strtotime(getFieldValue(41)));
+$PROP["SNILS"] = getFieldValue(43);
+$PROP["PASPORT"] = getFieldValue(44);
+$PROP["KEM_VYDAN_PASPORT"] = getFieldValue(45);
+$PROP["KOD_PODRAZDELENIYA"] = getFieldValue(46);
+$PROP["DATA_VYDACHI_PASPORTA"] = $dateExtract;
+$PROP["MESTO_ROZHDENIYA"] = getFieldValue(48);
+$PROP["KANAL_SBYTA"] = Array("VALUE" => getEnumFieldId($channel, 'KANAL_SBYTA'));
+$PROP["DATA_ROZHDENIYA"] = $bitrhday;
 $PROP["FILE"] = $arrFiles;
 
 $arLoadDocumentArray = Array(
