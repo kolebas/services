@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-    <TitleService />
     <form id="nsi003" name="nsi003" action="submit" novalidate>
       <v-card min-height="800px" class="py-12">
          <v-row>
@@ -29,19 +28,18 @@
 import { bus } from "@/main.js";
 import Api from "@/components/Api.js";
 import Input from "@/components/Input.vue";
-import TitleService from "@/components/TitleService.vue";
 import RqCardTitle from "@/components/RqCardTitle";
 import Buttons from "@/components/Buttons.vue";
+import { Form } from "@/utils.js";
 export default {
   components: {
-    TitleService,
     RqCardTitle,
     Input,
     Buttons,
   },
   data: () => ({
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
-    sendButtonDisable: false,
+    sendButtonDisable: true,
     api: new Api(),
     inputs: [],
     //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_nsi003.php",
@@ -50,6 +48,10 @@ export default {
   created() {
     bus.$on("inputFile", (data) => {
       this.inputs.find((item) => item.type === "F").value = data;
+    });    
+    bus.$on("resultArray", () => {
+      const form = new Form(this.inputs);
+      this.sendButtonDisable = !form.validation();
     });
   },
   mounted(){
@@ -74,6 +76,9 @@ export default {
           item.value = "";
           item.cs = "12";
           item.sm = item.md = "6";
+          item.rule = (item.is_required === "Y") ? [
+            (value) => !!value || "Обязательное поле",
+          ] : false;
           item.items = (item.list_values.length > 0) ? item.list_values : false;
           item.outlined = item.dense = item. solo = true;
           this.inputs.push(item);

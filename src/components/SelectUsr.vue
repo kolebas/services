@@ -12,7 +12,7 @@
           @change="selectUsr()"
           v-model="userId"
           :multiple="multiple"
-          :search-input.sync="searchInput"
+          :search-input.sync="searchInput"          
           outlined
           solo
           dense

@@ -6,7 +6,7 @@ export default class Api {
 
   getData(data) {
     const {url, headers, method, params} = data;
-    return axios(url, { 
+    return axios(url, {    
       headers: headers,
       method: method,
       params: params

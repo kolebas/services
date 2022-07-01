@@ -38,7 +38,7 @@ import { bus } from "../main.js";
 import axios from "axios";
 export default {
   props: {
-    title: { type: String, default: "Организация:"},
+    title: { type: String, default: "Организация*:"},
     org_err: { type: String },
     cols_title: { type: Number },
     cols_input: { type: Number },

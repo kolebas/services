@@ -49,6 +49,7 @@
                 :outlined="item.outlined"
                 :dense="item.dense"
                 :solo="item.solo"
+                :rules="item.rule"
                 :error-messages="item.err"
                 @input="item.err = ''"
                 @change="input()"

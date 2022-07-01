@@ -21,6 +21,7 @@
             :id="item.id"
             :title="item.title"
             :input_err="item.err"
+            :rules="item.rules"
             :label="item.label"
             :icon_in_rt="item.icon"
             :cols_title="item.cols_title"
@@ -78,13 +79,13 @@
           <SelectUsr
             :cols_title="4"
             :cols_input="6"
-            title="ФИО руководителя:"
+            title="ФИО руководителя*:"
             :userId_err="mng_err"
           />
           <v-row class="mb-n6">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
-                Контактный телефон:
+                Контактный телефон*:
               </v-card-text>
             </v-col>
             <v-col cols="3">
@@ -105,7 +106,7 @@
           <v-row class="mb-n6">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
-                Дата выхода:
+                Дата выхода*:
               </v-card-text>
             </v-col>
             <v-col cols="3">
@@ -124,6 +125,7 @@
                     type="date"
                     dense
                     v-model="date_start"
+                    :rules="rules"
                     label="Дата"
                     :error-messages="date_start_err"
                   ></v-text-field>
@@ -140,7 +142,7 @@
           <v-row class="mb-n4">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
-                Дата рождения:
+                Дата рождения*:
               </v-card-text>
             </v-col>
             <v-col cols="3">
@@ -158,6 +160,7 @@
                     solo
                     dense
                     v-model="date_burn"
+                    :rules="rules"
                     type="date"
                     label="Дата"
                     :error-messages="date_burn_err"
@@ -232,6 +235,7 @@
               </v-card>
             </v-expand-transition>
           </v-row>
+          <v-card-text> * Поля обязательные для заполнения </v-card-text>
           <hr />
           <v-card-actions class="py-4">
             <div class="mx-auto">
@@ -289,21 +293,23 @@ export default {
     inputs: [
       {
         id: "1",
-        title: "ФИО:",
+        title: "ФИО*:",
         err: "",
         label: "Например: Крючков Иван Петрович",
         value: null,
         icon: "mdi-account",
+        rules: [(value) => !!value || "Обязательное поле"],
         cols_title: "4",
         cols_input: "6",
       },
       {
         id: "2",
-        title: "Должность:",
+        title: "Должность*:",
         err: "",
         label: "Например: Весовщик",
         value: null,
         icon: "mdi-briefcase-account",
+        rules: [(value) => !!value || "Обязательное поле"],
         cols_title: "4",
         cols_input: "6",
       },
@@ -311,15 +317,16 @@ export default {
     input: [
       {
         id: 0,
-        name: "Электронная почта (внешнего сотрудника):",
+        name: "Электронная почта (внешнего сотрудника)*:",
         label: "Например: user@contoso.com",
         icon: "mdi-email",
-        value: [],
+        value: "",
         cs: "12",
         sm: "4",
         md: "4",
         type: "string",
         typeDomInput: "email",
+        rule: [(value) => !!value || "Обязательное поле"],
         outlined: true,
         dense: true,
         solo: true,
@@ -327,13 +334,14 @@ export default {
       },
       {
         id: 1,
-        name: "Период временного доступа:",
-        value: [],
+        name: "Период временного доступа*:",
+        value: "",
         cs: "12",
         sm: "4",
         md: "4",
         type: "date",
         outlined: true,
+        rule: [(value) => !!value || "Обязательное поле"],
         dense: true,
         solo: true,
         range: true,
@@ -364,6 +372,7 @@ export default {
     workspace: "",
     route: "",
     sendButtonDisable: false,
+    rules: [(value) => !!value || "Обязательное поле"],
   }),
   created() {
     bus.$on("selectOrg", (data) => {

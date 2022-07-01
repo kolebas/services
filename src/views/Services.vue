@@ -100,17 +100,20 @@ export default {
         items: [
           {
             name: "Редактирование справочника номенклатуры",
-            img: "lists.png",
+            img: "lists_edit.png",
+            info: "Создание нового элемента номеклатуры в базах 1С.",
             route: "/nsi001",
           },
           {
             name: "Создание контрагента",
-            img: "lists.png",
+            img: "lists_add.png",
+            info: "Создание нового контрагента в базах 1С.",
             route: "/nsi002",
           },          
           {
             name: "Редактирование контрагента",
-            img: "lists.png",
+            img: "lists_edit.png",
+            info: "Внесение изменений в элемент справочника контрагентов.",
             route: "/nsi003",
           },
         ],

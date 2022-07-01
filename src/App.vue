@@ -1,7 +1,7 @@
 <template>
   <v-app class="root">
     <v-main>
-      <v-container fluid v-if="getRouteService == '/'" class="mt-n2">
+      <v-container fluid v-if="getRouteService == '/' && this.getTabs.length > 0" class="mt-n2">
         <v-card>
           <v-tabs>
             <v-tab
@@ -55,18 +55,22 @@ export default {
       {
         text: "Отправить заявку",
         route: "/",
+        permissionGroup: ["12"],
       },
       {
         text: "Мои заявки",
         lnk: "../../it-uslugi/helpdesk/my_ticket.php",
+        permissionGroup: ["12"],
       },
       {
         text: "Мои инциденты",
         lnk: "../../it-uslugi/helpdesk/",
+        permissionGroup: ["12"],
       },
       {
         text: "Заявки НСИ",
         lnk: "../../it-uslugi/vse-zayavki.php",
+        permissionGroup: ["12"],
       },
       {
         text: "Панель управления 1С",
@@ -112,7 +116,16 @@ export default {
     getTabs() {
       let arrTabs = [];
       this.tabs.forEach((element) => {
-        if (element.permissionGroup == null) {
+        if (this.usrGroup){
+          element.permissionGroup.forEach((elementPG) => {
+            for (let i = 0; i < this.usrGroup.length; i++) {
+              if (elementPG == this.usrGroup[i]) {
+                arrTabs.push(element);
+              }
+            }
+          });
+        }
+        /*if (element.permissionGroup == null) {
           arrTabs.push(element);
         } else {
           element.permissionGroup.forEach((elementPG) => {
@@ -122,7 +135,7 @@ export default {
               }
             }
           });
-        }
+        }*/
       });
       return arrTabs;
     },

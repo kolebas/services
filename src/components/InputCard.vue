@@ -13,6 +13,7 @@
           solo
           dense
           :id="id"
+          :rules="rules"
           :label="label"
           :suffix="suffix"
           :append-icon="icon_in_rt"
@@ -36,6 +37,7 @@ export default {
     input_err: { type: String },
     cols_title: { type: String },
     cols_input: { type: String },
+    rules: { type: Array}
   },
   data: () => ({
     value: {
