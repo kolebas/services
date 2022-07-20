@@ -19,6 +19,11 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/services/1C002.vue')
   },
   {
+    path: '/1c003',
+    name: 'Заявка на изменение маршрутов согласования в 1С',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/1C003.vue')
+  },
+  {
     path: '/nu001',
     name: 'Заявка на нового сотрудника',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nu001.vue')
