@@ -2,7 +2,7 @@
   <v-container fluid>
     <form id="1C003" name="nsi003" action="submit" novalidate>
       <v-card min-height="800px" class="py-12">
-         <v-row>
+        <v-row>
           <v-card width="65%" raised class="mx-auto" color="grey lighten-4">
             <RqCardTitle
               :title="$router.currentRoute.name"
@@ -21,7 +21,7 @@
         </v-row>
       </v-card>
     </form>
-  </v-container>  
+  </v-container>
 </template>
 
 <script>
@@ -41,88 +41,90 @@ export default {
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
     sendButtonDisable: true,
     api: new Api(),
-    inputs: [
-      {
-        id: 0,
-        title: "ФИО",
-        name: "ФИО",
-        value: "",
-        type: "selectUsr",
-        cs: "12",
-        sm:  "6",
-        md: "6",
-        is_required: "Y"
-      }
-    ],
-    source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c003.php",
-    //source: "./ajax/ajax_1c003.php",
+    inputs: [],
+    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_1c003.php",
+    source: "./ajax/ajax_1c003.php",
   }),
   created() {
     bus.$on("inputFile", (data) => {
       this.inputs.find((item) => item.type === "F").value = data;
-    });    
-    /*bus.$on("resultArray", () => {
-      const form = new Form(this.inputs);
-      this.sendButtonDisable = !form.validation();
-    });*/
+    });
   },
-  mounted(){
+  mounted() {
     this.getFormData();
   },
   watch: {
     inputs: {
-        handler: function() {
-            const form = new Form(this.inputs);
-            this.sendButtonDisable = !form.validation();
-        },
-        deep: true
-    }
+      handler: function () {
+        const inputAction = this.inputs.find(
+          (item) => item.code === "FORM_DEYSTVIE"
+        );
+        const inputUser = this.inputs.find(
+          (item) => item.code === "FORM_FIO_SOTRUDNIKA"
+        );
+        if (inputAction.value && inputAction.value === "Заменить") {
+          if (inputUser) {
+            inputUser.visible = true;
+            inputUser.is_required = "Y";
+          }
+        } else {
+          inputUser.visible = inputUser.is_required = false;
+          inputUser.value = "";
+        }
+        const form = new Form(this.inputs);
+        this.sendButtonDisable = !form.validation();
+      },
+      deep: true,
+    },
   },
   methods: {
-    getFormData(){
-        this.api.getData({
-        url: this.source,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: "GET",
-        params: {
-          type: "getForm",
-          ib_id: 122
-        }
-      })
-      .then(response => {
-        response.data.forEach((item) => {
-          item.name = item.name + (item.is_required === "Y" ? "*" : "");
-          item.value = "";
-          item.multiple = (item.multiple === "Y") ? true : false;
-          item.cs = "12";
-          item.sm = item.md = "6";
-          item.rule = (item.is_required === "Y") ? [
-            (value) => !!value || "Обязательное поле",
-          ] : false;
-          item.items = (item.list_values.length > 0) ? item.list_values : false;
-          item.outlined = item.dense = item. solo = true;
-          this.inputs.push(item);
+    getFormData() {
+      this.api
+        .getData({
+          url: this.source,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+          params: {
+            type: "getForm",
+            ib_id: 122,
+          },
+        })
+        .then((response) => {
+          response.data.forEach((item) => {
+            item.name = item.name + (item.is_required === "Y" ? "*" : "");
+            item.value = "";
+            item.multiple = item.multiple === "Y" ? true : false;
+            item.visible = item.is_invisible ? false : true;
+            item.cs = "12";
+            item.sm = item.md = "6";
+            item.rule =
+              item.is_required === "Y"
+                ? [(value) => !!value || "Обязательное поле"]
+                : false;
+            item.items = item.list_values.length > 0 ? item.list_values : false;
+            item.outlined = item.dense = item.solo = true;
+            this.inputs.push(item);
+          });
         });
-      })
     },
-    sendData(){
+    sendData() {
       const formData = new FormData();
       this.inputs.forEach((element) => {
-        if(element.value != null){
-          if(element.type === "L"){
-            const values = element.value;            
+        if (element.value != null) {
+          if (element.type === "L" && element.multiple === true) {
+            const values = element.value;
             for (var i = 0; i < values.length; i++) {
-              formData.append(element.id + "[" + i + "]" , values[i]);              
+              formData.append(element.id + "[" + i + "]", values[i]);
             }
-          } else {        
+          } else {
             formData.append(element.id, element.value);
-          }        
+          }
         }
       });
-      return formData;  
+      return formData;
     },
-  }
-}
+  },
+};
 </script>

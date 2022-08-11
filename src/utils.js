@@ -1,5 +1,6 @@
 import axios from "axios";
 
+//Устаревший класс
 export default class Api{
   constructor(source){
     this._source = source,
@@ -7,8 +8,8 @@ export default class Api{
   }
   getData(){
     return axios
-      .get(this._source, {
-        auth: {},
+      .get(this._source, {        
+        withCredentials: true,
       })
       .then(response => this._data = response.data)
   }  

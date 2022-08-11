@@ -81,7 +81,7 @@ export default {
     route: { type: String, default: "-1" },
     widthDialogParam: { type: String, default: "500px" },
     titleDialogParam: { type: String, default: "Статус" },
-    btnTextParam: { type: String, default: "Понятно" },
+    btnTextParam: { type: String, default: "Закрыть" },
     btnDisable: { type: Boolean, default: false },
     dataArray: { type: Array },
   },

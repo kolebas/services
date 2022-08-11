@@ -7,7 +7,8 @@
           class="mx-1"
           :disabled="sendButtonDisable"
           :loading="btnLoader"
-          color="#9dcf00 lighten-2 white--text"
+          :type="type"
+          color="green lighten-2 white--text"
           @click="formSend()"
         >
           Отправить
@@ -30,6 +31,7 @@ export default {
     ajax: { type: String },
     btnLoader: { type: Boolean, default: false },
     sendButtonDisable: { type: Boolean, default: false },
+    type: { type: String },
   },
 
   data: () => ({
@@ -42,7 +44,7 @@ export default {
       this.$router.go(-1);
     },
     formSend() {
-      if (!this.sendButtonDisable) {
+      if (!this.sendButtonDisable && this.input) {
         this.btnLoader = true;
         axios({
           method: "post",

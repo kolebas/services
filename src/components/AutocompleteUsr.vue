@@ -67,6 +67,7 @@ export default {
     cols_title: { type: Number },
     cols_input: { type: Number },
     multiple: { type: Boolean },
+    rules: { type: Array},
     id: { type: Number, default: null },
   },
   data: () => ({

@@ -12,6 +12,7 @@
               :label="items.label"
               item-text="NAME"
               item-value="NAME"
+              :rules="items.rule"
               :error-messages="items.err"
               @change="changeValue()"
             >

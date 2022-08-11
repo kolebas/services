@@ -179,19 +179,24 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/store/storeAdminOrders.vue')
   },
   {
-    path: '/Nsi001',
+    path: '/nsi001',
     name: 'Заявка на создание элемента справочника номенклатуры',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi001.vue')
   },
   {
-    path: '/Nsi002',
+    path: '/nsi002',
     name: 'Заявка на создание контрагента',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi002.vue')
   },
   {
-    path: '/Nsi003',
+    path: '/nsi003',
     name: 'Заявка на редактирование контрагента',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi003.vue')
+  },
+  {
+    path: '/nsi004',
+    name: 'Заявка на создание/редактирование физ. лица',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi004.vue')
   },
   {
     path: '/test',

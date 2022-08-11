@@ -12,7 +12,7 @@
         </v-col>
         <v-col :cols="item.cs" :sm="item.sm" :md="item.md">
           <v-text-field
-            v-if="(item.type == 'string' || item.type == 'S') && item.visible != false"
+            v-if="(item.type === 'string' || (item.type === 'S' && (item.user_type === '' || item.user_type === null ))) && item.visible != false"
             v-model="item.value"
             :type="item.typeDomInput"
             :class="item.class"
@@ -33,7 +33,7 @@
             @change="input()"
           ></v-text-field>
           <v-menu
-            v-if="item.type == 'date' && item.visible != false"
+            v-if="(item.type === 'date' || (item.type === 'S' && item.user_type === 'Date')) && item.visible != false"
             v-model="dateDialog"
             :close-on-content-click="false"
             :nudge-right="40"
@@ -64,7 +64,7 @@
           </v-menu>
 
           <v-select
-            v-if="item.type == 'select' && item.visible != false"
+            v-if="item.type === 'select' && item.visible != false"
             v-model="item.value"
             :items="item.select_arr"
             :label="item.label"
@@ -81,7 +81,7 @@
             "
           ></v-select>
           <v-textarea
-            v-if="item.type == 'textarea' && item.visible != false"
+            v-if="item.type === 'textarea' && item.visible != false"
             v-model="item.value"
             :outlined="item.outlined"
             :dense="item.dense"
@@ -108,7 +108,7 @@
             ></v-radio>
           </v-radio-group>
           <v-switch
-            v-if="item.type == 'switch'"
+            v-if="item.type === 'switch'"
             v-model="item.value"
             :label="item.label"
             inset
@@ -121,15 +121,16 @@
             ></v-switch
           >
           <AutocompleteUsr
-            v-if="item.type == 'selectUsr' && item.visible != false"
+            v-if="(item.type === 'selectUsr' || item.user_type === 'employee') && item.visible != false "
             @change="input()"
             :classItem="item.class"
             :id="item.id"
             :label="item.label"
             :userId_err="item.err"
+            :rules="item.rule"
           />
-          <InputFileCard v-if="item.type == 'file' || item.type === 'F'" />
-          <InputAutocomplete :items="item" v-if="item.type == 'autocomplete' || item.type === 'L'" />
+          <InputFileCard v-if="item.type === 'file' || item.type === 'F'" />
+          <InputAutocomplete :items="item" v-if="item.type === 'autocomplete' || item.type === 'L'" />
           <SelectOrg
             :title="item.name"
             :cols_title="item.cols_title"

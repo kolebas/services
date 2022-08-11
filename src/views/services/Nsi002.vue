@@ -69,6 +69,20 @@ export default {
             ],
           },
           {
+            NAME: "Самозанятый",
+            ID: [
+              0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
+              23, 24, 25, 49, 32, 43, 44, 45, 46, 47, 48, 42
+            ],
+          },
+          {
+            NAME: "Получатель алиментов",
+            ID: [
+              0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
+              23, 24, 25, 49, 32, 43, 44, 45, 46, 47, 48, 42
+            ],
+          },
+          {
             NAME: "Обособленное подразделение",
             ID: [
               0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
@@ -227,11 +241,13 @@ export default {
       {
         id: 13,
         name: "Расчетный счёт",
+        title: "schet",
         type: "string",
       },
       {
         id: 14,
         name: "БИК",
+        title: "bik",
         type: "string",
       },
       {
@@ -493,18 +509,16 @@ export default {
       } else if (type === "Обособленное подразделение"){        
         let inputFullTitle = this.inputs.find(item => item.title === "fullTitle");
         let inputUrAddress = this.inputs.find(item => item.title === "urAddress");
-        const arrInput = [inputFullTitle, inputUrAddress];
-        arrInput.forEach((item) => {
-          const data = {
-            name: `${item.name}*`,
-            required: true,
-            rule: [
-              (value) => !!value || "Обязательное поле",
-            ]
-          };
-          item = this.addInputObjects(item, data);
-        })
-      } 
+        this.setInputRule([inputFullTitle, inputUrAddress]);
+      } else if (type === "Получатель алиментов"){
+        let inputBik = this.inputs.find(item => item.title === "bik"); 
+        let inputSchet = this.inputs.find(item => item.title === "schet");
+        let inputInn = this.inputs.find(item => item.title === "inn"); 
+        inputInn.required = false;
+        inputInn.rule = [];
+        inputInn.name = 'ИНН';
+        this.setInputRule([inputBik, inputSchet]);
+      }
     },
     addInputObjects(input, object){
       const obj = Object.assign(input, object);
@@ -571,6 +585,18 @@ export default {
         }
       }    
       return formData;   
+    },
+    setInputRule(inputs){
+      inputs.forEach((item) => {
+        const data = {
+          name: `${item.name}*`,
+          required: true,
+          rule: [
+            (value) => !!value || "Обязательное поле",
+          ]
+        };
+        item = this.addInputObjects(item, data);
+      })
     },
     getDadata(){
       var url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";

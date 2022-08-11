@@ -9,7 +9,7 @@ export default class Api {
     return axios(url, {    
       headers: headers,
       method: method,
-      params: params
+      params: params,
     })
       .then(this._checkResponse)
       .then((data) => {
@@ -17,12 +17,13 @@ export default class Api {
       }) 
   }
 
-  sendData(data) {
-    const {url, headers, method, params} = data;
+  sendData(formData) {
+    const {url, headers, method, params, data} = formData;
     return axios(url, {      
       headers: headers,
       method: method,
-      params: params
+      params: params,
+      data: data,
     })
       .then(this._checkResponse)
       .then((data) => {

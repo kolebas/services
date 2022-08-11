@@ -45,7 +45,7 @@
           <v-row class="mb-n6">
             <v-col cols="4">
               <v-card-text class="subtitle-1 text-right pt-2">
-                Комментарий:
+                Обоснование доступа :
               </v-card-text>
             </v-col>
             <v-col cols="6">
