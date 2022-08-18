@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export default class Api {
-  constructor (){
+  constructor() {
   }
 
   getData(data) {
-    const {url, headers, method, params} = data;
-    return axios(url, {    
+    const { url, headers, method, params } = data;
+    return axios(url, {
       headers: headers,
       method: method,
       params: params,
@@ -14,12 +14,24 @@ export default class Api {
       .then(this._checkResponse)
       .then((data) => {
         return data;
-      }) 
+      })
+  }
+  updateData(formData) {
+    const { url, headers, method, data } = formData;
+    return axios(url, {
+      headers: headers,
+      method: method,
+      data: data,
+    })
+      .then(this._checkResponse)
+      .then((data) => {
+        return data;
+      })
   }
 
   sendData(formData) {
-    const {url, headers, method, params, data} = formData;
-    return axios(url, {      
+    const { url, headers, method, params, data } = formData;
+    return axios(url, {
       headers: headers,
       method: method,
       params: params,
@@ -28,7 +40,7 @@ export default class Api {
       .then(this._checkResponse)
       .then((data) => {
         return data;
-      }) 
+      })
   }
 
   _checkResponse(res) {
