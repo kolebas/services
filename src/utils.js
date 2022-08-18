@@ -21,7 +21,7 @@ export class Form {
   }
   validation(){
     const input = this._inputs.filter((item) => (item.is_required === "Y"));
-    const valid = !input.some((item) => item.value == "");
+    const valid = !input.some((item) => item.value == "" || item.value == null);
     return valid;
   }
 }
