@@ -17,10 +17,15 @@
             ></RqCardTitle>
             <v-divider />
             <v-row v-if="!type" class="d-flex justify-center my-4">
-            <v-hover v-for="button in buttons" :key="button.id">
+              <v-hover v-for="button in buttons" :key="button.id">
                 <template v-slot:default="{ hover }">
                   <v-card
-                    @click="type = true; ib_id = button.ib_id; wf_id = button.wf_id; getFormData()"
+                    @click="
+                      type = true;
+                      ib_id = button.ib_id;
+                      wf_id = button.wf_id;
+                      getFormData();
+                    "
                     min-width="20vw"
                     min-height="10vh"
                     :elevation="hover ? 12 : 6"
@@ -30,14 +35,14 @@
                   >
                     <v-card-text class="mx-auto my-auto">
                       <v-icon :color="button.iconColor" large left>
-                        {{button.icon}} </v-icon
-                      ><span class="text-h6 font-weight-light"
-                        >{{button.title}}</span
-                      >
+                        {{ button.icon }} </v-icon
+                      ><span class="text-h6 font-weight-light">{{
+                        button.title
+                      }}</span>
                     </v-card-text></v-card
                   >
                 </template>
-              </v-hover>             
+              </v-hover>
             </v-row>
             <div v-if="type">
               <Input :arrInput="inputs" />
@@ -79,26 +84,29 @@ export default {
     dialog: false,
     btnLoader: false,
     type: false,
-    buttons: [{
-      id: 0,
-      title: "Создание физ. лица",
-      icon: "mdi-account-plus-outline",
-      iconColor: "green",
-      ib_id: 123,
-      wf_id: 537
-    },{
-      id: 1,
-      title: "Редактирование физ. лица",
-      icon: "mdi-account-edit-outline",
-      iconColor: "orange",
-      ib_id: 124,
-      wf_id: 540
-    }],
+    buttons: [
+      {
+        id: 0,
+        title: "Создание физ. лица",
+        icon: "mdi-account-plus-outline",
+        iconColor: "green",
+        ib_id: 123,
+        wf_id: 537,
+      },
+      {
+        id: 1,
+        title: "Редактирование физ. лица",
+        icon: "mdi-account-edit-outline",
+        iconColor: "orange",
+        ib_id: 124,
+        wf_id: 540,
+      },
+    ],
     ib_id: "",
     wf_Id: "",
     dialogMessage: "",
-    source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_services.php",
-    //source: "./ajax/ajax_services.php",
+    //source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_services.php",
+    source: "./ajax/ajax_services.php",
   }),
   created() {
     bus.$on("inputFile", (data) => {
@@ -112,6 +120,47 @@ export default {
         this.sendButtonDisable = !form.validation();
       },
       deep: true,
+    },
+    changeType(val) {
+      const inputsTemp = this.inputs.filter(
+        (item) =>
+          item.code === "FORM_INN" ||
+          item.code === "FORM_SNILS" ||
+          item.code === "FORM_MESTO_ROZHDENIYA" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_VID_DOK" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_SERIYA" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_NOMER" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_KEM_VYD" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_DATA_VY" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_KOD_POD" ||
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_SROK_DE"
+      );
+      if (val != "Прочее физлицо") {
+        inputsTemp.forEach((item) => {
+          item.name = item.name.replace(/\*/g, "");
+          item.is_required = "Y";
+          item.name = item.name + "*";
+          item.rule =
+            item.is_required === "Y"
+              ? [(value) => !!value || "Обязательное поле"]
+              : [];
+        });
+      } else {
+        inputsTemp.forEach((item) => {
+          item.is_required = "N";
+          item.rule = [];
+          item.name = item.name.replace(/\*/g, "");
+        });
+      }
+    },
+  },
+  computed: {
+    changeType() {
+      const type = this.inputs.find((item) => item.code === "FORM_TIP");
+      if (this.inputs.length > 0 && type.value) {
+        return type.value;
+      }
+      return null;
     },
   },
   methods: {
@@ -131,7 +180,7 @@ export default {
         .then((response) => {
           response.data.forEach((item) => {
             item.name = item.name + (item.is_required === "Y" ? "*" : "");
-            item.value = "";
+            item.value = null;
             item.multiple = item.multiple === "Y" ? true : false;
             item.visible = item.is_invisible ? false : true;
             item.cs = "12";
