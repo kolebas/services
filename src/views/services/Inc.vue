@@ -106,19 +106,7 @@ export default {
         title: "type_1c_slct",
         value: "",
         type: "select",
-        select_arr: [
-          "Бухгалтерский учёт",
-          "ГК ПИР",
-          "Зарплата и управление персоналом",
-          "Документооборот (договоры, приказы, поручение, закупки)",
-          "Казначейство",
-          "Закупка",
-          "Весовые",
-          "Эдо, EDI, ККТ",
-          "Логистика",
-          "МСФО",
-          "1С не работает, работает медленно",
-        ],
+        select_arr: [        ],
         rule: [],
         visible: false,
       },
@@ -183,6 +171,7 @@ export default {
     this.getUserData();
     this.valid = new Validate(this.checkTitle);
     this.getDb();
+    this.get1cDirections();
     bus.$on("inputFile", (data) => {
       this.file = data;
       this.inputs.find((item) => item.type === "file").value = data;
@@ -332,7 +321,35 @@ export default {
           db.push({"NAME": item});
         })
         inputDb.items = db;
-      }) 
+      })
+      .catch((error) => {
+        this.dialog = true;
+        this.dialogMessage = `Произошла ошибка ${error}`;
+      }); 
+    },
+    get1cDirections(){      
+      this.api.getData({
+        //url: "./ajax/ajax_services.php",
+        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_services.php",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET",
+        params: {
+          type: "get1cReposibles",
+          ib_id: 125
+        }
+      })
+      .then(response => {
+        const directios = this.fields.find(item => item.title === "type_1c_slct");
+        response.data.forEach(item => {
+          directios.select_arr.push(item.TITLE);
+        })
+      })
+      .catch((error) => {
+        this.dialog = true;
+        this.dialogMessage = `Произошла ошибка ${error}`;
+      });
     },
     getUserData() {
       axios
