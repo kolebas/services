@@ -10,7 +10,7 @@ export default class Validate{
         return false
       }
       const filteredInputs = inputs.filter(element => element.required === true);
-      const isValid = !filteredInputs.some(item => item.value == "");
+      const isValid = !filteredInputs.some(item => item.value == "" || item.value == null);
       return isValid
     } else {
       return false
