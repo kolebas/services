@@ -109,11 +109,6 @@ const routes = [{
     component: () => import( /* webpackChunkName: "services" */ '../views/hr/Hr.vue')
   },
   {
-    path: '/market',
-    name: 'Магазин',
-    component: () => import( /* webpackChunkName: "services" */ '../views/hr/Market.vue')
-  },
-  {
     path: '/agro',
     name: 'Агрономические опыты',
     component: () => import( /* webpackChunkName: "services" */ '../views/dashboard/agro.vue')
