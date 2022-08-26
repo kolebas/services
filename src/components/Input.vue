@@ -128,6 +128,7 @@
             :label="item.label"
             :userId_err="item.err"
             :rules="item.rule"
+            :multiple="item.multiple"
           />
           <InputFileCard v-if="item.type === 'file' || item.type === 'F'" />
           <InputAutocomplete :items="item" v-if="item.type === 'autocomplete' || item.type === 'L'" />
