@@ -1,5 +1,10 @@
 <template>
   <v-container fluid>
+    <DialogAfterSendForm
+      :dialog="dialog"
+      :warnMessage="dialogMessage"
+      :route="dialogRoute"
+    />
     <v-card min-height="800px" class="py-2">
       <Alert v-if="!access" :text="accessText" />
       <v-row v-if="access">
@@ -19,7 +24,8 @@
                   @click="
                     showTable(btn),
                       getData1C(btn.type, btn.sectionId),
-                      getDialogFields(btn.tableHeaders)
+                      getDialogFields(btn.tableHeaders),
+                      getTabsData(btn.ib_id)
                   "
                   v-for="btn in tabs[0].cards"
                   :key="btn.i"
@@ -58,19 +64,26 @@
 
 <script>
 import { bus } from "@/main.js";
+import Api from "@/components/Api.js";
 import axios from "axios";
 import DataTables from "@/components/DataTables.vue";
+import DialogAfterSendForm from "@/components/DialogAfterSendForm.vue";
 import Alert from "@/components/Alert.vue";
 export default {
   components: {
     DataTables,
     Alert,
+    DialogAfterSendForm,
   },
   data: () => ({
     name: "",
     accessText:
       "Доступ к данному разделу ограничен, для получения доступа вам необходимо обратиться к руководителю службы развития и поддержки ИТ-инфраструктуры",
-    access: false,
+    access: true,
+    api: new Api(),
+    dialogRoute: "",
+    //source: "./ajax/ajax_services.php",
+    source: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_services.php",
     tabs: [
       {
         text: "Панель управления 1C",
@@ -386,6 +399,44 @@ export default {
             tableItems: [],
             img: "https://img.icons8.com/office/30/000000/groups.png",
           },
+          {
+            title: "Направления 1С",
+            sectionId: 876,
+            icon: "mdi-directions-fork",
+            visible: false,
+            type: "getTypes",
+            tableHeaders: [
+              {
+                text: "ID",
+                value: "ID",
+                visibleInTable: false,
+                type: "string",
+              },
+              {
+                text: "Название",
+                value: "TITLE",
+                visibleInTable: true,
+                type: "string",
+              },
+              {
+                text: "Отвественный",
+                value: "RESPONSIBLES",
+                visibleInTable: true,
+                type: "selectUsr",
+                multiple: true,
+              },
+              {
+                text: "Действия",
+                value: "ACTIONS",
+                width: "10%",
+                visibleInTable: true,
+              },
+            ],
+            actions: ["chg", "rem"],
+            ib_id: 125,
+            tableItems: [],
+            img: "https://img.icons8.com/office/30/000000/bill.png",
+          },
         ],
       },
     ],
@@ -404,6 +455,7 @@ export default {
   }),
   created() {
     bus.$on("newItem", (data) => {
+      console.log(data);
       if (data[1].name == "название ИБ") {
         this.addData1C(data, "addDB");
       }
@@ -418,7 +470,10 @@ export default {
       this.addData1C(data, "remDB");
     });
     bus.$on("updItem", (data) => {
-      this.addData1C(data, "updDB");
+      console.log(data);
+      //this.addData1C(data, "updDB");
+      const id = data.find((item) => item.name === "ID");
+      this.updateElement(id.value);
     });
   },
   computed: {
@@ -510,6 +565,63 @@ export default {
         }
       });
     },
+    updateElement(id) {
+      if (id) {
+        this.api
+          .updateData({
+            url: this.source,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            data: this.prepareData(id, 125, null, "updateData"),
+          })
+          .then((response) => {
+            console.log(response);
+            this.dialog = true;
+            this.dialogMessage = response.status;
+            this.dialogRoute = "1";
+          })
+          .catch((err) => {
+            this.dialog = true;
+            this.dialogMessage = err.message;
+            this.dialogRoute = "0";
+          });
+      }
+    },
+    prepareData(id, ib_id = this.ib_id, wf_id = this.wf_id, type) {
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("ib_id", ib_id);
+      formData.append("wf_id", wf_id);
+      formData.append("type", type);
+      return formData;
+    },
+    getTabsData(ib_id) {
+      if (ib_id) {
+        const table = this.tabs[0].cards.find((item) => item.ib_id === ib_id);
+        this.api
+          .getData({
+            url: this.source,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "GET",
+            params: {
+              type: "get1cReposibles",
+              ib_id: ib_id,
+            },
+          })
+          .then((response) => {
+            table.tableItems = response.data;
+          })
+          .catch((err) => {
+            this.dialog = true;
+            this.dialogMessage = err.message;
+            this.dialogRoute = "0";
+          });
+      }
+    },
     showTable(item) {
       for (let i = 0; i < this.tabs[0].cards.length; i++) {
         this.tabs[0].cards[i].visible = false;
@@ -538,7 +650,7 @@ export default {
       axios.get("./ajax/ajax_usr.php", {}).then((response) => {
         if (response.status == 200) {
           let groupArray = response.data[0]["GROUP"];
-          if (groupArray.includes("48") == true) {
+          if (groupArray && groupArray.includes("48") == true) {
             this.access = true;
           }
         }

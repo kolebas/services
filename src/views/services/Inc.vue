@@ -329,8 +329,8 @@ export default {
     },
     get1cDirections(){      
       this.api.getData({
-        //url: "./ajax/ajax_services.php",
-        url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_services.php",
+        url: "./ajax/ajax_services.php",
+        //url: "https://portal.ahstep.ru/ahstep/services/ajax/ajax_services.php",
         headers: {
           'Content-Type': 'application/json'
         },
