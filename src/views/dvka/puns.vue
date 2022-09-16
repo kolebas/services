@@ -402,10 +402,6 @@ export default {
           params: {
             type: "get",
           },
-          /*auth: {
-            username: "zaikin.ni",
-            password: "Vbuhfwbz75",
-          },*/
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
@@ -443,10 +439,6 @@ export default {
         method: "post",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         url: this.source,
-        /*auth: {
-          username: "zaikin.ni",
-          password: "Vbuhfwbz75",
-        },*/
         data: {
           type: type,
           data: data,

@@ -163,10 +163,6 @@ export default {
         this.loading = true
             axios
                 .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
-                 /* auth:{
-                     username: "zaikin.ni",
-                     password: "Vbuhfwbz75"
-                 }, */
                  params:{
                     param1: "get_products"
                  }
@@ -197,33 +193,6 @@ export default {
                     console.log(this.orders)
                 })                
                 .catch(error => (console.log(error)))
-            /*axios
-                .get("https://portal.ahstep.ru/ahstep/services/ajax/hr/ajax_hr.php", {
-                 auth:{
-                     username: "zaikin.ni",
-                     password: "Vbuhfwbz75"
-                 },
-                 params:{
-                    param: "get_orders"
-                 }
-                })
-                .then(response => {
-                    (this.item = response.data)
-                    for(let i=0; i < this.item.length; i++ ){
-                        if(this.item[i].ORDER_ID != null){
-                                let value = this.item[i].PRODUCT_ID
-                                this.orders.push({
-                                    created_order: this.item[i].CREATED_BY,
-                                    date: this.item[i].DATE,
-                                    [value]: this.item[i].VALUE
-                                })
-                            }
-                        }
-                        
-                    console.log(this.item)
-                    
-                    console.log(this.orders)     
-                    })*/
     },
     methods:{
         getItem(type){
