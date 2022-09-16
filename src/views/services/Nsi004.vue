@@ -132,8 +132,7 @@ export default {
           item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_NOMER" ||
           item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_KEM_VYD" ||
           item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_DATA_VY" ||
-          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_KOD_POD" ||
-          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_SROK_DE"
+          item.code === "FORM_DOKUMENT_UDOSTOVERYAYUSHCHIY_LICHNOST_KOD_POD" 
       );
       if (val != "Прочее физлицо") {
         inputsTemp.forEach((item) => {
