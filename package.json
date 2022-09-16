@@ -6,8 +6,8 @@
   "author": "Zaikin Nikolay",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "deploy-dev": "npm run build && scp -r ./build/* bitrix@test-portal.ahstep.ru:/home/bitrix/test-deploy",
-    "deploy": "npm run build && scp -r ./build/* bitrix@portal.ahstep.ru:/home/bitrix/test-deploy",
+    "deploy-dev": "npm run build && scp -r ./build/* bitrix@test-portal.ahstep.ru:/home/bitrix/www/ahstep/services",
+    "deploy": "npm run build && scp -r ./build/* bitrix@portal.ahstep.ru:/home/bitrix/www/ahstep/services",
     "build": "vue-cli-service build --dest ./build",
     "lint": "vue-cli-service lint"
   },
