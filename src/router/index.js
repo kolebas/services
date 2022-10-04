@@ -192,6 +192,11 @@ const routes = [{
     path: '/nsi004',
     name: 'Заявка на создание/редактирование физ. лица',
     component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi004.vue')
+  },  
+  {
+    path: '/nsi005',
+    name: 'Заявка на создание/редактирование номенклатуры',
+    component: () => import( /* webpackChunkName: "services" */ '../views/services/Nsi005.vue')
   },
   {
     path: '/test',
