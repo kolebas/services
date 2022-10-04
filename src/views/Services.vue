@@ -190,7 +190,7 @@ export default {
         ],
       },
       {
-        name: "Заявки на каталог (папку)",
+        name: "Заявки на каталог (Диск L)",
         img: "folders.png",
         items: [
           {
