@@ -123,6 +123,22 @@ export default {
     },
   },
   methods: {
+    getAditionalData(url, inputCode) {
+      this.api
+        .getData({
+          url: `https://web1c.ahstep.ru/AGK/hs/op/info/${url}`,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          method: "GET",
+          auth: {
+            username: "TestHTTP",
+            password: "123",
+          },
+        })
+        .then((response) => {
+          const input = this.inputs.find((item) => item.code === inputCode);
+          input.items = response.data;
+        });
+    },
     getFormData() {
       this.api
         .getData({
@@ -152,6 +168,23 @@ export default {
             item.outlined = item.dense = item.solo = true;
             this.inputs.push(item);
           });
+          if (this.ib_id === 128) {
+            const inputAddInfo = [
+              { code: "FORM_MARKIROVKA_I_KONTROL", url: "markingtypes" },
+              { code: "FORM_NOMENKLATURNAYA_GRUPPA", url: "nomtypes" },
+              {
+                code: "FORM_VID_NOMENKLATURY_DLYA_NABORA_DOPOLNITELNYKH_S",
+                url: "nompropertiestypes",
+              },
+              { code: "FORM_STRANA_PROISKHOZHDENIYA", url: "countries" },
+              { code: "FORM_VID_TEKHNIKI", url: "TechnicTypes" },
+              { code: "FORM_BREND_TEKHNIKI", url: "Brand" },
+              { code: "FORM_EDINITSA_IZMERENIYA", url: "UnitTypes" },
+            ];
+            inputAddInfo.forEach((item) => {
+              this.getAditionalData(item.url, item.code);
+            });
+          }
         });
     },
     prepareData() {
