@@ -5,11 +5,12 @@ export default class Api {
   }
 
   getData(data) {
-    const { url, headers, method, params } = data;
+    const { url, headers, method, params, auth } = data;
     return axios(url, {
       headers: headers,
       method: method,
       params: params,
+      auth: auth
     })
       .then(this._checkResponse)
       .then((data) => {
