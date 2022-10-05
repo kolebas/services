@@ -27,6 +27,7 @@
 
 <script>
 import { bus } from "@/main.js";
+import Api from "@/components/Api.js";
 import RqCardTitle from "@/components/RqCardTitle";
 import Input from "@/components/Input.vue";
 import TitleService from "@/components/TitleService.vue";
@@ -41,6 +42,11 @@ export default {
   data: () => ({
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
     sendButtonDisable: true,
+    api: new Api(),
+    inputCode: [
+      { code: 38, url: "currencies" },
+      { code: 39, url: "countries" },
+    ],
     inputs: [
       {
         id: 100,
@@ -57,43 +63,43 @@ export default {
           {
             NAME: "Юридическое лицо",
             ID: [
-              0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
-              23, 24, 25, 49, 32, 42
+              0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 23, 24, 25, 49, 31,
+              32, 42,
             ],
           },
           {
             NAME: "Физическое лицо",
             ID: [
-              0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
-              23, 24, 25, 49, 32, 43, 44, 45, 46, 47, 48, 42
+              0, 9, 33, 34, 35, 41, 4, 5, 17, 13, 14, 19, 20, 21, 23, 24, 25,
+              49, 31, 32, 43, 44, 45, 46, 47, 48, 42,
             ],
           },
           {
             NAME: "Самозанятый",
             ID: [
-              0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
-              23, 24, 25, 49, 32, 43, 44, 45, 46, 47, 48, 42
+              0, 9, 33, 34, 35, 41, 4, 5, 17, 13, 14, 19, 20, 21, 23, 24, 25,
+              49, 31, 32, 43, 44, 45, 46, 47, 48, 42,
             ],
           },
           {
             NAME: "Получатель алиментов, охотник",
             ID: [
-              0, 9, 33, 34, 35, 41, 4, 5,  17, 13, 14, 19, 20, 21, 
-              23, 24, 25, 49, 32, 43, 44, 45, 46, 47, 48, 42
+              0, 9, 33, 34, 35, 41, 4, 5, 17, 13, 14, 19, 20, 21, 23, 24, 25,
+              49, 31, 32, 43, 44, 45, 46, 47, 48, 42,
             ],
           },
           {
             NAME: "Обособленное подразделение",
             ID: [
-              0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 
-              23, 24, 25, 49, 32, 42
+              0, 1, 2, 3, 9, 10, 4, 5, 13, 14, 19, 20, 21, 23, 24, 25, 49, 31,
+              32, 42,
             ],
           },
           {
             NAME: "Государственный орган",
             ID: [
-              0, 1, 2, 3, 9, 10, 4, 5, 7, 8, 12, 13, 14, 19, 20, 21,
-              23, 24, 25, 49, 32, 42
+              0, 1, 2, 3, 9, 10, 4, 5, 7, 8, 12, 13, 14, 19, 20, 21, 23, 24, 25,
+              49, 31, 32, 42,
             ],
           },
         ],
@@ -179,7 +185,7 @@ export default {
           { NAME: "УК" },
           { NAME: "Прочее" },
         ],
-        rule: [(value) => !!value || "Обязательное поле"],        
+        rule: [(value) => !!value || "Обязательное поле"],
         visible: false,
       },
       {
@@ -188,9 +194,7 @@ export default {
         title: "shortTitle",
         type: "string",
         required: true,
-         rule: [
-            (value) => !!value || "Обязательное поле",
-          ]
+        rule: [(value) => !!value || "Обязательное поле"],
       },
       {
         id: 5,
@@ -217,10 +221,11 @@ export default {
         required: true,
         rule: [
           (value) => !!value || "Обязательное поле",
-          (value) => (value && value.length == 10 ) || "Количество символов 10",
-        ],                
+          (value) => (value && value.length == 10) || "Количество символов 10",
+        ],
         icon: "mdi-briefcase-search-outline",
-        messages: "Для автоматического заполнения реквизитов нажмите иконку лупы с чемоданом (работает для юрлиц и ИП/ГКФХ)"
+        messages:
+          "Для автоматического заполнения реквизитов нажмите иконку лупы с чемоданом (работает для юрлиц и ИП/ГКФХ)",
       },
       {
         id: 10,
@@ -281,7 +286,12 @@ export default {
         id: 25,
         name: "Контактное лицо",
         type: "string",
-      },      
+      },
+      {
+        id: 31,
+        name: "Адрес доставки",
+        type: "string",
+      },
       {
         id: 32,
         name: "Описание",
@@ -321,13 +331,12 @@ export default {
       {
         id: 38,
         name: "Валюта счета",
-        type: "select",
-        select_arr: ["CAD", "CHF", "CNY", "EUR", "GPB", "USD", "РУБ"],
+        type: "autocomplete",
       },
       {
         id: 39,
         name: "Страна регистрации",
-        type: "string",
+        type: "autocomplete",
         rule: [(value) => !!value || "Обязательное поле"],
       },
       {
@@ -345,32 +354,32 @@ export default {
         id: 42,
         name: "Файл:",
         type: "file",
-      },      
+      },
       {
         id: 43,
         name: "СНИЛС",
         type: "string",
-      },            
+      },
       {
         id: 44,
         name: "Паспорт",
         type: "string",
-      },      
+      },
       {
         id: 45,
         name: "Кем выдан паспорт",
         type: "string",
-      },     
+      },
       {
         id: 46,
         name: "Код подразделения",
         type: "string",
-      },     
+      },
       {
         id: 47,
         name: "Дата выдачи паспорта",
         type: "date",
-      },     
+      },
       {
         id: 48,
         name: "Место рождения",
@@ -405,7 +414,7 @@ export default {
       userInput.value = data.userId;
     });
     bus.$on("resultArray", (data) => {
-      this.setPaishik(data.find(item => item.title === "paishik"))
+      this.setPaishik(data.find((item) => item.title === "paishik"));
       this.checkForm();
     });
     bus.$on("appendIconCallback", () => {
@@ -418,6 +427,9 @@ export default {
   mounted() {
     this.enableValidation({
       formSelector: "#nsi002",
+    });
+    this.inputCode.forEach((item) => {
+      this.getAditionalData(item.url, item.code);
     });
   },
   computed: {
@@ -435,7 +447,7 @@ export default {
       const insidegroup = this.inputs.find(
         (item) => item.title === "insidegroup"
       );
-      if(insidegroup){
+      if (insidegroup) {
         return insidegroup.value;
       } else {
         return false;
@@ -460,23 +472,39 @@ export default {
       segment.required = val;
       cluster.visible = val;
       cluster.required = val;
-      if(val == false){
+      if (val == false) {
         segment.value = "";
         cluster.value = "";
       }
     },
   },
   methods: {
-    setPaishik(paihik){
+    setPaishik(paihik) {
       const fiz = this.inputs.find((item) => item.title === "fiz");
       const fizCode = this.inputs.find((item) => item.title === "fizCode");
-      if(paihik.value === "Да"){
+      if (paihik && paihik.value === "Да") {
         fiz.visible = true;
         fizCode.visible = true;
       } else {
         fiz.visible = false;
         fizCode.visible = false;
       }
+    },
+    getAditionalData(url, inputCode) {
+      this.api
+        .getData({
+          url: `https://web1c.ahstep.ru/AGK/hs/op/info/${url}`,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          method: "GET",
+          auth: {
+            username: "TestHTTP",
+            password: "123",
+          },
+        })
+        .then((response) => {
+          const input = this.items.find((item) => item.id === inputCode);
+          input.items = response.data;
+        });
     },
     addInput(type, resident) {
       if (type && resident === true) {
@@ -490,37 +518,39 @@ export default {
         this.renderInputs(itemsID);
       }
     },
-    addInputRule(type){
-      if (type === "Физическое лицо"){
-        let inputInn = this.inputs.find(item => item.title === "inn"); 
-        let inputPaishik = this.inputs.find(item => item.title === "paishik");
+    addInputRule(type) {
+      if (type === "Физическое лицо") {
+        let inputInn = this.inputs.find((item) => item.title === "inn");
+        let inputPaishik = this.inputs.find((item) => item.title === "paishik");
         inputInn.rule = [
           (value) => !!value || "Обязательное поле",
           (value) => (value && value.length == 12) || "Количество символов 12",
-        ]
-        const data = {          
+        ];
+        const data = {
           name: `${inputPaishik.name}*`,
           required: true,
-          rule: [
-            (value) => !!value || "Обязательное поле",
-          ]
-        }
+          rule: [(value) => !!value || "Обязательное поле"],
+        };
         inputPaishik = this.addInputObjects(inputPaishik, data);
-      } else if (type === "Обособленное подразделение"){        
-        let inputFullTitle = this.inputs.find(item => item.title === "fullTitle");
-        let inputUrAddress = this.inputs.find(item => item.title === "urAddress");
+      } else if (type === "Обособленное подразделение") {
+        let inputFullTitle = this.inputs.find(
+          (item) => item.title === "fullTitle"
+        );
+        let inputUrAddress = this.inputs.find(
+          (item) => item.title === "urAddress"
+        );
         this.setInputRule([inputFullTitle, inputUrAddress]);
-      } else if (type === "Получатель алиментов"){
-        let inputBik = this.inputs.find(item => item.title === "bik"); 
-        let inputSchet = this.inputs.find(item => item.title === "schet");
-        let inputInn = this.inputs.find(item => item.title === "inn"); 
+      } else if (type === "Получатель алиментов") {
+        let inputBik = this.inputs.find((item) => item.title === "bik");
+        let inputSchet = this.inputs.find((item) => item.title === "schet");
+        let inputInn = this.inputs.find((item) => item.title === "inn");
         inputInn.required = false;
         inputInn.rule = [];
-        inputInn.name = 'ИНН';
+        inputInn.name = "ИНН";
         this.setInputRule([inputBik, inputSchet]);
       }
     },
-    addInputObjects(input, object){
+    addInputObjects(input, object) {
       const obj = Object.assign(input, object);
       return obj;
     },
@@ -533,9 +563,7 @@ export default {
         form.addEventListener("submit", (event) =>
           this.handleFormSubmit(event)
         );
-        form.addEventListener("input", () =>
-          this.checkForm()
-        );
+        form.addEventListener("input", () => this.checkForm());
       });
     },
     renderInputs(arrayInputs) {
@@ -561,7 +589,7 @@ export default {
       event.preventDefault();
     },
     checkForm() {
-      const input = this.inputs.filter((item) => (item.required === true));
+      const input = this.inputs.filter((item) => item.required === true);
       const valid = !input.some((item) => item.value == "");
       if (valid) {
         this.sendButtonDisable = false;
@@ -569,63 +597,67 @@ export default {
         this.sendButtonDisable = true;
       }
     },
-    sendData(){
+    sendData() {
       const formData = new FormData();
-      const fileInput = this.inputs.find(item => item.type === "file");
+      const fileInput = this.inputs.find((item) => item.type === "file");
       this.inputs.forEach((element) => {
-        if(element.value != null){          
+        if (element.value != null) {
           formData.append(element.id, element.value);
         }
       });
-      if(fileInput) {
+      if (fileInput) {
         const files = fileInput.value;
         for (var i = 0; i < files.length; i++) {
           let file = files[i];
           formData.append("file[" + i + "]", file);
         }
-      }    
-      return formData;   
+      }
+      return formData;
     },
-    setInputRule(inputs){
+    setInputRule(inputs) {
       inputs.forEach((item) => {
         const data = {
           name: `${item.name}*`,
           required: true,
-          rule: [
-            (value) => !!value || "Обязательное поле",
-          ]
+          rule: [(value) => !!value || "Обязательное поле"],
         };
         item = this.addInputObjects(item, data);
-      })
+      });
     },
-    getDadata(){
-      var url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
+    getDadata() {
+      var url =
+        "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
       var token = "f504593845086a6ff8765db38660efbe829b65ba";
-      var query = this.inputs.find(item => item.title === 'inn').value;
+      var query = this.inputs.find((item) => item.title === "inn").value;
 
       var options = {
-          method: "POST",
-          mode: "cors",
-          headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-              "Authorization": "Token " + token
-          },
-          body: JSON.stringify({query: query, branch_type: 'MAIN'})
-      }
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Token " + token,
+        },
+        body: JSON.stringify({ query: query, branch_type: "MAIN" }),
+      };
 
-    fetch(url, options)
-      .then(response => response.json())
-      .then((result) => {
-        this.inputs.find(item => item.title === "shortTitle").value = result.suggestions[0].data.name.short_with_opf;
-        this.inputs.find(item => item.title === "fullTitle").value = result.suggestions[0].data.name.full_with_opf;
-        this.inputs.find(item => item.title === "urAddress").value = result.suggestions[0].data.address.unrestricted_value;
-        this.inputs.find(item => item.title === "telephone").value = result.suggestions[0].data.address.phones;
-        this.inputs.find(item => item.id === 10).value = result.suggestions[0].data.kpp;
-        this.checkForm();
-      })
-      .catch(error => console.log("error", error));
-    }
+      fetch(url, options)
+        .then((response) => response.json())
+        .then((result) => {
+          this.inputs.find((item) => item.title === "shortTitle").value =
+            result.suggestions[0].data.name.short_with_opf;
+          this.inputs.find((item) => item.title === "fullTitle").value =
+            result.suggestions[0].data.name.full_with_opf;
+          this.inputs.find((item) => item.title === "urAddress").value =
+            result.suggestions[0].data.address.unrestricted_value;
+          this.inputs.find((item) => item.title === "telephone").value =
+            result.suggestions[0].data.address.phones;
+          this.inputs.find((item) => item.id === 10).value =
+            result.suggestions[0].data.kpp;
+          this.checkForm();
+        })
+        .catch((error) => console.log("error", error));
+    },
   },
 };
 </script>
