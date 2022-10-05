@@ -53,6 +53,7 @@ export default {
         id: 0,
         name: "Имя каталога:*",
         type: "autocomplete",
+        code: "folders",
         value: "",
         cs: "12",
         sm: "6",
@@ -108,7 +109,7 @@ export default {
             type: "getFldr",
           },
         })
-        .then((response) => (this.input[1].items = response.data))
+        .then((response) => (this.input.find(item => item.code === "folders").items = response.data))
         .catch(
           (error) => (
             (this.dialogMessage = "Произошла ошибка: " + error),
