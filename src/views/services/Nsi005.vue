@@ -158,6 +158,7 @@ export default {
             item.value = null;
             item.multiple = item.multiple === "Y" ? true : false;
             item.visible = item.is_invisible ? false : true;
+            item.messages = item.description;
             item.cs = "12";
             item.sm = item.md = "6";
             item.rule =
@@ -170,8 +171,9 @@ export default {
           });
           if (this.ib_id === 128) {
             const inputAddInfo = [
+            { code: "FORM_VID_NOMENKLATURY", url: "nomtypes" },
               { code: "FORM_MARKIROVKA_I_KONTROL", url: "markingtypes" },
-              { code: "FORM_NOMENKLATURNAYA_GRUPPA", url: "nomtypes" },
+              { code: "FORM_NOMENKLATURNAYA_GRUPPA", url: "nomgroups" },
               {
                 code: "FORM_VID_NOMENKLATURY_DLYA_NABORA_DOPOLNITELNYKH_S",
                 url: "nompropertiestypes",
