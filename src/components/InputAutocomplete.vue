@@ -13,6 +13,7 @@
               item-text="NAME"
               item-value="NAME"
               :rules="items.rule"
+              :messages="items.messages"
               :error-messages="items.err"
               @change="changeValue()"
             >
