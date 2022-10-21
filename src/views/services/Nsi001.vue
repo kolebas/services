@@ -8,6 +8,13 @@
             :title="$router.currentRoute.name"
             :sub_message="sub_message"
           ></RqCardTitle>
+          <Alert
+            :text="warningtext"
+            :type="'warning'"
+            :colorBorder="true"
+            :borderType="'bottom'"
+            :btnBack="false"
+          />
           <hr />
           <Input :arrInput="input" />
           <v-card-text> * Поля обязательные для заполнения </v-card-text>
@@ -27,11 +34,13 @@
 import { bus } from "@/main.js";
 import RqCardTitle from "@/components/RqCardTitle";
 import Input from "@/components/Input.vue";
+import Alert from "@/components/Alert.vue";
 import axios from "axios";
 import Buttons from "@/components/Buttons.vue";
 import TitleService from "@/components/TitleService.vue";
 export default {
   components: {
+    Alert,
     RqCardTitle,
     Input,
     Buttons,
@@ -40,6 +49,7 @@ export default {
   data: () => ({
     sub_message: "Вы сможете отслеживать статус заявки в разделе",
     sendButtonDisable: true,
+    warningtext: "Форма данной заявки неактуальна",
     input: [
       {
         id: 0,
@@ -51,8 +61,8 @@ export default {
         type: "autocomplete",
         items: [
           { NAME: "Аккумуляторы", ID: [2, 5, 6, 7, 8, 9, 11] },
-          { NAME: "Ветпрепараты и вет.материалы", ID: [2, 4, 6, 7, 8, 9, 11] },          
-          { NAME: "Внутренняя услуга", ID: [2, 6, 7, 8, 9, 11] },          
+          { NAME: "Ветпрепараты и вет.материалы", ID: [2, 4, 6, 7, 8, 9, 11] },
+          { NAME: "Внутренняя услуга", ID: [2, 6, 7, 8, 9, 11] },
           { NAME: "Для закупок", ID: [1, 2, 6, 7, 8, 9, 11] },
           { NAME: "Животные", ID: [2, 4, 6, 7, 8, 9, 11] },
           { NAME: "Запасные части", ID: [2, 5, 6, 7, 10, 12, 8, 9, 11] },
@@ -340,7 +350,7 @@ export default {
         solo: true,
       },
     ],
-    formData: null
+    formData: null,
   }),
   created() {
     bus.$on("inputFile", (data) => {
@@ -354,19 +364,25 @@ export default {
       this.formData = formData;
     });
   },
-  mounted() {    
-      const nomenclature = this.input.find(item => item.id === 0);
-      if(nomenclature) {
-        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/NomTypes").then(data => {
-          data.forEach(item => {
-            if(!nomenclature.items.some(function(value){ return value.NAME === item.NAME })){
-              const obj = {ID: [2, 6, 7, 8, 9, 11]}
+  mounted() {
+    const nomenclature = this.input.find((item) => item.id === 0);
+    if (nomenclature) {
+      this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/NomTypes").then(
+        (data) => {
+          data.forEach((item) => {
+            if (
+              !nomenclature.items.some(function (value) {
+                return value.NAME === item.NAME;
+              })
+            ) {
+              const obj = { ID: [2, 6, 7, 8, 9, 11] };
               const newItem = Object.assign(item, obj);
               nomenclature.items.push(newItem);
             }
           });
-        });
-      }
+        }
+      );
+    }
   },
   computed: {
     fullName() {
@@ -408,35 +424,41 @@ export default {
             this.sendButtonDisable = true;
             break;
           }
-          this.sendButtonDisable = false;
+          this.sendButtonDisable = true;
         }
       },
       deep: true,
     },
   },
   methods: {
-    sendData(data = this.input){
-      if(this.formData){
+    sendData(data = this.input) {
+      if (this.formData) {
         return this.formData;
       } else {
         return data;
-      }      
+      }
     },
     setVisibleInput(nomenklatura) {
       if (nomenklatura) {
         this.input.splice(1);
-        const unitTypes = this.items.find(item => item.id === 6);       
-        const technicsBrand = this.items.find(item => item.id === 10);
-        const technicsType = this.items.find(item => item.id === 12);
-        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes").then(data => { 
+        const unitTypes = this.items.find((item) => item.id === 6);
+        const technicsBrand = this.items.find((item) => item.id === 10);
+        const technicsType = this.items.find((item) => item.id === 12);
+        this.get1CUnits(
+          "https://web1c.ahstep.ru/AGK/hs/op/info/UnitTypes"
+        ).then((data) => {
           unitTypes.items = data;
         });
-        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand").then(data => { 
-          technicsBrand.items = data;
-        });
-        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes").then(data => { 
+        this.get1CUnits("https://web1c.ahstep.ru/AGK/hs/op/info/Brand").then(
+          (data) => {
+            technicsBrand.items = data;
+          }
+        );
+        this.get1CUnits(
+          "https://web1c.ahstep.ru/AGK/hs/op/info/TechnicTypes"
+        ).then((data) => {
           technicsType.items = data;
-        });      
+        });
         let arrayInput = this.input
           .filter((item) => item.name == "Вид номенклатуры:*")[0]
           .items.filter((itemValue) => itemValue.NAME == nomenklatura);
@@ -472,7 +494,7 @@ export default {
           password: "123",
         },
       }).then((response) => {
-        if (response.status == 200) {          
+        if (response.status == 200) {
           return response.data;
         }
       });
