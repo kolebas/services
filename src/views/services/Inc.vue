@@ -86,13 +86,6 @@ export default {
         value: false,
         type: "switch",
         class: "mt-n2",
-      },
-      {
-        label: "Проблема связана с мониторингом",
-        title: "switch_mon",
-        value: "",
-        type: "switch",
-        class: "mt-n2",
       },      
       {
         label: "Проблема связана с НСИ",
@@ -196,9 +189,6 @@ export default {
     },
     getSwitchNsi(){
       return this.computedInput("switch_nsi");
-    },    
-    getSwitchMon(){
-      return this.computedInput("switch_mon");
     },
   },
   watch:{
@@ -208,11 +198,6 @@ export default {
         this.toggleSwitchs("switch_1c", inputs, ["type_nsi_slct", "db"], value);
       } else { 
         this.removeInput(inputs);
-      }
-    },
-    getSwitchMon(value){
-      if(value){        
-        this.toggleSwitchs("switch_mon", null, ["type_1c_slct", "type_nsi_slct", "db"], value);
       }
     },
     getSwitchNsi(value){
