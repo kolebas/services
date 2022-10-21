@@ -171,7 +171,6 @@ export default {
           });
           if (this.ib_id === 128) {
             const inputAddInfo = [
-            { code: "FORM_VID_NOMENKLATURY", url: "nomtypes" },
               { code: "FORM_MARKIROVKA_I_KONTROL", url: "markingtypes" },
               { code: "FORM_NOMENKLATURNAYA_GRUPPA", url: "nomgroups" },
               {
